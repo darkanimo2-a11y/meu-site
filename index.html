@@ -57,16 +57,23 @@
   </style>
 </head>
 <body>
-  <header class="topbar">
-    <h1>Dashboard de Vendas</h1>
-    <div class="actions">
-      <button id="btnNewSale">Registrar venda</button>
-      <button id="btnNewAccount">Nova conta</button>
-      <div style="width:1px;background:#e6e6e6;height:28px;margin:0 8px"></div>
-      <button id="exportSalesCsv">Exportar Vendas CSV</button>
-      <button id="exportMonthsCsv">Exportar Faturamento Mensal CSV</button>
-    </div>
-  </header>
+ <header class="topbar" style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;">
+  <div style="display:flex;align-items:center;gap:12px;">
+    <a href="index.html" style="display:inline-block;">
+      <img src="logo.png" alt="Dash Tik" style="height:48px;display:block;">
+    </a>
+    <h1 style="margin:0;font-size:1.1rem;">Dashboard de Vendas</h1>
+  </div>
+
+  <div class="actions" style="display:flex;align-items:center;gap:8px;">
+    <button id="btnNewSale">Registrar venda</button>
+    <button id="btnNewAccount">Nova conta</button>
+    <div style="width:1px;background:#e6e6e6;height:28px;margin:0 8px"></div>
+    <button id="exportSalesCsv">Exportar Vendas CSV</button>
+    <button id="exportMonthsCsv">Exportar Faturamento Mensal CSV</button>
+  </div>
+</header>
+
 
   <main class="container">
     <section class="kpis">
