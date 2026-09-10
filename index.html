@@ -1,13 +1,201 @@
-# 1. clone ou entre na pasta do repositório
-git clone https://github.com/SEU_USUARIO/SEU_REPO.git
-cd SEU_REPO
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard de Vendas - Protótipo</title>
 
-# 2. buscar histórico e identificar o commit anterior
-git fetch
-git log --oneline
+  <!-- Favicon (ajuste o caminho se necessário) -->
+  <link rel="icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon-32x32.png">
 
-# 3. reverter o commit problemático (substitua COMMIT_HASH pelo hash do commit que adicionou o painel)
-git revert COMMIT_HASH
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-# 4. enviar a reversão para o GitHub
-git push origin main
+  <style>
+    :root{--bg:#f3f4f6;--card:#fff;--accent:#0ea5a4;--muted:#6b7280;}
+    *{box-sizing:border-box;font-family:Inter,system-ui,Arial,sans-serif}
+    body{margin:0;background:var(--bg);color:#111}
+    .topbar{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+    .topbar h1{margin:0;font-size:18px}
+    .topbar .brand{display:flex;align-items:center;gap:12px}
+    .topbar .brand img{height:48px;display:block}
+    .actions{display:flex;gap:8px;align-items:center}
+    .actions button{padding:8px 12px;border:0;background:var(--accent);color:#fff;border-radius:6px;cursor:pointer}
+    .container{padding:20px;max-width:1100px;margin:0 auto}
+    .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+    .card{background:var(--card);padding:14px;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+    .label{font-size:12px;color:var(--muted)}
+    .value{font-size:20px;font-weight:700;margin-top:6px}
+    /* Estilo do painel de vendas */
+    #vendas-panel { margin-top:18px; }
+    #vendas-panel .panel-header { display:flex;justify-content:space-between;align-items:center;margin-bottom:8px; }
+    #vendasChart { width:100%; display:block; }
+    @media (max-width:700px) {
+      .kpis{grid-template-columns:repeat(2,1fr)}
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <a href="index.html" aria-label="Home">
+        <img src="logo.png" alt="Dash Tik">
+      </a>
+      <h1>Dashboard de Vendas</h1>
+    </div>
+
+    <div class="actions">
+      <button id="btnNewSale">Registrar venda</button>
+      <button id="btnNewAccount">Nova conta</button>
+      <div style="width:1px;background:#e6e6e6;height:28px;margin:0 8px"></div>
+      <button id="exportSalesCsv">Exportar Vendas CSV</button>
+      <button id="exportMonthsCsv">Exportar Faturamento Mensal CSV</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="kpis">
+      <div class="card">
+        <div class="label">Faturamento mês</div>
+        <div id="kpiRevenue" class="value">R$ 0,00</div>
+      </div>
+      <div class="card">
+        <div class="label">Vendas no mês</div>
+        <div id="kpiSales" class="value">0</div>
+      </div>
+      <div class="card">
+        <div class="label">Ticket médio</div>
+        <div id="kpiTicket" class="value">R$ 0,00</div>
+      </div>
+      <div class="card">
+        <div class="label">Meta mensal (duplo clique para editar)</div>
+      </div>
+    </section>
+
+    <!-- Painel de Vendas -->
+    <section class="card" id="vendas-panel" aria-labelledby="vendas-title">
+      <div class="panel-header">
+        <div id="vendas-title" style="font-weight:700">Vendas</div>
+        <div style="font-size:12px;color:#6b7280">Faturamento por mês - ano atual</div>
+      </div>
+      <canvas id="vendasChart" role="img" aria-label="Gráfico de faturamento por mês"></canvas>
+    </section>
+
+  </main>
+
+  <!-- Script que monta o gráfico de vendas (versão estável) -->
+  <script>
+    (function () {
+      // ======= Substitua estes valores pelos seus dados reais =======
+      // Formato: chave = mês (1..12), valor = faturamento no mês em número (sem formatação)
+      // Exemplo: {1: 12000, 2: 8500, 3: 15000, ...}
+      const monthlyRevenue = {
+        1: 12000,
+        2: 8500,
+        3: 15000,
+        4: 9000,
+        5: 7000,
+        6: 11000,
+        7: 9500,
+        8: 13000,
+        9: 0,
+        10: 0,
+        11: 0,
+        12: 0
+      };
+      // =============================================================
+
+      // Executa quando a página estiver carregada para garantir que o canvas exista
+      window.addEventListener('load', function () {
+        const monthNames = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+        const now = new Date();
+        const currentYear = now.getFullYear();
+
+        // Labels até o mês atual
+        const labels = [];
+        const data = [];
+        for (let i = 0; i <= now.getMonth(); i++) {
+          labels.push(monthNames[i]);
+          const monthIndex = i + 1;
+          data.push(monthlyRevenue[monthIndex] ?? 0);
+        }
+
+        // Atualiza KPIs simples com base no mês atual (exemplo)
+        const thisMonthIndex = now.getMonth() + 1;
+        const thisMonthRevenue = monthlyRevenue[thisMonthIndex] ?? 0;
+        const kpiRevenueEl = document.getElementById('kpiRevenue');
+        if (kpiRevenueEl) kpiRevenueEl.textContent = 'R$ ' + thisMonthRevenue.toLocaleString('pt-BR');
+
+        // Configura canvas com altura fixa (evita loops de resize)
+        const canvas = document.getElementById('vendasChart');
+        if (!canvas) return;
+        canvas.style.width = '100%';
+        canvas.style.height = '260px';
+        canvas.setAttribute('height', '260');
+
+        // Se já existir um gráfico, destrói antes de criar outro
+        if (window._vendasChartInstance) {
+          try { window._vendasChartInstance.destroy(); } catch (e) { /* ignore */ }
+          window._vendasChartInstance = null;
+        }
+
+        const ctx = canvas.getContext('2d');
+
+        // Cria o gráfico com responsive true e maintainAspectRatio false,
+        // altura fixa evita comportamento de "crescer sem parar"
+        window._vendasChartInstance = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: `Faturamento ${currentYear}`,
+              data: data,
+              backgroundColor: 'rgba(14,165,164,0.95)',
+              borderRadius: 6,
+              barThickness: 28
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: { duration: 300 },
+            scales: {
+              x: { grid: { display: false } },
+              y: {
+                ticks: {
+                  callback: function(value) { return 'R$ ' + value.toLocaleString('pt-BR'); }
+                },
+                beginAtZero: true
+              }
+            },
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: function(ctx) {
+                    return 'R$ ' + Number(ctx.parsed.y).toLocaleString('pt-BR');
+                  }
+                }
+              }
+            }
+          }
+        });
+
+        // Opcional: observa mudanças de tamanho do container e atualiza o gráfico sem recriar
+        // (evita múltiplas instâncias e mantém responsividade)
+        const container = canvas.parentElement;
+        if (container && typeof ResizeObserver !== 'undefined') {
+          const ro = new ResizeObserver(() => {
+            if (window._vendasChartInstance) {
+              window._vendasChartInstance.resize();
+            }
+          });
+          ro.observe(container);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
