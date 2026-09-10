@@ -9,7 +9,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="favicon-32x32.png">
 
-  <!-- Chart.js -->
+  <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
@@ -26,6 +26,8 @@
     .label{font-size:12px;color:var(--muted)}
     .value{font-size:20px;font-weight:700;margin-top:6px}
     #transacoesChart { width:100%; display:block; }
+    .small-form { display:flex; gap:8px; align-items:center; margin-top:12px; flex-wrap:wrap; }
+    .small-form input, .small-form select, .small-form button { padding:8px; border-radius:6px; border:1px solid #ddd; }
     @media (max-width:700px) { .kpis{grid-template-columns:repeat(2,1fr)} }
   </style>
 </head>
@@ -60,29 +62,57 @@
       </div>
     </section>
 
-    <!-- Gráfico de Transações (restaurado conforme tabela) -->
+    <!-- Gráfico de Transações (Out 2025 → Set 2026) -->
     <section class="card" id="transacoes-panel" aria-labelledby="transacoes-title">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
         <div id="transacoes-title" style="font-weight:700">Transações</div>
         <div style="font-size:12px;color:#6b7280">Período: Out 2025 — Set 2026</div>
       </div>
+
       <canvas id="transacoesChart" role="img" aria-label="Gráfico de transações por mês"></canvas>
+
+      <!-- Formulário simples para registrar uma venda (útil para testar) -->
+      <div class="small-form" aria-hidden="false" style="margin-top:12px;">
+        <label for="monthSelect" class="label" style="margin-right:6px">Mês</label>
+        <select id="monthSelect" aria-label="Selecionar mês">
+          <option value="0">Out 2025</option><option value="1">Nov 2025</option><option value="2">Dez 2025</option>
+          <option value="3">Jan 2026</option><option value="4">Fev 2026</option><option value="5">Mar 2026</option>
+          <option value="6">Abr 2026</option><option value="7">Mai 2026</option><option value="8">Jun 2026</option>
+          <option value="9">Jul 2026</option><option value="10">Ago 2026</option><option value="11">Set 2026</option>
+        </select>
+
+        <label for="amountInput" class="label" style="margin-left:8px">Valor R$</label>
+        <input id="amountInput" type="number" min="0" step="0.01" value="130" aria-label="Valor da venda">
+
+        <button id="addSaleBtn" style="background:var(--accent);color:#fff;border:0;cursor:pointer">Registrar venda</button>
+      </div>
     </section>
   </main>
 
   <script>
     (function () {
-      // Labels e valores exatamente como na tabela que você mostrou
+      // Labels do período (Out 2025 → Set 2026)
       const labels = [
         'Out 2025','Nov 2025','Dez 2025',
         'Jan 2026','Fev 2026','Mar 2026',
         'Abr 2026','Mai 2026','Jun 2026',
         'Jul 2026','Ago 2026','Set 2026'
       ];
-      const values = [0,0,0,0,0,0,0,0,0,0,0,130];
 
-      // Aguarda carregamento para garantir que o canvas exista
-      window.addEventListener('load', function () {
+      // **Inicialmente todos os valores em zero**.
+      // O gráfico só aumenta quando você chamar recordSale(monthIndex, amount)
+      const values = new Array(labels.length).fill(0);
+
+      // Variáveis globais do gráfico
+      let transacoesChart = null;
+
+      // Função para formatar moeda BRL
+      function formatBRL(n) {
+        return 'R$ ' + Number(n).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      }
+
+      // Cria o gráfico de forma segura
+      function createChart() {
         const canvas = document.getElementById('transacoesChart');
         if (!canvas) return;
 
@@ -92,18 +122,18 @@
         canvas.setAttribute('height', '220');
 
         // Destrói instância anterior se existir
-        if (window._transacoesChartInstance) {
-          try { window._transacoesChartInstance.destroy(); } catch (e) {}
-          window._transacoesChartInstance = null;
+        if (transacoesChart) {
+          try { transacoesChart.destroy(); } catch (e) {}
+          transacoesChart = null;
         }
 
         const ctx = canvas.getContext('2d');
 
-        // Determina um máximo de Y confortável (um pouco acima do maior valor)
-        const maxValue = Math.max(...values);
-        const suggestedMax = Math.ceil((maxValue + (maxValue * 0.2 || 20)) / 10) * 10; // margem 20% ou +20
+        // Calcula suggestedMax com margem mínima para evitar escala muito pequena
+        const maxValue = Math.max(...values, 20); // garante pelo menos 20
+        const suggestedMax = Math.ceil((maxValue * 1.2) / 10) * 10; // +20% arredondado
 
-        window._transacoesChartInstance = new Chart(ctx, {
+        transacoesChart = new Chart(ctx, {
           type: 'line',
           data: {
             labels: labels,
@@ -111,11 +141,10 @@
               label: 'Transações',
               data: values,
               borderColor: 'rgba(250,204,21,0.95)',
-              backgroundColor: 'transparent', // sem preenchimento
+              backgroundColor: 'transparent',
               pointBackgroundColor: 'rgba(250,204,21,1)',
               pointBorderColor: '#fff',
               pointRadius: 6,
-              pointHoverRadius: 7,
               tension: 0.0,
               fill: false,
               borderWidth: 2
@@ -126,17 +155,14 @@
             maintainAspectRatio: false,
             animation: { duration: 200 },
             scales: {
-              x: {
-                title: { display: true, text: 'Período' },
-                grid: { display: false }
-              },
+              x: { grid: { display: false }, title: { display: true, text: 'Período' } },
               y: {
-                title: { display: true, text: 'R$' },
                 beginAtZero: true,
                 suggestedMax: suggestedMax,
                 ticks: {
                   callback: function(value) { return 'R$ ' + value.toLocaleString('pt-BR'); }
-                }
+                },
+                title: { display: true, text: 'R$' }
               }
             },
             plugins: {
@@ -144,26 +170,87 @@
               tooltip: {
                 callbacks: {
                   label: function(ctx) {
-                    return 'R$ ' + Number(ctx.parsed.y).toLocaleString('pt-BR');
+                    return formatBRL(ctx.parsed.y);
                   }
                 }
               }
             }
           }
         });
+      }
 
-        // Atualiza KPI do mês mais recente (Set 2026)
+      // Atualiza KPIs (faturamento do mês mais recente e contagem de vendas)
+      function updateKPIs() {
         const kpiRevenueEl = document.getElementById('kpiRevenue');
-        if (kpiRevenueEl) kpiRevenueEl.textContent = 'R$ ' + values[values.length - 1].toLocaleString('pt-BR');
+        const kpiSalesEl = document.getElementById('kpiSales');
+        const kpiTicketEl = document.getElementById('kpiTicket');
 
-        // Observador de resize para apenas redimensionar o gráfico (não recriar)
-        const container = canvas.parentElement;
-        if (container && typeof ResizeObserver !== 'undefined') {
-          const ro = new ResizeObserver(() => {
-            if (window._transacoesChartInstance) window._transacoesChartInstance.resize();
-          });
-          ro.observe(container);
+        // Faturamento do mês mais recente (último mês da lista)
+        const lastRevenue = values[values.length - 1] || 0;
+        if (kpiRevenueEl) kpiRevenueEl.textContent = formatBRL(lastRevenue);
+
+        // Vendas no mês: aqui contamos quantas vezes houve valor > 0 no mês atual (exemplo simples)
+        // Se você tiver dados de transações individuais, substitua por lógica real.
+        const salesCount = values.reduce((acc, v) => acc + (v > 0 ? 1 : 0), 0);
+        if (kpiSalesEl) kpiSalesEl.textContent = String(salesCount);
+
+        // Ticket médio simples: faturamento total / vendasCount (evita divisão por zero)
+        const totalRevenue = values.reduce((acc, v) => acc + v, 0);
+        const ticket = salesCount > 0 ? (totalRevenue / salesCount) : 0;
+        if (kpiTicketEl) kpiTicketEl.textContent = formatBRL(ticket);
+      }
+
+      // Função pública para registrar uma venda
+      // monthIndex: 0..11 (0 = Out 2025, 11 = Set 2026)
+      // amount: número (ex.: 130)
+      window.recordSale = function(monthIndex, amount) {
+        monthIndex = Number(monthIndex);
+        amount = Number(amount) || 0;
+        if (monthIndex < 0 || monthIndex >= values.length) return;
+
+        // Adiciona o valor ao mês selecionado
+        values[monthIndex] = Number((values[monthIndex] + amount).toFixed(2));
+
+        // Atualiza o gráfico sem recriar a instância (mais eficiente)
+        if (transacoesChart) {
+          transacoesChart.data.datasets[0].data = values.slice();
+          // recalcula suggestedMax dinamicamente
+          const maxValue = Math.max(...values, 20);
+          transacoesChart.options.scales.y.suggestedMax = Math.ceil((maxValue * 1.2) / 10) * 10;
+          transacoesChart.update();
+        } else {
+          createChart();
         }
+
+        // Atualiza KPIs
+        updateKPIs();
+      };
+
+      // Hook do botão de teste no formulário
+      window.addEventListener('load', function () {
+        createChart();
+        updateKPIs();
+
+        const addSaleBtn = document.getElementById('addSaleBtn');
+        const monthSelect = document.getElementById('monthSelect');
+        const amountInput = document.getElementById('amountInput');
+
+        if (addSaleBtn && monthSelect && amountInput) {
+          addSaleBtn.addEventListener('click', function () {
+            const mi = Number(monthSelect.value);
+            const amt = Number(amountInput.value) || 0;
+            if (amt <= 0) {
+              alert('Informe um valor maior que zero.');
+              return;
+            }
+            // Registra a venda e atualiza tudo
+            window.recordSale(mi, amt);
+          });
+        }
+
+        // Também expõe um atalho no console para testes:
+        // Ex.: recordSale(11, 130)  -> adiciona R$130 em Set 2026
+        console.info('Use recordSale(monthIndex, amount) para adicionar vendas. Ex: recordSale(11,130)');
       });
     })();
   </script>
