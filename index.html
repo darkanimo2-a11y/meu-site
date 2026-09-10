@@ -10,9 +10,6 @@
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="favicon-32x32.png">
 
-  <!-- Chart.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
   <style>
     :root{--bg:#f3f4f6;--card:#fff;--accent:#0ea5a4;--muted:#6b7280;}
     *{box-sizing:border-box;font-family:Inter,system-ui,Arial,sans-serif}
@@ -28,10 +25,6 @@
     .card{background:var(--card);padding:14px;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
     .label{font-size:12px;color:var(--muted)}
     .value{font-size:20px;font-weight:700;margin-top:6px}
-    /* Estilo do painel de vendas */
-    #vendas-panel { margin-top:18px; }
-    #vendas-panel .panel-header { display:flex;justify-content:space-between;align-items:center;margin-bottom:8px; }
-    #vendasChart { width:100%; display:block; }
     @media (max-width:700px) {
       .kpis{grid-template-columns:repeat(2,1fr)}
     }
@@ -74,109 +67,10 @@
       </div>
     </section>
 
-    <!-- Painel de Vendas adicionado -->
-    <section class="card" id="vendas-panel" aria-labelledby="vendas-title">
-      <div class="panel-header">
-        <div id="vendas-title" style="font-weight:700">Vendas</div>
-        <div style="font-size:12px;color:#6b7280">Faturamento por mês - ano atual</div>
-      </div>
-      <canvas id="vendasChart" role="img" aria-label="Gráfico de faturamento por mês"></canvas>
-    </section>
-
+    <!-- Aqui ficavam outros conteúdos originais (gráficos antigos, tabelas etc.) -->
   </main>
 
-  <!-- Script que monta o gráfico de vendas (corrigido para não criar múltiplas instâncias e evitar loop de resize) -->
-  <script>
-    (function(){
-      // ======= Substitua estes valores pelos seus dados reais =======
-      // Formato: chave = mês (1..12), valor = faturamento no mês em número (sem formatação)
-      // Exemplo: {1: 12000, 2: 8500, 3: 15000, ...}
-      const monthlyRevenue = {
-        1: 12000,
-        2: 8500,
-        3: 15000,
-        4: 9000,
-        5: 7000,
-        6: 11000,
-        7: 9500,
-        8: 13000,
-        9: 0,
-        10: 0,
-        11: 0,
-        12: 0
-      };
-      // =============================================================
-
-      const monthNames = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-      const now = new Date();
-      const currentYear = now.getFullYear();
-
-      // Mostrar apenas os meses do ano atual até o mês corrente
-      const labels = [];
-      const data = [];
-      for (let i = 0; i <= now.getMonth(); i++) {
-        labels.push(monthNames[i]);
-        const monthIndex = i + 1;
-        data.push(monthlyRevenue[monthIndex] ?? 0);
-      }
-
-      // Atualiza KPIs simples com base no mês atual (exemplo)
-      const thisMonthIndex = now.getMonth() + 1;
-      const thisMonthRevenue = monthlyRevenue[thisMonthIndex] ?? 0;
-      const kpiRevenueEl = document.getElementById('kpiRevenue');
-      if (kpiRevenueEl) kpiRevenueEl.textContent = 'R$ ' + thisMonthRevenue.toLocaleString('pt-BR');
-
-      // Garantir canvas com altura fixa e evitar que Chart.js entre em loop de resize
-      const canvas = document.getElementById('vendasChart');
-      canvas.style.width = '100%';
-      canvas.style.height = '220px';
-      canvas.setAttribute('height', '220');
-
-      // Se já existir um gráfico, destrói antes de criar outro
-      if (window._vendasChartInstance) {
-        try { window._vendasChartInstance.destroy(); } catch(e) {}
-        window._vendasChartInstance = null;
-      }
-
-      const ctx = canvas.getContext('2d');
-      window._vendasChartInstance = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: `Faturamento ${currentYear}`,
-            data: data,
-            backgroundColor: 'rgba(14,165,164,0.95)',
-            borderRadius: 6,
-            barThickness: 28
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          animation: { duration: 400 },
-          scales: {
-            x: { grid: { display: false } },
-            y: {
-              ticks: {
-                callback: function(value) { return 'R$ ' + value.toLocaleString('pt-BR'); }
-              },
-              beginAtZero: true
-            }
-          },
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              callbacks: {
-                label: function(ctx) {
-                  return 'R$ ' + Number(ctx.parsed.y).toLocaleString('pt-BR');
-                }
-              }
-            }
-          }
-        }
-      });
-    })();
-  </script>
+  <!-- Scripts originais (se houver) podem ser adicionados abaixo.
+       No momento não há Chart.js nem scripts do painel de vendas. -->
 </body>
 </html>
