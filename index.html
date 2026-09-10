@@ -9,35 +9,41 @@
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="favicon-32x32.png">
 
-  <!-- Chart.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
   <style>
     :root{--bg:#f3f4f6;--card:#fff;--accent:#0ea5a4;--muted:#6b7280;}
     *{box-sizing:border-box;font-family:Inter,system-ui,Arial,sans-serif}
     body{margin:0;background:var(--bg);color:#111}
     .topbar{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+    .topbar h1{margin:0;font-size:18px}
     .topbar .brand{display:flex;align-items:center;gap:12px}
     .topbar .brand img{height:48px;display:block}
     .actions{display:flex;gap:8px;align-items:center}
+    .actions button{padding:8px 12px;border:0;background:var(--accent);color:#fff;border-radius:6px;cursor:pointer}
     .container{padding:20px;max-width:1100px;margin:0 auto}
     .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
     .card{background:var(--card);padding:14px;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
     .label{font-size:12px;color:var(--muted)}
     .value{font-size:20px;font-weight:700;margin-top:6px}
-    #transacoesChart { width:100%; display:block; }
-    @media (max-width:700px) { .kpis{grid-template-columns:repeat(2,1fr)} }
+    @media (max-width:700px) {
+      .kpis{grid-template-columns:repeat(2,1fr)}
+    }
   </style>
 </head>
 <body>
   <header class="topbar">
     <div class="brand">
-      <a href="index.html" aria-label="Home"><img src="logo.png" alt="Dash Tik"></a>
+      <a href="index.html" aria-label="Home">
+        <img src="logo.png" alt="Dash Tik">
+      </a>
       <h1>Dashboard de Vendas</h1>
     </div>
+
     <div class="actions">
       <button id="btnNewSale">Registrar venda</button>
       <button id="btnNewAccount">Nova conta</button>
+      <div style="width:1px;background:#e6e6e6;height:28px;margin:0 8px"></div>
+      <button id="exportSalesCsv">Exportar Vendas CSV</button>
+      <button id="exportMonthsCsv">Exportar Faturamento Mensal CSV</button>
     </div>
   </header>
 
@@ -60,124 +66,8 @@
       </div>
     </section>
 
-    <!-- Painel Transações (apenas o gráfico antigo; painel de Vendas removido) -->
-    <section class="card" id="transacoes-panel" aria-labelledby="transacoes-title">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <div id="transacoes-title" style="font-weight:700">Transações</div>
-        <div style="font-size:12px;color:#6b7280">Período</div>
-      </div>
-      <canvas id="transacoesChart" role="img" aria-label="Gráfico de transações por período"></canvas>
-    </section>
+    <!-- Painel removido conforme solicitado. Aqui você pode adicionar outros conteúdos. -->
+
   </main>
-
-  <script>
-    (function () {
-      // Labels e valores conforme a tabela original (Out 2025 → Set 2026)
-      const labels = [
-        'Out 2025','Nov 2025','Dez 2025',
-        'Jan 2026','Fev 2026','Mar 2026',
-        'Abr 2026','Mai 2026','Jun 2026',
-        'Jul 2026','Ago 2026','Set 2026'
-      ];
-      // Todos zero por padrão; altere manualmente ou via função se quiser atualizar
-      const values = [0,0,0,0,0,0,0,0,0,0,0,0];
-
-      // Cria o gráfico quando a página carregar
-      window.addEventListener('load', function () {
-        const canvas = document.getElementById('transacoesChart');
-        if (!canvas) return;
-
-        // Altura fixa para evitar loops de resize
-        canvas.style.width = '100%';
-        canvas.style.height = '220px';
-        canvas.setAttribute('height', '220');
-
-        // Destrói instância anterior se existir
-        if (window._transacoesChartInstance) {
-          try { window._transacoesChartInstance.destroy(); } catch (e) {}
-          window._transacoesChartInstance = null;
-        }
-
-        const ctx = canvas.getContext('2d');
-
-        window._transacoesChartInstance = new Chart(ctx, {
-          type: 'line',
-          data: {
-            labels: labels,
-            datasets: [{
-              label: 'Transações',
-              data: values,
-              borderColor: 'rgba(250,204,21,0.95)',
-              backgroundColor: 'transparent',
-              pointBackgroundColor: 'rgba(250,204,21,1)',
-              pointBorderColor: '#fff',
-              pointRadius: 5,
-              tension: 0.0,
-              fill: false,
-              borderWidth: 2
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            animation: { duration: 200 },
-            scales: {
-              x: { title: { display: true, text: 'Período' }, grid: { display: false } },
-              y: {
-                title: { display: true, text: 'R$' },
-                beginAtZero: true,
-                ticks: {
-                  callback: function(value) { return 'R$ ' + value.toLocaleString('pt-BR'); }
-                }
-              }
-            },
-            plugins: {
-              legend: { display: false },
-              tooltip: {
-                callbacks: {
-                  label: function(ctx) {
-                    return 'R$ ' + Number(ctx.parsed.y).toLocaleString('pt-BR');
-                  }
-                }
-              }
-            }
-          }
-        });
-
-        // Atualiza KPIs iniciais (todos zero)
-        const kpiRevenueEl = document.getElementById('kpiRevenue');
-        const kpiSalesEl = document.getElementById('kpiSales');
-        const kpiTicketEl = document.getElementById('kpiTicket');
-        if (kpiRevenueEl) kpiRevenueEl.textContent = 'R$ 0,00';
-        if (kpiSalesEl) kpiSalesEl.textContent = '0';
-        if (kpiTicketEl) kpiTicketEl.textContent = 'R$ 0,00';
-
-        // Observador de resize para apenas redimensionar o gráfico (não recriar)
-        const container = canvas.parentElement;
-        if (container && typeof ResizeObserver !== 'undefined') {
-          const ro = new ResizeObserver(() => {
-            if (window._transacoesChartInstance) window._transacoesChartInstance.resize();
-          });
-          ro.observe(container);
-        }
-      });
-
-      // Função utilitária para registrar vendas programaticamente, se quiser usar no futuro.
-      // Ex.: recordSale(11, 130) adiciona R$130 ao índice 11 (Set 2026).
-      window.recordSale = function(monthIndex, amount) {
-        monthIndex = Number(monthIndex);
-        amount = Number(amount) || 0;
-        if (monthIndex < 0 || monthIndex >= labels.length) return;
-        values[monthIndex] = Number((values[monthIndex] + amount).toFixed(2));
-        if (window._transacoesChartInstance) {
-          window._transacoesChartInstance.data.datasets[0].data = values.slice();
-          window._transacoesChartInstance.update();
-        }
-        // Atualiza KPI do mês mais recente
-        const kpiRevenueEl = document.getElementById('kpiRevenue');
-        if (kpiRevenueEl) kpiRevenueEl.textContent = 'R$ ' + values[values.length - 1].toLocaleString('pt-BR', {minimumFractionDigits:2});
-      };
-    })();
-  </script>
 </body>
 </html>
