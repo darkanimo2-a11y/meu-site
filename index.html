@@ -5,12 +5,11 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Dashboard de Vendas - Protótipo</title>
 
-  <!-- Favicon (ajuste o caminho se necessário) -->
   <link rel="icon" href="favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="favicon-32x32.png">
 
-  <!-- Chart.js CDN -->
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
@@ -18,40 +17,27 @@
     *{box-sizing:border-box;font-family:Inter,system-ui,Arial,sans-serif}
     body{margin:0;background:var(--bg);color:#111}
     .topbar{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.1)}
-    .topbar h1{margin:0;font-size:18px}
     .topbar .brand{display:flex;align-items:center;gap:12px}
     .topbar .brand img{height:48px;display:block}
     .actions{display:flex;gap:8px;align-items:center}
-    .actions button{padding:8px 12px;border:0;background:var(--accent);color:#fff;border-radius:6px;cursor:pointer}
     .container{padding:20px;max-width:1100px;margin:0 auto}
     .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
     .card{background:var(--card);padding:14px;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
     .label{font-size:12px;color:var(--muted)}
     .value{font-size:20px;font-weight:700;margin-top:6px}
-    /* Estilos do painel de transações (original exato) */
-    #transacoes-panel { margin-top:18px; }
-    #transacoes-panel .panel-header { display:flex;justify-content:space-between;align-items:center;margin-bottom:8px; }
     #transacoesChart { width:100%; display:block; }
-    @media (max-width:700px) {
-      .kpis{grid-template-columns:repeat(2,1fr)}
-    }
+    @media (max-width:700px) { .kpis{grid-template-columns:repeat(2,1fr)} }
   </style>
 </head>
 <body>
   <header class="topbar">
     <div class="brand">
-      <a href="index.html" aria-label="Home">
-        <img src="logo.png" alt="Dash Tik">
-      </a>
+      <a href="index.html" aria-label="Home"><img src="logo.png" alt="Dash Tik"></a>
       <h1>Dashboard de Vendas</h1>
     </div>
-
     <div class="actions">
       <button id="btnNewSale">Registrar venda</button>
       <button id="btnNewAccount">Nova conta</button>
-      <div style="width:1px;background:#e6e6e6;height:28px;margin:0 8px"></div>
-      <button id="exportSalesCsv">Exportar Vendas CSV</button>
-      <button id="exportMonthsCsv">Exportar Faturamento Mensal CSV</button>
     </div>
   </header>
 
@@ -74,22 +60,19 @@
       </div>
     </section>
 
-    <!-- Painel Transações (restaurado exatamente como o antigo solicitado) -->
+    <!-- Gráfico de Transações (restaurado conforme tabela) -->
     <section class="card" id="transacoes-panel" aria-labelledby="transacoes-title">
-      <div class="panel-header">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
         <div id="transacoes-title" style="font-weight:700">Transações</div>
-        <div style="font-size:12px;color:#6b7280">Período</div>
+        <div style="font-size:12px;color:#6b7280">Período: Out 2025 — Set 2026</div>
       </div>
-      <canvas id="transacoesChart" role="img" aria-label="Gráfico de transações por período"></canvas>
+      <canvas id="transacoesChart" role="img" aria-label="Gráfico de transações por mês"></canvas>
     </section>
-
   </main>
 
-  <!-- Script que monta o gráfico de Transações com os meses e valores que você indicou -->
   <script>
     (function () {
-      // Labels e valores conforme a tabela que você mostrou:
-      // Out 2025 .. Set 2026, todos R$ 0,00 exceto Set 2026 = R$ 130,00
+      // Labels e valores exatamente como na tabela que você mostrou
       const labels = [
         'Out 2025','Nov 2025','Dez 2025',
         'Jan 2026','Fev 2026','Mar 2026',
@@ -98,11 +81,12 @@
       ];
       const values = [0,0,0,0,0,0,0,0,0,0,0,130];
 
+      // Aguarda carregamento para garantir que o canvas exista
       window.addEventListener('load', function () {
         const canvas = document.getElementById('transacoesChart');
         if (!canvas) return;
 
-        // Define altura fixa para evitar loops de resize
+        // Altura fixa para evitar loops de resize
         canvas.style.width = '100%';
         canvas.style.height = '220px';
         canvas.setAttribute('height', '220');
@@ -115,6 +99,10 @@
 
         const ctx = canvas.getContext('2d');
 
+        // Determina um máximo de Y confortável (um pouco acima do maior valor)
+        const maxValue = Math.max(...values);
+        const suggestedMax = Math.ceil((maxValue + (maxValue * 0.2 || 20)) / 10) * 10; // margem 20% ou +20
+
         window._transacoesChartInstance = new Chart(ctx, {
           type: 'line',
           data: {
@@ -122,20 +110,21 @@
             datasets: [{
               label: 'Transações',
               data: values,
-              borderColor: 'rgba(250,204,21,0.95)', // amarelo
-              backgroundColor: 'rgba(250,204,21,0.12)',
+              borderColor: 'rgba(250,204,21,0.95)',
+              backgroundColor: 'transparent', // sem preenchimento
               pointBackgroundColor: 'rgba(250,204,21,1)',
               pointBorderColor: '#fff',
-              pointRadius: 5,
+              pointRadius: 6,
+              pointHoverRadius: 7,
               tension: 0.0,
-              fill: true,
+              fill: false,
               borderWidth: 2
             }]
           },
           options: {
             responsive: true,
             maintainAspectRatio: false,
-            animation: { duration: 250 },
+            animation: { duration: 200 },
             scales: {
               x: {
                 title: { display: true, text: 'Período' },
@@ -144,6 +133,7 @@
               y: {
                 title: { display: true, text: 'R$' },
                 beginAtZero: true,
+                suggestedMax: suggestedMax,
                 ticks: {
                   callback: function(value) { return 'R$ ' + value.toLocaleString('pt-BR'); }
                 }
@@ -162,20 +152,18 @@
           }
         });
 
-        // Observador de resize para atualizar o gráfico sem recriar
+        // Atualiza KPI do mês mais recente (Set 2026)
+        const kpiRevenueEl = document.getElementById('kpiRevenue');
+        if (kpiRevenueEl) kpiRevenueEl.textContent = 'R$ ' + values[values.length - 1].toLocaleString('pt-BR');
+
+        // Observador de resize para apenas redimensionar o gráfico (não recriar)
         const container = canvas.parentElement;
         if (container && typeof ResizeObserver !== 'undefined') {
           const ro = new ResizeObserver(() => {
-            if (window._transacoesChartInstance) {
-              window._transacoesChartInstance.resize();
-            }
+            if (window._transacoesChartInstance) window._transacoesChartInstance.resize();
           });
           ro.observe(container);
         }
-
-        // Atualiza KPI de faturamento do mês mais recente (Set 2026 = R$ 130,00)
-        const kpiRevenueEl = document.getElementById('kpiRevenue');
-        if (kpiRevenueEl) kpiRevenueEl.textContent = 'R$ ' + values[values.length - 1].toLocaleString('pt-BR');
       });
     })();
   </script>
