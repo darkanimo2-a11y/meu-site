@@ -92,6 +92,26 @@
     .tab{padding:8px 12px;border-radius:8px;background:#fff;cursor:pointer;border:1px solid #eee;white-space:nowrap;flex:0 0 auto}
     .tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
 
+    /* Progresso por conta (barra até 2.000 seguidores) */
+    .acc-progress-wrap{display:flex;align-items:center;gap:6px;min-width:140px}
+    .acc-progress-bg{flex:1;height:8px;background:#eee;border-radius:6px;overflow:hidden;min-width:80px}
+    .acc-progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),#06b6d4)}
+    .acc-progress-text{font-size:11px;color:var(--muted);white-space:nowrap}
+
+    /* Projeção de meta */
+    .projection{margin-top:10px;padding:10px 12px;border-radius:8px;background:#f8fafc;border:1px solid #eef2f6;font-size:13px}
+    .projection.ok{background:#ecfdf5;border-color:#bbf7d0;color:#065f46}
+    .projection.bad{background:#fef2f2;border-color:#fecaca;color:#991b1b}
+    .projection b{display:block;font-size:15px;margin-bottom:2px}
+
+    /* Histórico de seguidores */
+    .history-list{list-style:none;margin:0;padding:0;max-height:220px;overflow-y:auto}
+    .history-list li{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-top:1px solid #f1f1f1;font-size:13px}
+    .history-list li:first-child{border-top:0}
+    .history-delta.up{color:#0ea55a;font-weight:600}
+    .history-delta.down{color:#dc2626;font-weight:600}
+    .history-empty{color:var(--muted);font-size:13px;padding:6px 0}
+
     /* ===== Ajustes para celular ===== */
     @media(max-width:900px){
       .kpis{grid-template-columns:repeat(2,1fr)}
@@ -143,6 +163,8 @@
       </div>
     </section>
 
+    <div id="projectionBox" class="projection">Calculando projeção...</div>
+
     <div class="tabs" id="tabs">
       <div class="tab active" data-tab="available">Contas Disponíveis</div>
       <div class="tab" data-tab="sold">Contas Vendidas</div>
@@ -153,7 +175,7 @@
         <h2>Contas</h2>
         <div class="table-scroll">
           <table id="accountsTable">
-            <thead><tr><th>Nome</th><th>Seguidores</th><th>Preço</th><th>Status</th><th>Ações</th></tr></thead>
+            <thead><tr><th>Nome</th><th>Seguidores</th><th>Progresso até 2.000</th><th>Preço</th><th>Status</th><th>Ações</th></tr></thead>
             <tbody></tbody>
           </table>
         </div>
@@ -206,6 +228,7 @@
   <script>
   document.addEventListener('DOMContentLoaded', () => {
     const LS_KEY = 'tiktok_dashboard_v1';
+    const FOLLOWERS_GOAL = 2000; // meta de seguidores por conta
     function loadState(){ try{ return JSON.parse(localStorage.getItem(LS_KEY)) || {accounts:[],sales:[],goal:0} }catch(e){return {accounts:[],sales:[],goal:0}}}
     function saveState(s){ localStorage.setItem(LS_KEY, JSON.stringify(s)) }
     let state = loadState();
@@ -340,6 +363,25 @@
       }
     }
 
+    function addFollowersHistory(acc, newValue){
+      if(!acc.history) acc.history = [];
+      const from = Number(acc.followers||0);
+      const to = Number(newValue||0);
+      if(from === to) return;
+      acc.history.push({
+        date: new Date().toISOString().slice(0,10),
+        from, to, delta: to - from
+      });
+    }
+
+    function progressBarHtml(followers){
+      const pct = Math.min(100, Math.round((Number(followers||0) / FOLLOWERS_GOAL) * 100));
+      return `<div class="acc-progress-wrap">
+          <div class="acc-progress-bg"><div class="acc-progress-fill" style="width:${pct}%"></div></div>
+          <div class="acc-progress-text">${pct}%</div>
+        </div>`;
+    }
+
     function renderAccounts(){
       const tbody = document.querySelector('#accountsTable tbody');
       if(!tbody) return;
@@ -347,10 +389,11 @@
       const visibleAccounts = state.accounts.filter(a => a.status !== 'SOLD');
       visibleAccounts.forEach(a=>{
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${a.name}</td><td>${a.followers}</td><td>${formatMoney(a.price)}</td><td>${a.status}</td>
+        tr.innerHTML = `<td>${a.name}</td><td>${a.followers}</td><td>${progressBarHtml(a.followers)}</td><td>${formatMoney(a.price)}</td><td>${a.status}</td>
           <td>
             <button class="small" data-id="${a.id}" data-action="edit">Editar</button>
             <button class="small" data-id="${a.id}" data-action="followers">Seguidores</button>
+            <button class="small" data-id="${a.id}" data-action="history">Histórico</button>
             <button class="small" data-id="${a.id}" data-action="sell">Vender</button>
           </td>`;
         tbody.appendChild(tr);
@@ -386,7 +429,38 @@
       });
     }
 
-    function refreshAll(){ renderKPIs(); renderAccounts(); renderSoldAccounts(); renderSales(); renderMonthsPanel(); saveState(state) }
+    function renderProjection(){
+      const box = document.getElementById('projectionBox');
+      if(!box) return;
+      const now = new Date();
+      const dayOfMonth = now.getDate();
+      const daysInMonth = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+
+      const monthSales = state.sales.filter(s => {
+        const d = new Date(s.sale_date);
+        return d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear();
+      });
+      const totalSoFar = monthSales.reduce((a,b)=>a+Number(b.gross_value),0);
+
+      if(!state.goal){
+        box.className = 'projection';
+        box.innerHTML = `<b>Projeção de meta</b>Defina uma meta mensal (duplo clique/toque duplo no card "Meta mensal") para ver a projeção.`;
+        return;
+      }
+
+      const dailyAvg = dayOfMonth > 0 ? totalSoFar / dayOfMonth : 0;
+      const projected = dailyAvg * daysInMonth;
+      const pctOfGoal = Math.round((projected / state.goal) * 100);
+      const willHit = projected >= state.goal;
+
+      box.className = 'projection ' + (willHit ? 'ok' : 'bad');
+      box.innerHTML = `<b>Projeção de meta: ${formatMoney(projected)} (${pctOfGoal}% da meta)</b>` +
+        (willHit
+          ? `No ritmo atual (${formatMoney(dailyAvg)}/dia), você deve bater a meta de ${formatMoney(state.goal)} até o fim do mês.`
+          : `No ritmo atual (${formatMoney(dailyAvg)}/dia), faltariam ${formatMoney(Math.max(0, state.goal - projected))} para bater a meta de ${formatMoney(state.goal)} até o fim do mês.`);
+    }
+
+    function refreshAll(){ renderKPIs(); renderAccounts(); renderSoldAccounts(); renderSales(); renderMonthsPanel(); renderProjection(); saveState(state) }
 
     function openModal(html){ const modal = document.getElementById('modal'); if(!modal) return; document.getElementById('modalBody').innerHTML = html; modal.classList.remove('hidden') }
     function closeModal(){ const modal = document.getElementById('modal'); if(!modal) return; modal.classList.add('hidden') }
@@ -471,7 +545,9 @@
             const saveEdit = document.getElementById('saveEdit');
             if(saveEdit) saveEdit.onclick = ()=>{
               acc.name = document.getElementById('editName').value;
-              acc.followers = Number(document.getElementById('editFollowers').value||0);
+              const newFollowers = Number(document.getElementById('editFollowers').value||0);
+              if(newFollowers !== acc.followers) addFollowersHistory(acc, newFollowers);
+              acc.followers = newFollowers;
               acc.price = Number(document.getElementById('editPrice').value||0);
               acc.status = document.getElementById('editStatus').value;
               refreshAll(); closeModal();
@@ -486,10 +562,23 @@
           setTimeout(()=>{
             const saveFollowers = document.getElementById('saveFollowers');
             if(saveFollowers) saveFollowers.onclick = ()=>{
-              acc.followers = Number(document.getElementById('newFollowers').value||0);
+              const newVal = Number(document.getElementById('newFollowers').value||0);
+              addFollowersHistory(acc, newVal);
+              acc.followers = newVal;
               refreshAll(); closeModal();
             }
           }, 50);
+        } else if(action==='history'){
+          if(!acc.history) acc.history = [];
+          const items = acc.history.slice().reverse().map(h=>{
+            const deltaClass = h.delta > 0 ? 'up' : (h.delta < 0 ? 'down' : '');
+            const deltaSign = h.delta > 0 ? '+' : '';
+            return `<li><span>${h.date}</span><span>${h.from} → ${h.to} <span class="history-delta ${deltaClass}">(${deltaSign}${h.delta})</span></span></li>`;
+          }).join('');
+          openModal(`
+            <h3>Histórico de seguidores - ${acc.name}</h3>
+            <ul class="history-list">${items || '<li class="history-empty">Nenhuma atualização registrada ainda.</li>'}</ul>
+          `);
         } else if(action==='sell'){
           openModal(`
             <h3>Vender conta - ${acc.name}</h3>
