@@ -2,66 +2,111 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
   <title>Dashboard de Vendas - Protótipo</title>
- 
+
   <!-- Favicon (ajuste o caminho se colocou em assets/) -->
   <link rel="icon" href="favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="favicon-32x32.png">
 
   <!-- Chart.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
-   
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
     :root{--bg:#f3f4f6;--card:#fff;--accent:#0ea5a4;--muted:#6b7280}
     *{box-sizing:border-box;font-family:Inter,system-ui,Arial,sans-serif}
-    body{margin:0;background:var(--bg);color:#111}
-    .topbar{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.06)}
-    .topbar h1{margin:0;font-size:18px}
-    .actions{display:flex;gap:8px;align-items:center}
-    .actions button{padding:8px 12px;border:0;background:var(--accent);color:#fff;border-radius:6px;cursor:pointer}
-    .container{padding:20px;max-width:1100px;margin:0 auto}
+    html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+    body{margin:0;background:var(--bg);color:#111;overflow-x:hidden}
+
+    .topbar{
+      display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;
+      gap:10px;padding:12px 16px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.06);
+    }
+    .topbar h1{margin:0;font-size:18px;flex:1 1 100%}
+    .actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;width:100%;overflow-x:auto;padding-bottom:2px}
+    .actions button{
+      padding:8px 12px;border:0;background:var(--accent);color:#fff;border-radius:6px;
+      cursor:pointer;white-space:nowrap;font-size:14px;flex:0 0 auto;
+    }
+    .actions .divider{width:1px;background:#e6e6e6;height:28px;margin:0 4px;flex:0 0 auto}
+
+    .container{padding:16px;max-width:1100px;margin:0 auto}
+
     .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
-    .card{background:var(--card);padding:14px;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+    .card{background:var(--card);padding:14px;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.04);min-width:0}
     .label{font-size:12px;color:var(--muted)}
-    .value{font-size:20px;font-weight:700;margin-top:6px}
+    .value{font-size:20px;font-weight:700;margin-top:6px;word-break:break-word}
     .progress{height:8px;background:#eee;border-radius:6px;margin-top:8px;overflow:hidden}
     .bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent),#06b6d4)}
+
     .lists{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .panel{background:var(--card);padding:12px;border-radius:8px}
-    table{width:100%;border-collapse:collapse}
-    thead th{text-align:left;padding:8px;font-size:13px;color:var(--muted)}
-    tbody td{padding:8px;border-top:1px solid #f1f1f1}
-    button.small{padding:6px 8px;background:#111;color:#fff;border-radius:6px;border:0;cursor:pointer}
-    .modal{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center}
+    .panel{background:var(--card);padding:12px;border-radius:8px;min-width:0}
+
+    /* rolagem horizontal para tabelas em telas pequenas, sem "esmagar" as colunas */
+    .table-scroll{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+    table{width:100%;border-collapse:collapse;min-width:480px}
+    thead th{text-align:left;padding:8px;font-size:13px;color:var(--muted);white-space:nowrap}
+    tbody td{padding:8px;border-top:1px solid #f1f1f1;white-space:nowrap}
+
+    button.small{padding:6px 8px;background:#111;color:#fff;border-radius:6px;border:0;cursor:pointer;white-space:nowrap}
+
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;padding:16px}
     .modal.hidden{display:none}
-    .modal-content{background:#fff;padding:16px;border-radius:8px;min-width:320px;max-width:600px;position:relative}
-    .close{position:absolute;right:8px;top:8px;border:0;background:transparent;font-size:20px;cursor:pointer}
-    .form-row{display:flex;gap:8px;margin-bottom:8px}
-    .form-row input, .form-row select{flex:1;padding:8px;border:1px solid #e5e7eb;border-radius:6px}
+    .modal-content{
+      background:#fff;padding:16px;border-radius:8px;
+      width:100%;max-width:480px;max-height:90vh;overflow-y:auto;position:relative;
+    }
+    .close{position:absolute;right:8px;top:8px;border:0;background:transparent;font-size:24px;cursor:pointer;line-height:1;padding:4px}
+
+    .form-row{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+    .form-row input, .form-row select{
+      flex:1;min-width:0;padding:10px;border:1px solid #e5e7eb;border-radius:6px;
+      font-size:16px; /* evita o zoom automático do iOS ao focar em campos */
+    }
     .footer-actions{text-align:right;margin-top:8px}
+
     /* Faturamento por mês */
     .panel.fullwidth{grid-column:1 / -1}
-    .months-chart{position:relative;display:flex;align-items:flex-end;gap:8px;padding:12px 6px;height:160px;background:#fff;border-radius:8px;margin-bottom:10px}
-    .month-bar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:6px;position:relative}
+    .months-chart{
+      position:relative;display:flex;align-items:flex-end;gap:6px;
+      padding:12px 6px;height:160px;background:#fff;border-radius:8px;margin-bottom:10px;
+      overflow-x:auto;-webkit-overflow-scrolling:touch;
+    }
+    .month-bar{flex:1 0 28px;min-width:28px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:6px;position:relative}
     .month-bar .bar{width:100%;background:linear-gradient(180deg,#06b6d4,#0ea5a4);border-radius:6px 6px 0 0;transition:height .2s;cursor:pointer}
-    .month-bar .label{font-size:12px;color:var(--muted);margin-top:6px}
-    .months-table{width:100%;border-collapse:collapse;margin-top:6px}
+    .month-bar .label{font-size:11px;color:var(--muted);margin-top:6px;white-space:nowrap}
+
+    .months-table{width:100%;border-collapse:collapse;margin-top:6px;min-width:0}
     .months-table thead th{text-align:left;padding:8px;font-size:13px;color:var(--muted)}
     .months-table tbody td{padding:8px;border-top:1px solid #f1f1f1}
+
     /* Tooltip */
-    .tooltip{position:absolute;padding:8px 10px;background:#111;color:#fff;border-radius:8px;font-size:13px;pointer-events:none;transform:translate(-50%, -10px);white-space:nowrap;opacity:0;transition:opacity .12s,transform .12s}
+    .tooltip{position:absolute;padding:8px 10px;background:#111;color:#fff;border-radius:8px;font-size:13px;pointer-events:none;transform:translate(-50%, -10px);white-space:nowrap;opacity:0;transition:opacity .12s,transform .12s;z-index:5}
     .tooltip.visible{opacity:1;transform:translate(-50%, -18px)}
     .tooltip .big{font-weight:700;display:block}
     .tooltip .small{font-size:12px;color:#ddd;margin-top:4px}
+
     /* Tabs */
-    .tabs{display:flex;gap:8px;margin-bottom:12px}
-    .tab{padding:8px 12px;border-radius:8px;background:#fff;cursor:pointer;border:1px solid #eee}
+    .tabs{display:flex;gap:8px;margin-bottom:12px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+    .tab{padding:8px 12px;border-radius:8px;background:#fff;cursor:pointer;border:1px solid #eee;white-space:nowrap;flex:0 0 auto}
     .tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+    /* ===== Ajustes para celular ===== */
     @media(max-width:900px){
       .kpis{grid-template-columns:repeat(2,1fr)}
       .lists{grid-template-columns:1fr}
+    }
+    @media(max-width:520px){
+      .container{padding:10px}
+      .kpis{grid-template-columns:1fr 1fr;gap:8px}
+      .card{padding:10px}
+      .value{font-size:17px}
+      .topbar{padding:10px 12px}
+      .topbar h1{font-size:16px}
+      .actions button{padding:7px 10px;font-size:13px}
+      table{min-width:420px}
+      .modal-content{padding:14px}
     }
   </style>
 </head>
@@ -71,7 +116,7 @@
     <div class="actions">
       <button id="btnNewSale">Registrar venda</button>
       <button id="btnNewAccount">Nova conta</button>
-      <div style="width:1px;background:#e6e6e6;height:28px;margin:0 8px"></div>
+      <div class="divider"></div>
       <button id="exportSalesCsv">Exportar Vendas CSV</button>
       <button id="exportMonthsCsv">Exportar Faturamento Mensal CSV</button>
     </div>
@@ -92,7 +137,7 @@
         <div id="kpiTicket" class="value">R$ 0,00</div>
       </div>
       <div class="card">
-        <div class="label">Meta mensal (duplo clique para editar)</div>
+        <div class="label">Meta mensal (duplo clique / toque duplo para editar)</div>
         <div id="kpiGoal" class="value">R$ 0,00</div>
         <div class="progress"><div id="goalBar" class="bar"></div></div>
       </div>
@@ -106,26 +151,32 @@
     <section class="lists" id="listsSection">
       <div class="panel" id="availablePanel">
         <h2>Contas</h2>
-        <table id="accountsTable">
-          <thead><tr><th>Nome</th><th>Seguidores</th><th>Preço</th><th>Status</th><th>Ações</th></tr></thead>
-          <tbody></tbody>
-        </table>
+        <div class="table-scroll">
+          <table id="accountsTable">
+            <thead><tr><th>Nome</th><th>Seguidores</th><th>Preço</th><th>Status</th><th>Ações</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </div>
 
       <div class="panel" id="soldPanel" style="display:none">
         <h2>Contas Vendidas</h2>
-        <table id="soldAccountsTable">
-          <thead><tr><th>Nome</th><th>Seguidores</th><th>Preço</th><th>Data venda</th><th>Ações</th></tr></thead>
-          <tbody></tbody>
-        </table>
+        <div class="table-scroll">
+          <table id="soldAccountsTable">
+            <thead><tr><th>Nome</th><th>Seguidores</th><th>Preço</th><th>Data venda</th><th>Ações</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </div>
 
       <div class="panel">
         <h2>Últimas vendas</h2>
-        <table id="salesTable">
-          <thead><tr><th>Data</th><th>Conta</th><th>Cliente</th><th>Valor</th><th>Ações</th></tr></thead>
-          <tbody></tbody>
-        </table>
+        <div class="table-scroll">
+          <table id="salesTable">
+            <thead><tr><th>Data</th><th>Conta</th><th>Cliente</th><th>Valor</th><th>Ações</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </div>
 
       <div class="panel fullwidth">
@@ -135,10 +186,12 @@
           <span class="big">R$ 0,00</span>
           <span class="small">Vendas: 0</span>
         </div>
-        <table id="monthsTable" class="months-table">
-          <thead><tr><th>Mês</th><th>Faturamento</th></tr></thead>
-          <tbody></tbody>
-        </table>
+        <div class="table-scroll">
+          <table id="monthsTable" class="months-table">
+            <thead><tr><th>Mês</th><th>Faturamento</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </div>
     </section>
   </main>
@@ -211,9 +264,8 @@
           barEl.dataset.key = d.key;
           barEl.dataset.label = d.label;
           barEl.dataset.value = d.value;
-          // mouse events for tooltip show value + count
-          barEl.addEventListener('mouseenter', (ev) => {
-            const rect = barEl.getBoundingClientRect();
+
+          function showTooltip(clientX, clientY, rect){
             const chartRect = chart.getBoundingClientRect();
             const centerX = rect.left + rect.width / 2 - chartRect.left;
             tooltip.style.left = centerX + 'px';
@@ -222,6 +274,11 @@
             tooltip.querySelector('.big').innerText = `${d.label}: ${formatMoney(d.value)}`;
             tooltip.querySelector('.small').innerText = `Vendas: ${count}`;
             tooltip.classList.add('visible');
+          }
+
+          // mouse (desktop)
+          barEl.addEventListener('mouseenter', () => {
+            showTooltip(null, null, barEl.getBoundingClientRect());
           });
           barEl.addEventListener('mousemove', (ev) => {
             const rect = chart.getBoundingClientRect();
@@ -230,6 +287,14 @@
           });
           barEl.addEventListener('mouseleave', () => {
             tooltip.classList.remove('visible');
+          });
+
+          // toque (celular)
+          barEl.addEventListener('touchstart', (ev) => {
+            showTooltip(null, null, barEl.getBoundingClientRect());
+          }, {passive:true});
+          barEl.addEventListener('touchend', () => {
+            setTimeout(()=> tooltip.classList.remove('visible'), 1200);
           });
 
           barWrap.appendChild(barEl);
@@ -508,9 +573,19 @@
       });
     }
 
-    // Quick goal setter via double-click KPI
+    // Quick goal setter via double-click / duplo toque na KPI
     const kpiGoalEl = document.getElementById('kpiGoal');
-    if(kpiGoalEl) kpiGoalEl.addEventListener('dblclick', ()=>{
+    if(kpiGoalEl){
+      kpiGoalEl.addEventListener('dblclick', openGoalModal);
+      // suporte a duplo toque em celular (dblclick nem sempre dispara em touch)
+      let lastTap = 0;
+      kpiGoalEl.addEventListener('touchend', ()=>{
+        const now = Date.now();
+        if(now - lastTap < 350){ openGoalModal(); }
+        lastTap = now;
+      });
+    }
+    function openGoalModal(){
       openModal(`<h3>Definir meta mensal</h3><div class="form-row"><input id="goalVal" type="number" step="0.01" value="${state.goal||0}"></div><div class="footer-actions"><button id="saveGoal" class="small">Salvar</button></div>`);
       setTimeout(()=>{
         const saveGoal = document.getElementById('saveGoal');
@@ -519,7 +594,7 @@
           refreshAll(); closeModal();
         }
       }, 50);
-    });
+    }
 
     // CSV export helpers
     function downloadCsv(filename, csvContent){
