@@ -1,5 +1,5 @@
 // =====================================
-// DASHTIK V3.2
+// DASHTIK V3.3
 // SCRIPT PRINCIPAL
 // =====================================
 
@@ -36,6 +36,8 @@ function voltarDashboard(){
 
 
 
+
+
 // ===============================
 // PRODUTOS
 // ===============================
@@ -48,14 +50,13 @@ function cadastrar(){
     document.getElementById("nome").value;
 
 
-
     let preco =
     document.getElementById("preco").value;
 
 
-
     let estoque =
     document.getElementById("estoque").value;
+
 
 
 
@@ -73,6 +74,7 @@ function cadastrar(){
 
 
 
+
     let produto = {
 
         id: Date.now(),
@@ -87,6 +89,8 @@ function cadastrar(){
 
 
 
+
+
     adicionarProduto(produto);
 
 
@@ -98,11 +102,12 @@ function cadastrar(){
     listarProdutos();
 
 
-
     atualizarDashboard();
 
 
+
 }
+
 
 
 
@@ -134,6 +139,7 @@ function listarProdutos(){
 
 
 
+
     produtos.forEach(produto=>{
 
 
@@ -142,11 +148,20 @@ function listarProdutos(){
 
         <tr>
 
-        <td>${produto.nome}</td>
+        <td>
+        ${produto.nome}
+        </td>
 
-        <td>R$ ${produto.preco}</td>
 
-        <td>${produto.estoque}</td>
+        <td>
+        R$ ${produto.preco}
+        </td>
+
+
+        <td>
+        ${produto.estoque}
+        </td>
+
 
         <td>
 
@@ -155,6 +170,7 @@ function listarProdutos(){
         🗑
 
         </button>
+
 
         </td>
 
@@ -177,7 +193,6 @@ function listarProdutos(){
 
 function excluirProduto(id){
 
-
     removerProduto(id);
 
 
@@ -198,11 +213,12 @@ function excluirProduto(id){
 
 
 // ===============================
-// DASHBOARD
+// DASHBOARD V3.3
 // ===============================
 
 
 function atualizarDashboard(){
+
 
 
     let produtos =
@@ -210,44 +226,65 @@ function atualizarDashboard(){
 
 
 
-    let totalProdutos =
+    let vendas =
+    pegarVendas();
+
+
+
+
+
+    // PRODUTOS
+
+
+    let campoProdutos =
     document.getElementById("totalProdutos");
 
 
 
-    let totalEstoque =
-    document.getElementById("totalEstoque");
+    if(campoProdutos){
+
+        campoProdutos.innerHTML =
+        produtos.length;
+
+    }
 
 
 
-    let valorEstoque =
-    document.getElementById("valorEstoque");
+
+
+
+    // VENDAS
+
+
+    let campoVendas =
+    document.getElementById("totalVendas");
+
+
+
+    if(campoVendas){
+
+        campoVendas.innerHTML =
+        vendas.length;
+
+    }
 
 
 
 
 
-    let qtdProdutos =
-    produtos.length;
+
+
+    // FATURAMENTO
+
+
+    let faturamento = 0;
 
 
 
-    let estoque = 0;
+    vendas.forEach(venda=>{
 
 
-    let valor = 0;
-
-
-
-    produtos.forEach(produto=>{
-
-
-        estoque += Number(produto.estoque);
-
-
-        valor +=
-        Number(produto.preco) *
-        Number(produto.estoque);
+        faturamento += Number(venda.valor);
 
 
     });
@@ -256,36 +293,143 @@ function atualizarDashboard(){
 
 
 
-    if(totalProdutos){
-
-        totalProdutos.innerHTML =
-        qtdProdutos;
-
-    }
+    let campoFaturamento =
+    document.getElementById("faturamento");
 
 
 
+    if(campoFaturamento){
 
-
-    if(totalEstoque){
-
-        totalEstoque.innerHTML =
-        estoque;
-
-    }
-
-
-
-
-
-    if(valorEstoque){
-
-        valorEstoque.innerHTML =
+        campoFaturamento.innerHTML =
         "R$ " +
-        valor.toLocaleString("pt-BR");
+        faturamento.toLocaleString("pt-BR");
 
     }
 
+
+
+
+
+
+
+    // TICKET MÉDIO
+
+
+    let ticket = 0;
+
+
+
+    if(vendas.length > 0){
+
+        ticket =
+        faturamento / vendas.length;
+
+    }
+
+
+
+
+
+
+    let campoTicket =
+    document.getElementById("ticketMedio");
+
+
+
+    if(campoTicket){
+
+        campoTicket.innerHTML =
+        "R$ " +
+        ticket.toLocaleString("pt-BR");
+
+    }
+
+
+
+
+
+
+    mostrarVendasDashboard();
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// ÚLTIMAS VENDAS
+// ===============================
+
+
+function mostrarVendasDashboard(){
+
+
+
+    let tabela =
+    document.getElementById("listaVendasDashboard");
+
+
+
+    if(!tabela){
+
+        return;
+
+    }
+
+
+
+
+    let vendas =
+    pegarVendas();
+
+
+
+    tabela.innerHTML="";
+
+
+
+
+    vendas
+    .slice(-5)
+    .reverse()
+    .forEach(venda=>{
+
+
+        tabela.innerHTML += `
+
+
+        <tr>
+
+
+        <td>
+        ${venda.produto}
+        </td>
+
+
+        <td>
+        ${venda.quantidade}
+        </td>
+
+
+        <td>
+        R$ ${venda.valor}
+        </td>
+
+
+        </tr>
+
+
+        `;
+
+
+    });
 
 
 
@@ -304,9 +448,7 @@ function atualizarDashboard(){
 // ===============================
 
 
-
 function carregarProdutosVenda(){
-
 
 
     let select =
@@ -319,6 +461,7 @@ function carregarProdutosVenda(){
         return;
 
     }
+
 
 
 
@@ -340,8 +483,9 @@ function carregarProdutosVenda(){
 
         <option value="${produto.id}">
 
-        ${produto.nome} 
-        - Estoque: ${produto.estoque}
+        ${produto.nome}
+        | Estoque:
+        ${produto.estoque}
 
         </option>
 
@@ -361,28 +505,29 @@ function carregarProdutosVenda(){
 
 
 
-
 function registrarVenda(){
 
 
 
     let produtoId =
     Number(
-    document.getElementById("produtoVenda").value
+        document.getElementById("produtoVenda").value
     );
 
 
 
     let quantidade =
     Number(
-    document.getElementById("quantidadeVenda").value
+        document.getElementById("quantidadeVenda").value
     );
+
 
 
 
 
     let produtos =
     pegarProdutos();
+
 
 
 
@@ -408,6 +553,7 @@ function registrarVenda(){
 
 
 
+
     if(quantidade > produto.estoque){
 
         alert("Estoque insuficiente!");
@@ -420,13 +566,13 @@ function registrarVenda(){
 
 
 
+
     produto.estoque -= quantidade;
 
 
 
-
-
     salvarProdutos(produtos);
+
 
 
 
@@ -458,14 +604,13 @@ function registrarVenda(){
 
 
 
+
     adicionarVenda(venda);
 
 
 
 
-
     alert("Venda registrada!");
-
 
 
 
@@ -481,7 +626,6 @@ function registrarVenda(){
 
 
 }
-
 
 
 
@@ -506,13 +650,14 @@ function listarVendas(){
 
 
 
+
+
     let vendas =
     pegarVendas();
 
 
 
     tabela.innerHTML="";
-
 
 
 
@@ -581,7 +726,6 @@ document.addEventListener(
 
 
     listarVendas();
-
 
 
 });
