@@ -1,5 +1,5 @@
 // =====================================
-// DASHTIK V3.5.1
+// DASHTIK V4
 // SCRIPT PRINCIPAL
 // =====================================
 
@@ -26,11 +26,20 @@ function abrirVendas(){
 
 
 
+function abrirRelatorios(){
+
+    window.location.href="relatorios.html";
+
+}
+
+
+
 function voltarDashboard(){
 
     window.location.href="index.html";
 
 }
+
 
 
 
@@ -46,69 +55,71 @@ function voltarDashboard(){
 function cadastrar(){
 
 
-    let nome =
-    document.getElementById("nome").value;
+let nome =
+document.getElementById("nome").value;
 
 
-    let preco =
-    document.getElementById("preco").value;
+let preco =
+document.getElementById("preco").value;
 
 
-    let estoque =
-    document.getElementById("estoque").value;
-
-
-
-
-    if(nome==="" || preco==="" || estoque===""){
-
-        alert("Preencha todos os campos!");
-
-        return;
-
-    }
+let estoque =
+document.getElementById("estoque").value;
 
 
 
+if(
+nome==="" ||
+preco==="" ||
+estoque===""
+){
 
+alert("Preencha todos os campos!");
 
-    let produto={
-
-
-        id:Date.now(),
-
-
-        nome:nome,
-
-
-        preco:Number(preco),
-
-
-        estoque:Number(estoque)
-
-
-    };
-
-
-
-
-
-    adicionarProduto(produto);
-
-
-
-    alert("Produto cadastrado!");
-
-
-
-    listarProdutos();
-
-
-    atualizarDashboard();
-
+return;
 
 }
 
+
+
+
+let produto={
+
+
+id:Date.now(),
+
+
+nome:nome,
+
+
+preco:Number(preco),
+
+
+estoque:Number(estoque)
+
+
+};
+
+
+
+
+
+adicionarProduto(produto);
+
+
+
+alert("Produto cadastrado!");
+
+
+
+listarProdutos();
+
+
+atualizarDashboard();
+
+
+
+}
 
 
 
@@ -119,64 +130,81 @@ function cadastrar(){
 function listarProdutos(){
 
 
-    let tabela =
-    document.getElementById("lista");
+let tabela =
+document.getElementById("lista");
 
 
 
-    if(!tabela){
+if(!tabela){
 
-        return;
+return;
 
-    }
-
-
-
-    let produtos =
-    pegarProdutos();
+}
 
 
 
-    tabela.innerHTML="";
+let produtos =
+pegarProdutos();
 
 
 
-    produtos.forEach(produto=>{
+tabela.innerHTML="";
 
 
-        tabela.innerHTML += `
+
+produtos.forEach(produto=>{
 
 
-        <tr>
-
-        <td>${produto.nome}</td>
+tabela.innerHTML += `
 
 
-        <td>R$ ${produto.preco}</td>
+<tr>
+
+<td>${produto.nome}</td>
+
+<td>R$ ${produto.preco}</td>
+
+<td>${produto.estoque}</td>
 
 
-        <td>${produto.estoque}</td>
+<td>
+
+<button onclick="excluirProduto(${produto.id})">
+
+🗑
+
+</button>
+
+</td>
 
 
-        <td>
-
-        <button onclick="excluirProduto(${produto.id})">
-
-        🗑
-
-        </button>
+</tr>
 
 
-        </td>
+`;
 
 
-        </tr>
+});
 
 
-        `;
+}
 
 
-    });
+
+
+
+
+
+function excluirProduto(id){
+
+
+removerProduto(id);
+
+
+listarProdutos();
+
+
+atualizarDashboard();
 
 
 }
@@ -188,16 +216,220 @@ function listarProdutos(){
 
 
 
-function excluirProduto(id){
+
+// ===============================
+// FINANCEIRO
+// ===============================
 
 
-    removerProduto(id);
+function calcularFaturamento(){
 
 
-    listarProdutos();
+let vendas =
+pegarVendas();
 
 
-    atualizarDashboard();
+
+let total=0;
+
+
+
+vendas.forEach(venda=>{
+
+
+total += Number(venda.valor);
+
+
+});
+
+
+
+return total;
+
+
+}
+
+
+
+
+
+
+
+function calcularMeta(){
+
+
+let meta =
+pegarMeta();
+
+
+
+let faturamento =
+calcularFaturamento();
+
+
+
+
+
+let percentual=0;
+
+
+
+if(meta>0){
+
+percentual =
+(faturamento/meta)*100;
+
+}
+
+
+
+
+
+return {
+
+
+meta:meta,
+
+
+faturamento:faturamento,
+
+
+percentual:percentual,
+
+
+falta:
+Math.max(
+meta-faturamento,
+0
+)
+
+
+};
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// SALVAR META
+// ===============================
+
+
+function definirMeta(){
+
+
+let valor =
+document.getElementById("metaMensal").value;
+
+
+
+if(valor===""){
+
+alert("Digite uma meta!");
+
+return;
+
+}
+
+
+
+salvarMeta(
+Number(valor)
+);
+
+
+
+alert("Meta salva!");
+
+
+
+atualizarMeta();
+
+
+}
+
+
+
+
+
+
+
+
+
+function atualizarMeta(){
+
+
+let dados =
+calcularMeta();
+
+
+
+let campoMeta =
+document.getElementById("valorMeta");
+
+
+
+if(campoMeta){
+
+campoMeta.innerHTML =
+"R$ "+
+dados.meta.toLocaleString("pt-BR");
+
+}
+
+
+
+
+let campoRealizado =
+document.getElementById("valorRealizado");
+
+
+
+if(campoRealizado){
+
+campoRealizado.innerHTML =
+"R$ "+
+dados.faturamento.toLocaleString("pt-BR");
+
+}
+
+
+
+
+
+let campoProgresso =
+document.getElementById("progressoMeta");
+
+
+
+if(campoProgresso){
+
+campoProgresso.innerHTML =
+dados.percentual.toFixed(1)+"%";
+
+}
+
+
+
+let campoFalta =
+document.getElementById("faltaMeta");
+
+
+
+if(campoFalta){
+
+campoFalta.innerHTML =
+"R$ "+
+dados.falta.toLocaleString("pt-BR");
+
+}
 
 
 }
@@ -218,177 +450,28 @@ function excluirProduto(id){
 function atualizarDashboard(){
 
 
-    let produtos =
-    pegarProdutos();
 
+let produtos =
+pegarProdutos();
 
 
-    let vendas =
-    pegarVendas();
 
+let vendas =
+pegarVendas();
 
 
 
 
 
-    let totalProdutos =
-    document.getElementById("totalProdutos");
+let totalProdutos =
+document.getElementById("totalProdutos");
 
 
-    if(totalProdutos){
 
-        totalProdutos.innerHTML =
-        produtos.length;
+if(totalProdutos){
 
-    }
-
-
-
-
-
-
-    let totalVendas =
-    document.getElementById("totalVendas");
-
-
-    if(totalVendas){
-
-        totalVendas.innerHTML =
-        vendas.length;
-
-    }
-
-
-
-
-
-
-
-    let faturamento=0;
-
-
-
-    vendas.forEach(venda=>{
-
-
-        faturamento += Number(venda.valor);
-
-
-    });
-
-
-
-
-
-
-
-    let campoFaturamento =
-    document.getElementById("faturamento");
-
-
-    if(campoFaturamento){
-
-        campoFaturamento.innerHTML =
-        "R$ "+
-        faturamento.toLocaleString("pt-BR");
-
-    }
-
-
-
-
-
-
-
-    let ticket=0;
-
-
-
-    if(vendas.length>0){
-
-        ticket =
-        faturamento / vendas.length;
-
-    }
-
-
-
-
-
-
-    let campoTicket =
-    document.getElementById("ticketMedio");
-
-
-    if(campoTicket){
-
-        campoTicket.innerHTML =
-        "R$ "+
-        ticket.toLocaleString("pt-BR");
-
-    }
-
-
-
-
-
-
-
-
-    // NOVOS INDICADORES
-
-
-    let produtoTop =
-    document.getElementById("produtoTop");
-
-
-    if(produtoTop){
-
-        produtoTop.innerHTML =
-        produtoMaisVendido();
-
-    }
-
-
-
-
-
-
-    let baixo =
-    document.getElementById("estoqueBaixo");
-
-
-    if(baixo){
-
-        baixo.innerHTML =
-        estoqueBaixo();
-
-    }
-
-
-
-
-
-
-    let hoje =
-    document.getElementById("vendasHoje");
-
-
-    if(hoje){
-
-        hoje.innerHTML =
-        vendasHoje();
-
-    }
-
-
-
-
-
-
-
-    mostrarVendasDashboard();
-
+totalProdutos.innerHTML =
+produtos.length;
 
 }
 
@@ -398,93 +481,15 @@ function atualizarDashboard(){
 
 
 
-
-
-// ===============================
-// PRODUTO MAIS VENDIDO
-// ===============================
-
-
-function produtoMaisVendido(){
-
-
-    let vendas =
-    pegarVendas();
+let totalVendas =
+document.getElementById("totalVendas");
 
 
 
-    if(vendas.length===0){
+if(totalVendas){
 
-        return "-";
-
-    }
-
-
-
-
-
-    let ranking={};
-
-
-
-
-
-    vendas.forEach(venda=>{
-
-
-        if(!ranking[venda.produto]){
-
-            ranking[venda.produto]=0;
-
-        }
-
-
-
-        ranking[venda.produto]
-        += Number(venda.quantidade);
-
-
-
-    });
-
-
-
-
-
-
-    let maiorProduto="-";
-
-    let maiorQuantidade=0;
-
-
-
-
-
-    Object.keys(ranking)
-    .forEach(produto=>{
-
-
-        if(ranking[produto]>maiorQuantidade){
-
-
-            maiorProduto=produto;
-
-
-            maiorQuantidade=ranking[produto];
-
-
-        }
-
-
-    });
-
-
-
-
-
-    return maiorProduto;
-
-
+totalVendas.innerHTML =
+vendas.length;
 
 }
 
@@ -494,26 +499,21 @@ function produtoMaisVendido(){
 
 
 
-
-
-// ===============================
-// ESTOQUE BAIXO
-// ===============================
-
-
-function estoqueBaixo(){
-
-
-    let produtos =
-    pegarProdutos();
+let faturamento =
+document.getElementById("faturamento");
 
 
 
-    return produtos.filter(
-        produto =>
-        produto.estoque <=5
-    ).length;
+let total =
+calcularFaturamento();
 
+
+
+if(faturamento){
+
+faturamento.innerHTML =
+"R$ "+
+total.toLocaleString("pt-BR");
 
 }
 
@@ -522,33 +522,11 @@ function estoqueBaixo(){
 
 
 
+atualizarMeta();
 
 
 
-// ===============================
-// VENDAS HOJE
-// ===============================
-
-
-function vendasHoje(){
-
-
-    let vendas =
-    pegarVendas();
-
-
-
-    let hoje =
-    new Date()
-    .toLocaleDateString("pt-BR");
-
-
-
-
-    return vendas.filter(
-        venda =>
-        venda.data === hoje
-    ).length;
+mostrarVendasDashboard();
 
 
 }
@@ -569,171 +547,53 @@ function vendasHoje(){
 function mostrarVendasDashboard(){
 
 
-    let tabela =
-    document.getElementById("listaVendasDashboard");
+
+let tabela =
+document.getElementById("listaVendasDashboard");
 
 
 
-    if(!tabela){
+if(!tabela){
 
-        return;
-
-    }
-
-
-
-    let vendas =
-    pegarVendas();
-
-
-
-    tabela.innerHTML="";
-
-
-
-
-    vendas
-    .slice(-5)
-    .reverse()
-    .forEach(venda=>{
-
-
-        tabela.innerHTML += `
-
-
-        <tr>
-
-        <td>${venda.produto}</td>
-
-        <td>${venda.quantidade}</td>
-
-        <td>R$ ${venda.valor}</td>
-
-        </tr>
-
-
-        `;
-
-
-    });
-
+return;
 
 }
 
 
 
+let vendas =
+pegarVendas();
 
 
 
+tabela.innerHTML="";
 
 
 
-// ===============================
-// GRÁFICO AGRUPADO
-// ===============================
+vendas
+.slice(-5)
+.reverse()
+.forEach(venda=>{
 
 
-function criarGrafico(){
+tabela.innerHTML += `
 
 
+<tr>
 
-    let canvas =
-    document.getElementById("graficoVendas");
+<td>${venda.produto}</td>
 
+<td>${venda.quantidade}</td>
 
+<td>R$ ${venda.valor}</td>
 
-    if(!canvas){
+</tr>
 
-        return;
 
-    }
+`;
 
 
-
-    let vendas =
-    pegarVendas();
-
-
-
-
-    if(vendas.length===0){
-
-        return;
-
-    }
-
-
-
-
-    let dados={};
-
-
-
-
-
-    vendas.forEach(venda=>{
-
-
-        if(!dados[venda.produto]){
-
-            dados[venda.produto]=0;
-
-        }
-
-
-
-        dados[venda.produto]
-        += Number(venda.valor);
-
-
-
-    });
-
-
-
-
-
-
-    new Chart(canvas,{
-
-
-        type:"bar",
-
-
-        data:{
-
-
-            labels:Object.keys(dados),
-
-
-            datasets:[{
-
-                label:"Faturamento",
-
-                data:Object.values(dados)
-
-            }]
-
-
-        },
-
-
-
-        options:{
-
-
-            responsive:true,
-
-
-            maintainAspectRatio:false
-
-
-        }
-
-
-
-    });
-
+});
 
 
 }
@@ -751,158 +611,108 @@ function criarGrafico(){
 // ===============================
 
 
-function carregarProdutosVenda(){
-
-
-    let select =
-    document.getElementById("produtoVenda");
-
-
-
-    if(!select){
-
-        return;
-
-    }
-
-
-
-    let produtos =
-    pegarProdutos();
-
-
-
-    select.innerHTML="";
-
-
-
-    produtos.forEach(produto=>{
-
-
-        select.innerHTML += `
-
-
-        <option value="${produto.id}">
-
-        ${produto.nome}
-        -
-        Estoque:
-        ${produto.estoque}
-
-        </option>
-
-
-        `;
-
-
-    });
-
-
-}
-
-
-
-
-
-
-
 function registrarVenda(){
 
 
-
-    let id =
-    Number(
-    document.getElementById("produtoVenda").value
-    );
-
-
-
-    let quantidade =
-    Number(
-    document.getElementById("quantidadeVenda").value
-    );
+let id =
+Number(
+document.getElementById("produtoVenda").value
+);
 
 
 
-    let produtos =
-    pegarProdutos();
+let quantidade =
+Number(
+document.getElementById("quantidadeVenda").value
+);
 
 
 
-
-    let produto =
-    produtos.find(
-        item=>item.id===id
-    );
+let produtos =
+pegarProdutos();
 
 
 
 
 
-    if(!produto){
-
-        return;
-
-    }
-
-
-
-
-
-    if(quantidade > produto.estoque){
-
-        alert("Estoque insuficiente");
-
-        return;
-
-    }
-
-
-
-
-    produto.estoque -= quantidade;
-
-
-
-    salvarProdutos(produtos);
+let produto =
+produtos.find(
+p=>p.id===id
+);
 
 
 
 
 
+if(!produto){
 
-    adicionarVenda({
+return;
 
-        id:Date.now(),
-
-        produto:produto.nome,
-
-        quantidade:quantidade,
-
-        valor:
-        produto.preco*quantidade,
-
-        data:
-        new Date()
-        .toLocaleDateString("pt-BR")
-
-    });
+}
 
 
 
 
 
-    alert("Venda realizada!");
+if(quantidade > produto.estoque){
+
+alert("Estoque insuficiente");
+
+return;
+
+}
 
 
 
-    atualizarDashboard();
 
 
-    carregarProdutosVenda();
+produto.estoque -= quantidade;
+
+
+
+salvarProdutos(produtos);
+
+
+
+
+
+adicionarVenda({
+
+
+id:Date.now(),
+
+
+produto:produto.nome,
+
+
+quantidade:quantidade,
+
+
+valor:
+produto.preco*quantidade,
+
+
+data:
+new Date()
+.toLocaleDateString("pt-BR")
+
+
+});
+
+
+
+
+
+alert("Venda realizada!");
+
+
+
+atualizarDashboard();
+
 
 
 }
+
 
 
 
@@ -916,16 +726,13 @@ document.addEventListener(
 ()=>{
 
 
-    atualizarDashboard();
+atualizarDashboard();
 
 
-    listarProdutos();
+listarProdutos();
 
 
-    carregarProdutosVenda();
-
-
-    criarGrafico();
+atualizarMeta();
 
 
 });
