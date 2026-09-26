@@ -1,5 +1,5 @@
 // =====================================
-// DASHTIK V3.4
+// DASHTIK V3.5
 // SCRIPT PRINCIPAL
 // =====================================
 
@@ -12,7 +12,7 @@
 
 function abrirProdutos(){
 
-    window.location.href = "produtos.html";
+    window.location.href="produtos.html";
 
 }
 
@@ -20,7 +20,7 @@ function abrirProdutos(){
 
 function abrirVendas(){
 
-    window.location.href = "vendas.html";
+    window.location.href="vendas.html";
 
 }
 
@@ -28,11 +28,9 @@ function abrirVendas(){
 
 function voltarDashboard(){
 
-    window.location.href = "index.html";
+    window.location.href="index.html";
 
 }
-
-
 
 
 
@@ -45,70 +43,72 @@ function voltarDashboard(){
 // ===============================
 
 
+
 function cadastrar(){
 
 
-    let nome =
-    document.getElementById("nome").value;
+let nome =
+document.getElementById("nome").value;
 
 
-    let preco =
-    document.getElementById("preco").value;
+let preco =
+document.getElementById("preco").value;
 
 
-    let estoque =
-    document.getElementById("estoque").value;
-
-
-
-    if(
-        nome === "" ||
-        preco === "" ||
-        estoque === ""
-    ){
-
-        alert("Preencha todos os campos!");
-
-        return;
-
-    }
+let estoque =
+document.getElementById("estoque").value;
 
 
 
 
-    let produto = {
+if(
+nome === "" ||
+preco === "" ||
+estoque === ""
+){
 
+alert("Preencha todos os campos!");
 
-        id: Date.now(),
+return;
 
-
-        nome:nome,
-
-
-        preco:Number(preco),
-
-
-        estoque:Number(estoque)
-
-
-    };
+}
 
 
 
 
-
-    adicionarProduto(produto);
-
+let produto={
 
 
-    alert("Produto cadastrado!");
+id:Date.now(),
+
+
+nome:nome,
+
+
+preco:Number(preco),
+
+
+estoque:Number(estoque)
+
+
+};
 
 
 
-    listarProdutos();
 
 
-    atualizarDashboard();
+adicionarProduto(produto);
+
+
+
+alert("Produto cadastrado!");
+
+
+
+listarProdutos();
+
+
+atualizarDashboard();
 
 
 
@@ -120,77 +120,73 @@ function cadastrar(){
 
 
 
-
-
 function listarProdutos(){
 
 
-    let tabela =
-    document.getElementById("lista");
+let tabela =
+document.getElementById("lista");
 
 
 
-    if(!tabela){
+if(!tabela){
 
-        return;
+return;
 
-    }
-
-
-
-    let produtos =
-    pegarProdutos();
+}
 
 
 
-    tabela.innerHTML="";
+let produtos =
+pegarProdutos();
+
+
+
+tabela.innerHTML="";
 
 
 
 
-    produtos.forEach(produto=>{
+produtos.forEach(produto=>{
 
 
-        tabela.innerHTML += `
+tabela.innerHTML += `
 
 
-        <tr>
+<tr>
 
-        <td>
-        ${produto.nome}
-        </td>
-
-
-        <td>
-        R$ ${produto.preco}
-        </td>
+<td>
+${produto.nome}
+</td>
 
 
-        <td>
-        ${produto.estoque}
-        </td>
+<td>
+R$ ${produto.preco}
+</td>
 
 
-        <td>
-
-        <button onclick="excluirProduto(${produto.id})">
-
-        🗑
-
-        </button>
+<td>
+${produto.estoque}
+</td>
 
 
-        </td>
+<td>
+
+<button onclick="excluirProduto(${produto.id})">
+
+🗑
+
+</button>
+
+</td>
 
 
-        </tr>
+</tr>
 
 
-        `;
+`;
 
 
-    });
-
+});
 
 
 }
@@ -203,13 +199,14 @@ function listarProdutos(){
 
 function excluirProduto(id){
 
-    removerProduto(id);
+
+removerProduto(id);
 
 
-    listarProdutos();
+listarProdutos();
 
 
-    atualizarDashboard();
+atualizarDashboard();
 
 
 }
@@ -223,98 +220,99 @@ function excluirProduto(id){
 
 
 // ===============================
-// DASHBOARD
+// DASHBOARD INTELIGENTE
 // ===============================
+
 
 
 function atualizarDashboard(){
 
 
 
-    let produtos =
-    pegarProdutos();
+let produtos =
+pegarProdutos();
 
 
 
-    let vendas =
-    pegarVendas();
+let vendas =
+pegarVendas();
 
 
 
 
 
+// PRODUTOS
 
-    let totalProdutos =
-    document.getElementById("totalProdutos");
 
+let campoProdutos =
+document.getElementById("totalProdutos");
 
 
-    let totalVendas =
-    document.getElementById("totalVendas");
 
+if(campoProdutos){
 
+campoProdutos.innerHTML =
+produtos.length;
 
-    let faturamento =
-    document.getElementById("faturamento");
+}
 
 
 
-    let ticket =
-    document.getElementById("ticketMedio");
 
 
 
 
+// VENDAS
 
 
+let campoVendas =
+document.getElementById("totalVendas");
 
-    if(totalProdutos){
 
-        totalProdutos.innerHTML =
-        produtos.length;
 
-    }
+if(campoVendas){
 
+campoVendas.innerHTML =
+vendas.length;
 
+}
 
 
 
-    if(totalVendas){
 
-        totalVendas.innerHTML =
-        vendas.length;
 
-    }
 
 
+let faturamento = 0;
 
 
 
+vendas.forEach(venda=>{
 
-    let totalFaturamento = 0;
 
+faturamento += Number(venda.valor);
 
 
-    vendas.forEach(venda=>{
+});
 
 
-        totalFaturamento += Number(venda.valor);
 
 
-    });
 
 
 
+let campoFaturamento =
+document.getElementById("faturamento");
 
 
 
-    if(faturamento){
+if(campoFaturamento){
 
-        faturamento.innerHTML =
-        "R$ " +
-        totalFaturamento.toLocaleString("pt-BR");
+campoFaturamento.innerHTML =
+"R$ "+
+faturamento.toLocaleString("pt-BR");
 
-    }
+}
 
 
 
@@ -322,39 +320,196 @@ function atualizarDashboard(){
 
 
 
-    let media = 0;
+let ticket=0;
 
 
 
-    if(vendas.length > 0){
+if(vendas.length){
 
-        media =
-        totalFaturamento / vendas.length;
+ticket =
+faturamento / vendas.length;
 
-    }
+}
 
 
 
 
+let campoTicket =
+document.getElementById("ticketMedio");
 
-    if(ticket){
 
-        ticket.innerHTML =
-        "R$ " +
-        media.toLocaleString("pt-BR");
 
-    }
+if(campoTicket){
 
+campoTicket.innerHTML =
+"R$ "+
+ticket.toLocaleString("pt-BR");
 
+}
 
 
 
 
-    mostrarVendasDashboard();
+
+
+mostrarVendasDashboard();
+
+
+criarGrafico();
+
 
 
 }
 
+
+
+
+
+
+
+
+
+// ===============================
+// PRODUTO MAIS VENDIDO
+// ===============================
+
+
+function produtoMaisVendido(){
+
+
+let vendas =
+pegarVendas();
+
+
+
+let ranking={};
+
+
+
+
+vendas.forEach(venda=>{
+
+
+if(!ranking[venda.produto]){
+
+
+ranking[venda.produto]=0;
+
+
+}
+
+
+
+ranking[venda.produto]+=
+Number(venda.quantidade);
+
+
+
+});
+
+
+
+
+
+let maior="Nenhum";
+
+let quantidade=0;
+
+
+
+for(let produto in ranking){
+
+
+if(ranking[produto] > quantidade){
+
+
+maior=produto;
+
+quantidade=ranking[produto];
+
+
+}
+
+
+}
+
+
+
+return maior;
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// ESTOQUE BAIXO
+// ===============================
+
+
+function estoqueBaixo(){
+
+
+
+let produtos =
+pegarProdutos();
+
+
+
+return produtos.filter(
+
+produto =>
+produto.estoque <= 5
+
+).length;
+
+
+
+}
+
+
+
+
+
+
+
+
+// ===============================
+// VENDAS HOJE
+// ===============================
+
+
+function vendasHoje(){
+
+
+
+let vendas =
+pegarVendas();
+
+
+
+let hoje =
+new Date().toLocaleDateString("pt-BR");
+
+
+
+return vendas.filter(
+
+venda =>
+venda.data === hoje
+
+).length;
+
+
+
+}
 
 
 
@@ -371,67 +526,63 @@ function atualizarDashboard(){
 function mostrarVendasDashboard(){
 
 
-    let tabela =
-    document.getElementById("listaVendasDashboard");
+
+let tabela =
+document.getElementById("listaVendasDashboard");
 
 
 
-    if(!tabela){
+if(!tabela){
 
-        return;
+return;
 
-    }
-
-
-
-
-    let vendas =
-    pegarVendas();
+}
 
 
 
+let vendas =
+pegarVendas();
 
-    tabela.innerHTML="";
 
+
+tabela.innerHTML="";
 
 
 
 
-    vendas
-    .slice(-5)
-    .reverse()
-    .forEach(venda=>{
+vendas
+.slice(-5)
+.reverse()
+.forEach(venda=>{
 
 
-        tabela.innerHTML += `
+tabela.innerHTML += `
 
 
-        <tr>
+<tr>
+
+<td>
+${venda.produto}
+</td>
 
 
-        <td>
-        ${venda.produto}
-        </td>
+<td>
+${venda.quantidade}
+</td>
 
 
-        <td>
-        ${venda.quantidade}
-        </td>
+<td>
+R$ ${venda.valor}
+</td>
 
 
-        <td>
-        R$ ${venda.valor}
-        </td>
+</tr>
 
 
-        </tr>
+`;
 
 
-        `;
-
-
-    });
-
+});
 
 
 }
@@ -443,130 +594,144 @@ function mostrarVendasDashboard(){
 
 
 
+// ===============================
+// GRÁFICO AGRUPADO
+// ===============================
 
-// ===============================
-// GRÁFICO
-// ===============================
 
 
 function criarGrafico(){
 
 
 
-    let canvas =
-    document.getElementById("graficoVendas");
+let canvas =
+document.getElementById("graficoVendas");
 
 
 
-    if(!canvas){
+if(!canvas){
 
-        return;
+return;
 
-    }
+}
 
 
 
 
-    let vendas =
-    pegarVendas();
+let vendas =
+pegarVendas();
 
 
 
-    if(vendas.length === 0){
+if(vendas.length===0){
 
-        return;
+return;
 
-    }
+}
 
 
 
 
-    let nomes = [];
+let produtos={};
 
-    let valores = [];
 
 
 
+vendas.forEach(venda=>{
 
-    vendas.forEach(venda=>{
 
+if(!produtos[venda.produto]){
 
-        nomes.push(
-            venda.produto
-        );
 
+produtos[venda.produto]=0;
 
 
-        valores.push(
-            Number(venda.valor)
-        );
+}
 
 
-    });
 
+produtos[venda.produto]+=
+Number(venda.valor);
 
 
 
+});
 
 
-    new Chart(canvas,{
 
 
-        type:"bar",
 
+let nomes =
+Object.keys(produtos);
 
 
-        data:{
 
+let valores =
+Object.values(produtos);
 
-            labels:nomes,
 
 
 
-            datasets:[{
 
-                label:"Faturamento",
 
-                data:valores
+new Chart(canvas,{
 
 
-            }]
+type:"bar",
 
 
-        },
+data:{
 
 
+labels:nomes,
 
-        options:{
 
+datasets:[{
 
-            responsive:true,
 
+label:"Faturamento por produto",
 
-            maintainAspectRatio:false,
 
+data:valores
 
-            scales:{
 
+}]
 
-                y:{
 
+},
 
-                    beginAtZero:true
 
 
-                }
+options:{
 
 
-            }
+responsive:true,
 
 
+maintainAspectRatio:false,
 
-        }
 
+scales:{
 
 
-    });
+y:{
+
+
+beginAtZero:true
+
+
+}
+
+
+}
+
+
+
+}
+
+
+
+});
 
 
 
@@ -589,49 +754,51 @@ function criarGrafico(){
 function carregarProdutosVenda(){
 
 
-    let select =
-    document.getElementById("produtoVenda");
+
+let select =
+document.getElementById("produtoVenda");
 
 
 
-    if(!select){
+if(!select){
 
-        return;
+return;
 
-    }
-
-
-
-    let produtos =
-    pegarProdutos();
-
-
-
-    select.innerHTML="";
+}
 
 
 
 
-    produtos.forEach(produto=>{
+let produtos =
+pegarProdutos();
 
 
-        select.innerHTML += `
+
+select.innerHTML="";
 
 
-        <option value="${produto.id}">
-
-        ${produto.nome}
-        | Estoque:
-        ${produto.estoque}
-
-        </option>
 
 
-        `;
+produtos.forEach(produto=>{
 
 
-    });
+select.innerHTML += `
 
+
+<option value="${produto.id}">
+
+${produto.nome}
+-
+Estoque:
+${produto.estoque}
+
+</option>
+
+
+`;
+
+
+});
 
 
 }
@@ -646,123 +813,110 @@ function registrarVenda(){
 
 
 
-    let produtoId =
-    Number(
-    document.getElementById("produtoVenda").value
-    );
+let id =
+Number(
+document.getElementById("produtoVenda").value
+);
 
 
 
-    let quantidade =
-    Number(
-    document.getElementById("quantidadeVenda").value
-    );
+let quantidade =
+Number(
+document.getElementById("quantidadeVenda").value
+);
 
 
 
+let produtos =
+pegarProdutos();
 
 
-    let produtos =
-    pegarProdutos();
 
+let produto =
+produtos.find(
+p=>p.id===id
+);
 
 
 
 
-    let produto =
-    produtos.find(
-        item => item.id === produtoId
-    );
 
+if(!produto){
 
+return;
 
+}
 
 
-    if(!produto){
 
-        alert("Produto inválido");
 
-        return;
+if(quantidade > produto.estoque){
 
-    }
+alert("Estoque insuficiente");
 
+return;
 
+}
 
 
 
 
+produto.estoque -= quantidade;
 
-    if(quantidade > produto.estoque){
 
-        alert("Estoque insuficiente");
 
-        return;
+salvarProdutos(produtos);
 
-    }
 
 
 
 
 
+let venda={
 
 
-    produto.estoque -= quantidade;
+id:Date.now(),
 
 
+produto:produto.nome,
 
-    salvarProdutos(produtos);
 
+quantidade:quantidade,
 
 
+valor:
+produto.preco * quantidade,
 
 
+data:
+new Date().toLocaleDateString("pt-BR")
 
 
-    let venda = {
+};
 
 
-        id:Date.now(),
 
 
-        produto:produto.nome,
 
+adicionarVenda(venda);
 
-        quantidade:quantidade,
 
 
-        valor:
-        produto.preco * quantidade
+alert("Venda realizada!");
 
 
-    };
 
+atualizarDashboard();
 
 
+carregarProdutosVenda();
 
 
-    adicionarVenda(venda);
-
-
-
-
-    alert("Venda realizada!");
-
-
-
-    atualizarDashboard();
-
-
-
-    carregarProdutosVenda();
-
-
-
-    listarVendas();
+listarVendas();
 
 
 
 }
-
 
 
 
@@ -774,61 +928,59 @@ function listarVendas(){
 
 
 
-    let tabela =
-    document.getElementById("listaVendas");
+let tabela =
+document.getElementById("listaVendas");
 
 
 
-    if(!tabela){
+if(!tabela){
 
-        return;
+return;
 
-    }
-
-
-
-
-    let vendas =
-    pegarVendas();
+}
 
 
 
-    tabela.innerHTML="";
+let vendas =
+pegarVendas();
 
 
 
-
-    vendas.forEach(venda=>{
-
-
-        tabela.innerHTML += `
+tabela.innerHTML="";
 
 
-        <tr>
 
-        <td>
-        ${venda.produto}
-        </td>
+vendas.forEach(venda=>{
 
 
-        <td>
-        ${venda.quantidade}
-        </td>
+tabela.innerHTML += `
 
 
-        <td>
-        R$ ${venda.valor}
-        </td>
+<tr>
+
+<td>
+${venda.produto}
+</td>
 
 
-        </tr>
+<td>
+${venda.quantidade}
+</td>
 
 
-        `;
+<td>
+R$ ${venda.valor}
+</td>
 
 
-    });
+</tr>
 
+
+`;
+
+
+
+});
 
 
 }
@@ -841,7 +993,7 @@ function listarVendas(){
 
 
 // ===============================
-// INICIALIZAÇÃO
+// INICIAR
 // ===============================
 
 
@@ -850,19 +1002,17 @@ document.addEventListener(
 ()=>{
 
 
-    atualizarDashboard();
+atualizarDashboard();
 
 
-    listarProdutos();
+listarProdutos();
 
 
-    carregarProdutosVenda();
+carregarProdutosVenda();
 
 
-    listarVendas();
+listarVendas();
 
 
-    criarGrafico();
-
-
-});
+}
+);
