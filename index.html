@@ -20,8 +20,7 @@
 <div class="app">
 
 
-
-<!-- MENU LATERAL -->
+<!-- MENU -->
 
 <aside class="sidebar">
 
@@ -29,7 +28,6 @@
 <h1>
 <span>Dash</span>Tik
 </h1>
-
 
 
 <ul>
@@ -86,7 +84,6 @@
 </ul>
 
 
-
 </aside>
 
 
@@ -95,8 +92,7 @@
 
 
 
-
-<!-- ÁREA PRINCIPAL -->
+<!-- CONTEÚDO -->
 
 <main>
 
@@ -113,12 +109,11 @@ Painel de Vendas
 
 
 <p>
-Visão geral da sua operação
+Análise da sua operação em tempo real
 </p>
 
 
 </div>
-
 
 
 
@@ -150,9 +145,7 @@ Visão geral da sua operação
 
 
 <div class="icon">
-
 📦
-
 </div>
 
 
@@ -167,7 +160,7 @@ Produtos cadastrados
 
 
 <span>
-Atualizado automaticamente
+Produtos ativos
 </span>
 
 
@@ -183,24 +176,22 @@ Atualizado automaticamente
 
 
 <div class="icon">
-
-🏬
-
+🛒
 </div>
 
 
 <p>
-Estoque total
+Vendas realizadas
 </p>
 
 
-<h3 id="totalEstoque">
+<h3 id="totalVendas">
 0
 </h3>
 
 
 <span>
-Itens disponíveis
+Pedidos concluídos
 </span>
 
 
@@ -216,24 +207,22 @@ Itens disponíveis
 
 
 <div class="icon">
-
 💰
-
 </div>
 
 
 <p>
-Valor em estoque
+Faturamento total
 </p>
 
 
-<h3 id="valorEstoque">
+<h3 id="faturamento">
 R$ 0
 </h3>
 
 
 <span>
-Valor dos produtos
+Receita acumulada
 </span>
 
 
@@ -249,24 +238,22 @@ Valor dos produtos
 
 
 <div class="icon">
-
-📈
-
+🎯
 </div>
 
 
 <p>
-Sistema
+Ticket médio
 </p>
 
 
-<h3>
-Online
+<h3 id="ticketMedio">
+R$ 0
 </h3>
 
 
 <span>
-DashTik ativo
+Média por venda
 </span>
 
 
@@ -302,22 +289,23 @@ Desempenho de vendas
 
 
 
+
 <div class="chart">
 
 
 <div style="height:40%"></div>
 
-<div style="height:65%"></div>
-
-<div style="height:50%"></div>
-
-<div style="height:90%"></div>
+<div style="height:60%"></div>
 
 <div style="height:75%"></div>
 
+<div style="height:90%"></div>
+
+<div style="height:70%"></div>
+
+
 
 </div>
-
 
 
 </div>
@@ -334,7 +322,7 @@ Desempenho de vendas
 
 
 <h3>
-Produtos recentes
+Últimas vendas
 </h3>
 
 
@@ -345,7 +333,9 @@ Produtos recentes
 
 <thead>
 
+
 <tr>
+
 
 <th>
 Produto
@@ -353,12 +343,12 @@ Produto
 
 
 <th>
-Preço
+Quantidade
 </th>
 
 
 <th>
-Estoque
+Valor
 </th>
 
 
@@ -369,7 +359,7 @@ Estoque
 
 
 
-<tbody id="listaDashboard">
+<tbody id="listaVendasDashboard">
 
 
 </tbody>
@@ -381,6 +371,7 @@ Estoque
 
 
 </div>
+
 
 
 
