@@ -1,6 +1,7 @@
 // =====================================
-// DASHTIK V3.5.1
+// DASHTIK V4
 // STORAGE
+// Produtos + Vendas + Metas
 // =====================================
 
 
@@ -12,7 +13,8 @@
 
 function pegarProdutos(){
 
-    let dados = localStorage.getItem("produtos");
+    let dados =
+    localStorage.getItem("produtos");
 
 
     if(dados){
@@ -25,6 +27,9 @@ function pegarProdutos(){
     return [];
 
 }
+
+
+
 
 
 
@@ -42,9 +47,12 @@ function salvarProdutos(produtos){
 
 
 
+
+
 function adicionarProduto(produto){
 
-    let produtos = pegarProdutos();
+    let produtos =
+    pegarProdutos();
 
 
     produtos.push(produto);
@@ -58,20 +66,27 @@ function adicionarProduto(produto){
 
 
 
+
+
 function removerProduto(id){
 
-    let produtos = pegarProdutos();
+
+    let produtos =
+    pegarProdutos();
 
 
 
-    produtos = produtos.filter(
+    produtos =
+    produtos.filter(
         produto => produto.id !== id
     );
+
 
 
     salvarProdutos(produtos);
 
 }
+
 
 
 
@@ -87,7 +102,10 @@ function removerProduto(id){
 
 function pegarVendas(){
 
-    let dados = localStorage.getItem("vendas");
+
+    let dados =
+    localStorage.getItem("vendas");
+
 
 
     if(dados){
@@ -95,6 +113,7 @@ function pegarVendas(){
         return JSON.parse(dados);
 
     }
+
 
 
     return [];
@@ -105,12 +124,16 @@ function pegarVendas(){
 
 
 
+
+
 function salvarVendas(vendas){
+
 
     localStorage.setItem(
         "vendas",
         JSON.stringify(vendas)
     );
+
 
 }
 
@@ -118,14 +141,76 @@ function salvarVendas(vendas){
 
 
 
+
+
 function adicionarVenda(venda){
 
-    let vendas = pegarVendas();
+
+    let vendas =
+    pegarVendas();
+
 
 
     vendas.push(venda);
 
 
+
     salvarVendas(vendas);
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// META MENSAL
+// ===============================
+
+
+
+function pegarMeta(){
+
+
+    let meta =
+    localStorage.getItem("metaMensal");
+
+
+
+    if(meta){
+
+        return Number(meta);
+
+    }
+
+
+
+    return 0;
+
+
+}
+
+
+
+
+
+
+
+function salvarMeta(valor){
+
+
+    localStorage.setItem(
+
+        "metaMensal",
+
+        valor
+
+    );
+
 
 }
