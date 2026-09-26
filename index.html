@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
 
 <head>
 
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Produtos | DashTik</title>
+<title>DashTik | Dashboard</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -19,7 +19,10 @@
 <div class="app">
 
 
+<!-- MENU LATERAL -->
+
 <aside class="sidebar">
+
 
 <h1>
 <span>Dash</span>Tik
@@ -28,11 +31,11 @@
 
 <ul>
 
-<li>
+<li class="active">
 📊 Dashboard
 </li>
 
-<li class="active">
+<li>
 📦 Produtos
 </li>
 
@@ -40,6 +43,17 @@
 💰 Vendas
 </li>
 
+<li>
+👥 Clientes
+</li>
+
+<li>
+📈 Relatórios
+</li>
+
+<li>
+⚙ Configurações
+</li>
 
 </ul>
 
@@ -49,20 +63,33 @@
 
 
 
+
+<!-- CONTEÚDO PRINCIPAL -->
+
 <main>
+
 
 
 <header>
 
+
+<div>
+
 <h2>
-Produtos
+Painel de Vendas
 </h2>
 
 
-<button onclick="abrirFormulario()">
+<p>
+Visão geral da sua operação
+</p>
 
+
+</div>
+
+
+<button>
 + Novo Produto
-
 </button>
 
 
@@ -72,42 +99,184 @@ Produtos
 
 
 
-<div id="formulario" class="box">
+<!-- CARDS DINÂMICOS -->
+
+
+<section class="cards">
+
+
+
+<div class="card">
+
+
+<div class="icon">
+📦
+</div>
+
+
+<p>
+Produtos cadastrados
+</p>
+
+
+<h3 id="totalProdutos">
+0
+</h3>
+
+
+<span>
+Atualizado automaticamente
+</span>
+
+
+</div>
+
+
+
+
+
+
+<div class="card">
+
+
+<div class="icon">
+🏬
+</div>
+
+
+<p>
+Estoque total
+</p>
+
+
+<h3 id="totalEstoque">
+0
+</h3>
+
+
+<span>
+Itens disponíveis
+</span>
+
+
+</div>
+
+
+
+
+
+
+<div class="card">
+
+
+<div class="icon">
+💰
+</div>
+
+
+<p>
+Valor em estoque
+</p>
+
+
+<h3 id="valorEstoque">
+R$ 0
+</h3>
+
+
+<span>
+Valor dos produtos
+</span>
+
+
+</div>
+
+
+
+
+
+
+<div class="card">
+
+
+<div class="icon">
+📈
+</div>
+
+
+<p>
+Sistema</p>
 
 
 <h3>
-Cadastrar Produto
+Online
+</h3>
+
+
+<span>
+Dash Tik ativo
+</span>
+
+
+</div>
+
+
+
+</section>
+
+
+
+
+
+
+
+<!-- ÁREA INFERIOR -->
+
+
+<section class="content">
+
+
+
+<div class="box">
+
+
+<h3>
+Desempenho de vendas
 </h3>
 
 
 
-<input 
-id="nome"
-placeholder="Nome do produto">
+<div class="chart">
 
 
-
-<input 
-id="preco"
-placeholder="Preço">
+<div style="height:40%">
+</div>
 
 
-
-<input 
-id="estoque"
-placeholder="Estoque">
+<div style="height:65%">
+</div>
 
 
+<div style="height:50%">
+</div>
 
-<button onclick="cadastrar()">
 
-Salvar Produto
+<div style="height:90%">
+</div>
 
-</button>
+
+<div style="height:75%">
+</div>
 
 
 
 </div>
+
+
+</div>
+
+
+
 
 
 
@@ -117,7 +286,7 @@ Salvar Produto
 
 
 <h3>
-Lista de Produtos
+Produtos recentes
 </h3>
 
 
@@ -132,16 +301,14 @@ Lista de Produtos
 Produto
 </th>
 
+
 <th>
 Preço
 </th>
 
-<th>
-Estoque
-</th>
 
 <th>
-Ação
+Estoque
 </th>
 
 
@@ -152,16 +319,24 @@ Ação
 
 
 
-<tbody id="lista">
+<tbody id="listaDashboard">
+
 
 </tbody>
+
 
 
 </table>
 
 
-
 </div>
+
+
+
+
+</section>
+
+
 
 
 
@@ -172,12 +347,19 @@ Ação
 
 
 
+
+
+<!-- CARREGA O BANCO LOCAL -->
+
 <script src="storage.js"></script>
 
+
+<!-- SISTEMA -->
 
 <script src="script.js"></script>
 
 
 </body>
+
 
 </html>
