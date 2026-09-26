@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Produtos | DashTik</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+
+<!-- MENU -->
+
+<aside class="sidebar">
+
+
+<h1>
+<span>Dash</span>Tik
+</h1>
+
+
+
+<ul>
+
+
+<li onclick="voltarDashboard()">
+📊 Dashboard
+</li>
+
+
+
+<li class="active">
+📦 Produtos
+</li>
+
+
+
+<li>
+💰 Vendas
+</li>
+
+
+
+<li>
+👥 Clientes
+</li>
+
+
+
+</ul>
+
+
+</aside>
+
+
+
+
+
+
+
+
+<!-- CONTEÚDO -->
+
+
+<main>
+
+
+
+<header>
+
+
+<div>
+
+<h2>
+Cadastro de Produtos
+</h2>
+
+
+<p>
+Gerencie seus produtos
+</p>
+
+
+</div>
+
+
+
+<button onclick="voltarDashboard()">
+
+← Voltar
+
+</button>
+
+
+
+</header>
+
+
+
+
+
+
+
+
+<!-- FORMULÁRIO -->
+
+
+<div class="box">
+
+
+<h3>
+Novo Produto
+</h3>
+
+
+
+<br>
+
+
+<input 
+id="nome"
+type="text"
+placeholder="Nome do produto">
+
+
+
+<br><br>
+
+
+
+<input 
+id="preco"
+type="number"
+placeholder="Preço">
+
+
+
+<br><br>
+
+
+
+<input 
+id="estoque"
+type="number"
+placeholder="Quantidade em estoque">
+
+
+
+<br><br>
+
+
+
+<button onclick="cadastrar()">
+
+Salvar Produto
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- LISTA -->
+
+
+<div class="box">
+
+
+<h3>
+Produtos cadastrados
+</h3>
+
+
+
+
+<table>
+
+
+
+<thead>
+
+
+<tr>
+
+
+<th>
+Produto
+</th>
+
+
+<th>
+Preço
+</th>
+
+
+<th>
+Estoque
+</th>
+
+
+<th>
+Ação
+</th>
+
+
+
+</tr>
+
+
+
+</thead>
+
+
+
+
+<tbody id="lista">
+
+
+</tbody>
+
+
+
+</table>
+
+
+
+</div>
+
+
+
+
+
+
+</main>
+
+
+</div>
+
+
+
+
+
+
+
+
+<script src="storage.js"></script>
+
+<script src="script.js"></script>
+
+
+
+<script>
+
+
+function voltarDashboard(){
+
+window.location.href="index.html";
+
+}
+
+
+</script>
+
+
+
+</body>
+
+
+</html>
