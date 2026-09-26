@@ -5,12 +5,15 @@
 
 <meta charset="UTF-8">
 
+
 <meta 
 name="viewport" 
 content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 
-<title>DashTik | Dashboard</title>
+<title>
+DashTik | Dashboard
+</title>
 
 
 <link rel="stylesheet" href="style.css">
@@ -25,6 +28,7 @@ content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable
 <div class="app">
 
 
+
 <aside class="sidebar">
 
 
@@ -33,42 +37,52 @@ content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable
 </h1>
 
 
+
 <ul>
 
 
 <li class="active">
+
 📊 Dashboard
+
 </li>
+
 
 
 
 <li onclick="abrirProdutos()">
+
 📦 Produtos
+
 </li>
+
 
 
 
 <li onclick="abrirVendas()">
+
 💰 Vendas
+
 </li>
 
 
 
-<li>
-👥 Clientes
-</li>
 
+<li onclick="abrirRelatorios()">
 
-
-<li>
 📈 Relatórios
+
 </li>
+
 
 
 
 <li>
+
 ⚙ Configurações
+
 </li>
+
 
 
 </ul>
@@ -88,10 +102,12 @@ content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable
 
 
 
+
 <header>
 
 
 <div>
+
 
 <h2>
 Painel de Vendas
@@ -99,11 +115,12 @@ Painel de Vendas
 
 
 <p>
-Análise inteligente da operação
+Visão geral da operação
 </p>
 
 
 </div>
+
 
 
 
@@ -129,7 +146,10 @@ Análise inteligente da operação
 
 
 
+
+
 <div class="card">
+
 
 <div class="icon">
 📦
@@ -152,6 +172,7 @@ Produtos ativos
 
 
 </div>
+
 
 
 
@@ -190,6 +211,7 @@ Pedidos concluídos
 
 
 
+
 <div class="card">
 
 
@@ -199,7 +221,7 @@ Pedidos concluídos
 
 
 <p>
-Faturamento total
+Faturamento
 </p>
 
 
@@ -221,6 +243,7 @@ Receita acumulada
 
 
 
+
 <div class="card">
 
 
@@ -230,125 +253,21 @@ Receita acumulada
 
 
 <p>
-Ticket médio
+Meta mensal
 </p>
 
 
-<h3 id="ticketMedio">
-R$ 0
+<h3 id="progressoMeta">
+0%
 </h3>
 
 
 <span>
-Média por venda
+Progresso da meta
 </span>
 
 
 </div>
-
-
-
-</section>
-
-
-
-
-
-
-
-
-
-<section class="cards cards-extra">
-
-
-
-<div class="card">
-
-
-<div class="icon">
-🏆
-</div>
-
-
-<p>
-Produto mais vendido
-</p>
-
-
-<h3 id="produtoTop">
--
-</h3>
-
-
-<span>
-Ranking de vendas
-</span>
-
-
-</div>
-
-
-
-
-
-
-
-<div class="card">
-
-
-<div class="icon">
-⚠️
-</div>
-
-
-<p>
-Estoque baixo
-</p>
-
-
-<h3 id="estoqueBaixo">
-0
-</h3>
-
-
-<span>
-Produtos críticos
-</span>
-
-
-</div>
-
-
-
-
-
-
-
-<div class="card">
-
-
-<div class="icon">
-📅
-</div>
-
-
-<p>
-Vendas hoje
-</p>
-
-
-<h3 id="vendasHoje">
-0
-</h3>
-
-
-<span>
-Pedidos do dia
-</span>
-
-
-</div>
-
 
 
 
@@ -364,6 +283,8 @@ Pedidos do dia
 
 
 <section class="content">
+
+
 
 
 
@@ -395,7 +316,6 @@ Desempenho de vendas
 
 
 
-
 <div class="box">
 
 
@@ -410,7 +330,6 @@ Desempenho de vendas
 
 
 <thead>
-
 
 <tr>
 
@@ -433,6 +352,7 @@ Valor
 
 
 </thead>
+
 
 
 
@@ -461,13 +381,15 @@ Valor
 
 
 
+
+
+
+
 </main>
 
 
 
 </div>
-
-
 
 
 
@@ -484,6 +406,5 @@ Valor
 
 
 </body>
-
 
 </html>
