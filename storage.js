@@ -1,7 +1,8 @@
 // =====================================
-// DASHTIK V3.4
-// STORAGE - BANCO LOCAL
+// DASHTIK V3.5
+// STORAGE
 // =====================================
+
 
 
 // ===============================
@@ -9,9 +10,13 @@
 // ===============================
 
 
+
 function pegarProdutos(){
 
-    const dados = localStorage.getItem("produtos");
+
+    let dados =
+    localStorage.getItem("produtos");
+
 
 
     if(dados){
@@ -31,10 +36,12 @@ function pegarProdutos(){
 
 function salvarProdutos(produtos){
 
+
     localStorage.setItem(
         "produtos",
         JSON.stringify(produtos)
     );
+
 
 }
 
@@ -42,17 +49,20 @@ function salvarProdutos(produtos){
 
 
 
-
-
 function adicionarProduto(produto){
 
-    let produtos = pegarProdutos();
+
+    let produtos =
+    pegarProdutos();
+
 
 
     produtos.push(produto);
 
 
+
     salvarProdutos(produtos);
+
 
 }
 
@@ -64,11 +74,14 @@ function adicionarProduto(produto){
 
 function removerProduto(id){
 
-    let produtos = pegarProdutos();
+
+    let produtos =
+    pegarProdutos();
 
 
 
-    produtos = produtos.filter(
+    produtos =
+    produtos.filter(
         produto => produto.id !== id
     );
 
@@ -76,7 +89,9 @@ function removerProduto(id){
 
     salvarProdutos(produtos);
 
+
 }
+
 
 
 
@@ -94,7 +109,9 @@ function removerProduto(id){
 
 function pegarVendas(){
 
-    const dados = localStorage.getItem("vendas");
+
+    let dados =
+    localStorage.getItem("vendas");
 
 
 
@@ -105,8 +122,8 @@ function pegarVendas(){
     }
 
 
-
     return [];
+
 
 }
 
@@ -118,10 +135,12 @@ function pegarVendas(){
 
 function salvarVendas(vendas){
 
+
     localStorage.setItem(
         "vendas",
         JSON.stringify(vendas)
     );
+
 
 }
 
@@ -133,12 +152,17 @@ function salvarVendas(vendas){
 
 function adicionarVenda(venda){
 
-    let vendas = pegarVendas();
+
+    let vendas =
+    pegarVendas();
+
 
 
     vendas.push(venda);
 
 
+
     salvarVendas(vendas);
+
 
 }
