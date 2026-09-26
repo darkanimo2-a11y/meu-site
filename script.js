@@ -1,76 +1,98 @@
-const numbers = document.querySelectorAll("[data-value]");
+// =====================================
+// DASHTIK V3.1
+// SISTEMA PRINCIPAL
+// =====================================
 
 
-numbers.forEach(number=>{
+
+// ================================
+// ATUALIZAR DASHBOARD
+// ================================
 
 
-let target = Number(number.dataset.value);
-
-let current = 0;
+function atualizarDashboard(){
 
 
-let timer=setInterval(()=>{
+let produtos = pegarProdutos();
 
 
-current += Math.ceil(target/60);
+
+let totalProdutos = produtos.length;
 
 
-if(current >= target){
-
-current=target;
-
-clearInterval(timer);
-
-}
+let estoqueTotal = 0;
 
 
-number.innerHTML =
-current.toLocaleString("pt-BR");
+let valorEstoque = 0;
 
 
-},30);
+
+produtos.forEach(produto => {
+
+
+estoqueTotal += Number(produto.estoque);
+
+
+
+valorEstoque += 
+Number(produto.preco) *
+Number(produto.estoque);
 
 
 
 });
 
-function cadastrar(){
-
-
-let nome =
-document.getElementById("nome").value;
-
-
-let preco =
-document.getElementById("preco").value;
-
-
-let estoque =
-document.getElementById("estoque").value;
 
 
 
-let produto = {
+// CARD PRODUTOS
+
+let campoProdutos =
+document.getElementById("totalProdutos");
 
 
-id: Date.now(),
+if(campoProdutos){
 
-nome:nome,
+campoProdutos.innerHTML =
+totalProdutos;
 
-preco:preco,
-
-estoque:estoque
-
-
-};
-
-
-
-adicionarProduto(produto);
+}
 
 
 
-mostrarProdutos();
+// CARD ESTOQUE
+
+let campoEstoque =
+document.getElementById("totalEstoque");
+
+
+if(campoEstoque){
+
+campoEstoque.innerHTML =
+estoqueTotal;
+
+}
+
+
+
+
+// CARD VALOR
+
+let campoValor =
+document.getElementById("valorEstoque");
+
+
+if(campoValor){
+
+campoValor.innerHTML =
+"R$ " +
+valorEstoque.toLocaleString("pt-BR");
+
+}
+
+
+
+mostrarProdutosDashboard();
 
 
 
@@ -78,19 +100,22 @@ mostrarProdutos();
 
 
 
-function mostrarProdutos(){
 
 
-let lista =
-document.getElementById("lista");
+// =====================================
+// MOSTRAR PRODUTOS NO DASHBOARD
+// =====================================
+
+
+function mostrarProdutosDashboard(){
+
+
+let tabela =
+document.getElementById("listaDashboard");
 
 
 
-if(!lista) return;
-
-
-
-lista.innerHTML="";
+if(!tabela) return;
 
 
 
@@ -99,10 +124,14 @@ pegarProdutos();
 
 
 
-produtos.forEach(produto=>{
+tabela.innerHTML="";
 
 
-lista.innerHTML += `
+
+produtos.slice(-5).reverse().forEach(produto=>{
+
+
+tabela.innerHTML += `
 
 <tr>
 
@@ -121,19 +150,7 @@ ${produto.estoque}
 </td>
 
 
-<td>
-
-<button onclick="excluir(${produto.id})">
-
-🗑
-
-</button>
-
-</td>
-
-
 </tr>
-
 
 `;
 
@@ -141,34 +158,256 @@ ${produto.estoque}
 });
 
 
+
 }
 
 
+
+
+
+
+
+
+// =====================================
+// CADASTRAR PRODUTO
+// =====================================
+
+
+function cadastrar(){
+
+
+
+let nome =
+document.getElementById("nome").value;
+
+
+
+let preco =
+document.getElementById("preco").value;
+
+
+
+let estoque =
+document.getElementById("estoque").value;
+
+
+
+
+if(
+nome === "" ||
+preco === "" ||
+estoque === ""
+){
+
+alert("Preencha todos os campos!");
+
+return;
+
+}
+
+
+
+
+let produto = {
+
+
+id: Date.now(),
+
+
+nome:nome,
+
+
+preco:Number(preco),
+
+
+estoque:Number(estoque)
+
+
+
+};
+
+
+
+
+
+adicionarProduto(produto);
+
+
+
+alert("Produto cadastrado!");
+
+
+
+mostrarProdutos();
+
+
+
+atualizarDashboard();
+
+
+
+}
+
+
+
+
+
+// =====================================
+// LISTAR PRODUTOS
+// =====================================
+
+
+function mostrarProdutos(){
+
+
+
+let lista =
+document.getElementById("lista");
+
+
+
+if(!lista) return;
+
+
+
+
+let produtos =
+pegarProdutos();
+
+
+
+lista.innerHTML="";
+
+
+
+
+produtos.forEach(produto=>{
+
+
+lista.innerHTML += `
+
+
+<tr>
+
+
+<td>
+${produto.nome}
+</td>
+
+
+
+<td>
+R$ ${produto.preco}
+</td>
+
+
+
+<td>
+${produto.estoque}
+</td>
+
+
+
+<td>
+
+
+<button onclick="excluir(${produto.id})">
+
+🗑
+
+</button>
+
+
+</td>
+
+
+</tr>
+
+
+
+`;
+
+
+
+});
+
+
+
+}
+
+
+
+
+
+// =====================================
+// EXCLUIR PRODUTO
+// =====================================
 
 
 function excluir(id){
 
+
+
 removerProduto(id);
 
+
+
 mostrarProdutos();
+
+
+atualizarDashboard();
+
+
 
 }
 
 
+
+
+
+// =====================================
+// ABRIR FORMULÁRIO
+// =====================================
 
 
 function abrirFormulario(){
 
 
-let form =
+
+let formulario =
 document.getElementById("formulario");
 
 
-form.style.display="block";
+
+if(formulario){
+
+formulario.style.display="block";
+
+}
+
 
 
 }
 
 
 
+
+
+// =====================================
+// INICIAR SISTEMA
+// =====================================
+
+
+document.addEventListener(
+"DOMContentLoaded",
+()=>{
+
+
+atualizarDashboard();
+
+
 mostrarProdutos();
+
+
+}
+);
