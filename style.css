@@ -1,20 +1,22 @@
 *{
+
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:Arial, Helvetica, sans-serif;
+font-family:Arial,sans-serif;
+
 }
 
 
 body{
 
-background:#080b16;
+background:#070b18;
 color:white;
 
 }
 
 
-.container{
+.app{
 
 display:flex;
 min-height:100vh;
@@ -22,61 +24,65 @@ min-height:100vh;
 }
 
 
+/* SIDEBAR */
 
-/* MENU */
 
 .sidebar{
 
-width:260px;
+width:270px;
 background:#101528;
-padding:30px;
+padding:35px;
 
 }
 
 
 .sidebar h1{
 
-font-size:32px;
+font-size:34px;
 margin-bottom:50px;
 
 }
 
 
-.sidebar h1 span{
+.sidebar span{
 
 color:#00e5ff;
 
 }
 
 
+.sidebar li{
 
-nav a{
+list-style:none;
 
-display:block;
-padding:15px;
+padding:18px;
+
 margin-bottom:10px;
 
 color:#aaa;
-text-decoration:none;
 
-border-radius:10px;
+border-radius:12px;
+
+cursor:pointer;
 
 transition:.3s;
 
 }
 
 
-nav a:hover,
-.active{
+.sidebar li:hover,
+.sidebar .active{
 
 background:#00e5ff;
-color:#000!important;
+
+color:#000;
 
 }
 
 
 
-/* CONTEUDO */
+
+/* MAIN */
 
 
 main{
@@ -90,26 +96,39 @@ padding:35px;
 header{
 
 display:flex;
+
 justify-content:space-between;
+
 align-items:center;
 
 }
 
 
+header p{
+
+color:#888;
+
+margin-top:8px;
+
+}
+
+
+
 button{
 
 background:#00e5ff;
-border:none;
 
-padding:14px 25px;
+border:0;
 
-border-radius:10px;
+padding:15px 25px;
+
+border-radius:12px;
 
 font-weight:bold;
 
-cursor:pointer;
-
 }
+
+
 
 
 
@@ -129,6 +148,7 @@ margin-top:35px;
 }
 
 
+
 .card{
 
 background:#151b32;
@@ -137,26 +157,38 @@ padding:25px;
 
 border-radius:20px;
 
-box-shadow:
-0 0 20px #0005;
+position:relative;
+
+overflow:hidden;
+
+}
+
+
+
+.icon{
+
+font-size:30px;
 
 }
 
 
 .card p{
 
-color:#888;
+color:#999;
+
+margin-top:15px;
 
 }
 
 
 .card h3{
 
-font-size:32px;
+font-size:35px;
 
 margin:15px 0;
 
 }
+
 
 
 .card span{
@@ -167,10 +199,32 @@ color:#00e676;
 
 
 
-/* DASHBOARD */
+.mini-chart{
+
+height:35px;
+
+background:
+linear-gradient(
+90deg,
+transparent,
+#00e5ff,
+transparent
+);
+
+opacity:.3;
+
+margin-top:20px;
+
+}
 
 
-.dashboard{
+
+
+
+/* CONTENT */
+
+
+.content{
 
 display:grid;
 
@@ -183,12 +237,11 @@ margin-top:35px;
 }
 
 
-.grafico,
-.produtos{
+.box{
 
 background:#151b32;
 
-padding:25px;
+padding:30px;
 
 border-radius:20px;
 
@@ -196,27 +249,26 @@ border-radius:20px;
 
 
 
-/* BARRAS */
 
+.chart{
 
-.bars{
-
-height:250px;
+height:260px;
 
 display:flex;
 
 align-items:end;
 
-gap:20px;
+gap:25px;
 
-margin-top:30px;
+margin-top:40px;
 
 }
 
 
-.bars div{
 
-width:35px;
+.chart div{
+
+width:45px;
 
 background:#00e5ff;
 
@@ -226,7 +278,9 @@ border-radius:10px 10px 0 0;
 
 
 
-/* TABELA */
+
+
+/* TABLE */
 
 
 table{
@@ -240,13 +294,11 @@ border-collapse:collapse;
 }
 
 
-td,th{
+th,td{
 
-padding:15px;
+padding:16px;
 
-border-bottom:1px solid #333;
-
-text-align:left;
+border-bottom:1px solid #30364d;
 
 }
 
@@ -266,10 +318,9 @@ color:#ff9800;
 
 
 
-/* RESPONSIVO */
 
 
-@media(max-width:900px){
+@media(max-width:1000px){
 
 
 .sidebar{
@@ -286,7 +337,7 @@ grid-template-columns:1fr;
 }
 
 
-.dashboard{
+.content{
 
 grid-template-columns:1fr;
 
