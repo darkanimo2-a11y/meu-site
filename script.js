@@ -1,7 +1,13 @@
-// =================================
-// DASHTIK - SCRIPT
-// =================================
+// =====================================
+// DASHTIK V3.2
+// SCRIPT PRINCIPAL
+// =====================================
 
+
+
+// ===============================
+// NAVEGAÇÃO
+// ===============================
 
 
 function abrirProdutos(){
@@ -10,6 +16,13 @@ function abrirProdutos(){
 
 }
 
+
+
+function abrirVendas(){
+
+    window.location.href = "vendas.html";
+
+}
 
 
 
@@ -23,6 +36,9 @@ function voltarDashboard(){
 
 
 
+// ===============================
+// PRODUTOS
+// ===============================
 
 
 function cadastrar(){
@@ -43,9 +59,13 @@ function cadastrar(){
 
 
 
-    if(nome === "" || preco === "" || estoque === ""){
+    if(
+        nome === "" ||
+        preco === "" ||
+        estoque === ""
+    ){
 
-        alert("Preencha todos os campos");
+        alert("Preencha todos os campos!");
 
         return;
 
@@ -71,22 +91,19 @@ function cadastrar(){
 
 
 
-    alert("Produto salvo!");
-
-
-
-    document.getElementById("nome").value="";
-
-    document.getElementById("preco").value="";
-
-    document.getElementById("estoque").value="";
+    alert("Produto cadastrado!");
 
 
 
     listarProdutos();
 
 
+
+    atualizarDashboard();
+
+
 }
+
 
 
 
@@ -101,7 +118,9 @@ function listarProdutos(){
 
 
     if(!tabela){
+
         return;
+
     }
 
 
@@ -120,6 +139,7 @@ function listarProdutos(){
 
         tabela.innerHTML += `
 
+
         <tr>
 
         <td>${produto.nome}</td>
@@ -128,11 +148,12 @@ function listarProdutos(){
 
         <td>${produto.estoque}</td>
 
-
         <td>
 
         <button onclick="excluirProduto(${produto.id})">
+
         🗑
+
         </button>
 
         </td>
@@ -140,15 +161,15 @@ function listarProdutos(){
 
         </tr>
 
+
         `;
 
 
     });
 
 
+
 }
-
-
 
 
 
@@ -156,9 +177,15 @@ function listarProdutos(){
 
 function excluirProduto(id){
 
+
     removerProduto(id);
 
+
     listarProdutos();
+
+
+    atualizarDashboard();
+
 
 }
 
@@ -168,7 +195,130 @@ function excluirProduto(id){
 
 
 
+
+
+// ===============================
+// DASHBOARD
+// ===============================
+
+
 function atualizarDashboard(){
+
+
+    let produtos =
+    pegarProdutos();
+
+
+
+    let totalProdutos =
+    document.getElementById("totalProdutos");
+
+
+
+    let totalEstoque =
+    document.getElementById("totalEstoque");
+
+
+
+    let valorEstoque =
+    document.getElementById("valorEstoque");
+
+
+
+
+
+    let qtdProdutos =
+    produtos.length;
+
+
+
+    let estoque = 0;
+
+
+    let valor = 0;
+
+
+
+    produtos.forEach(produto=>{
+
+
+        estoque += Number(produto.estoque);
+
+
+        valor +=
+        Number(produto.preco) *
+        Number(produto.estoque);
+
+
+    });
+
+
+
+
+
+    if(totalProdutos){
+
+        totalProdutos.innerHTML =
+        qtdProdutos;
+
+    }
+
+
+
+
+
+    if(totalEstoque){
+
+        totalEstoque.innerHTML =
+        estoque;
+
+    }
+
+
+
+
+
+    if(valorEstoque){
+
+        valorEstoque.innerHTML =
+        "R$ " +
+        valor.toLocaleString("pt-BR");
+
+    }
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// VENDAS
+// ===============================
+
+
+
+function carregarProdutosVenda(){
+
+
+
+    let select =
+    document.getElementById("produtoVenda");
+
+
+
+    if(!select){
+
+        return;
+
+    }
 
 
 
@@ -177,76 +327,29 @@ function atualizarDashboard(){
 
 
 
-    let total =
-    document.getElementById("totalProdutos");
+    select.innerHTML="";
 
-
-
-    let estoque =
-    document.getElementById("totalEstoque");
-
-
-
-    let valor =
-    document.getElementById("valorEstoque");
-
-
-
-
-    let quantidadeProdutos =
-    produtos.length;
-
-
-
-    let totalEstoque = 0;
-
-    let valorTotal = 0;
 
 
 
     produtos.forEach(produto=>{
 
 
-        totalEstoque += produto.estoque;
+        select.innerHTML += `
 
 
-        valorTotal += 
-        produto.preco * produto.estoque;
+        <option value="${produto.id}">
+
+        ${produto.nome} 
+        - Estoque: ${produto.estoque}
+
+        </option>
+
+
+        `;
 
 
     });
-
-
-
-
-
-    if(total){
-
-        total.innerHTML =
-        quantidadeProdutos;
-
-    }
-
-
-
-
-    if(estoque){
-
-        estoque.innerHTML =
-        totalEstoque;
-
-    }
-
-
-
-
-
-    if(valor){
-
-        valor.innerHTML =
-        "R$ " + valorTotal.toLocaleString("pt-BR");
-
-    }
 
 
 
@@ -255,6 +358,212 @@ function atualizarDashboard(){
 
 
 
+
+
+
+
+function registrarVenda(){
+
+
+
+    let produtoId =
+    Number(
+    document.getElementById("produtoVenda").value
+    );
+
+
+
+    let quantidade =
+    Number(
+    document.getElementById("quantidadeVenda").value
+    );
+
+
+
+
+    let produtos =
+    pegarProdutos();
+
+
+
+
+    let produto =
+    produtos.find(
+        p => p.id === produtoId
+    );
+
+
+
+
+
+    if(!produto){
+
+        alert("Produto não encontrado");
+
+        return;
+
+    }
+
+
+
+
+
+    if(quantidade > produto.estoque){
+
+        alert("Estoque insuficiente!");
+
+        return;
+
+    }
+
+
+
+
+
+    produto.estoque -= quantidade;
+
+
+
+
+
+    salvarProdutos(produtos);
+
+
+
+
+
+    let venda = {
+
+
+        id:Date.now(),
+
+
+        produto:produto.nome,
+
+
+        quantidade:quantidade,
+
+
+        valor:
+        produto.preco * quantidade,
+
+
+        data:
+        new Date().toLocaleDateString("pt-BR")
+
+
+    };
+
+
+
+
+
+    adicionarVenda(venda);
+
+
+
+
+
+    alert("Venda registrada!");
+
+
+
+
+
+    carregarProdutosVenda();
+
+
+    listarVendas();
+
+
+    atualizarDashboard();
+
+
+
+}
+
+
+
+
+
+
+
+
+function listarVendas(){
+
+
+
+    let tabela =
+    document.getElementById("listaVendas");
+
+
+
+    if(!tabela){
+
+        return;
+
+    }
+
+
+
+    let vendas =
+    pegarVendas();
+
+
+
+    tabela.innerHTML="";
+
+
+
+
+
+    vendas.forEach(venda=>{
+
+
+        tabela.innerHTML += `
+
+
+        <tr>
+
+
+        <td>
+        ${venda.produto}
+        </td>
+
+
+        <td>
+        ${venda.quantidade}
+        </td>
+
+
+        <td>
+        R$ ${venda.valor}
+        </td>
+
+
+        </tr>
+
+
+        `;
+
+
+    });
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
+// INICIALIZAÇÃO
+// ===============================
 
 
 document.addEventListener(
@@ -264,7 +573,15 @@ document.addEventListener(
 
     atualizarDashboard();
 
+
     listarProdutos();
+
+
+    carregarProdutosVenda();
+
+
+    listarVendas();
+
 
 
 });
