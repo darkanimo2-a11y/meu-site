@@ -1,87 +1,181 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Dash Tik | Dashboard de Vendas</title>
+<title>DashTik | Dashboard</title>
 
 <link rel="stylesheet" href="style.css">
 
 </head>
 
+
 <body>
 
-<div class="container">
 
-<!-- MENU -->
+<div class="app">
+
+
+<!-- SIDEBAR -->
 
 <aside class="sidebar">
+
 
 <h1>
 <span>Dash</span>Tik
 </h1>
 
 
-<nav>
+<ul>
 
-<a class="active">📊 Dashboard</a>
-<a>🛒 Produtos</a>
-<a>💰 Vendas</a>
-<a>👥 Clientes</a>
-<a>⚙ Configurações</a>
+<li class="active">📊 Dashboard</li>
 
-</nav>
+<li>📦 Produtos</li>
+
+<li>💰 Vendas</li>
+
+<li>👥 Clientes</li>
+
+<li>📈 Relatórios</li>
+
+<li>⚙ Configurações</li>
+
+</ul>
+
 
 </aside>
 
 
 
-<!-- CONTEÚDO -->
+
+<!-- MAIN -->
 
 <main>
 
 
 <header>
 
+
+<div>
+
 <h2>Painel de Vendas</h2>
+
+<p>
+Visão geral do desempenho da loja
+</p>
+
+</div>
+
 
 <button>
 + Novo Produto
 </button>
 
+
 </header>
 
+
+
+
+
+<!-- CARDS -->
 
 
 <section class="cards">
 
 
 <div class="card">
+
+<div class="icon">
+💰
+</div>
+
 <p>Faturamento</p>
-<h3>R$ 45.890</h3>
-<span>+12% este mês</span>
+
+<h3 data-value="45890">
+0
+</h3>
+
+<span>
+↑ 12% este mês
+</span>
+
+<div class="mini-chart"></div>
+
 </div>
 
 
+
+
 <div class="card">
+
+<div class="icon">
+🛒
+</div>
+
 <p>Vendas</p>
-<h3>1.248</h3>
-<span>+8% crescimento</span>
+
+<h3 data-value="1248">
+0
+</h3>
+
+<span>
+↑ 8% crescimento
+</span>
+
+<div class="mini-chart"></div>
+
 </div>
 
 
+
+
+
 <div class="card">
+
+<div class="icon">
+👥
+</div>
+
 <p>Clientes</p>
-<h3>856</h3>
-<span>+20 novos</span>
+
+<h3 data-value="856">
+0
+</h3>
+
+<span>
++20 novos
+</span>
+
+<div class="mini-chart"></div>
+
 </div>
 
 
+
+
+
 <div class="card">
+
+<div class="icon">
+📦
+</div>
+
 <p>Produtos</p>
-<h3>342</h3>
-<span>Atualizado</span>
+
+<h3 data-value="342">
+0
+</h3>
+
+<span>
+Atualizado
+</span>
+
+<div class="mini-chart"></div>
+
 </div>
 
 
@@ -89,59 +183,148 @@
 
 
 
-<section class="dashboard">
 
 
-<div class="grafico">
 
-<h3>Desempenho de vendas</h3>
 
-<div class="bars">
+<section class="content">
 
-<div style="height:40%"></div>
-<div style="height:70%"></div>
-<div style="height:55%"></div>
-<div style="height:90%"></div>
-<div style="height:65%"></div>
+
+<div class="box">
+
+
+<h3>
+Vendas Mensais
+</h3>
+
+
+<div class="chart">
+
+
+<div style="height:40%">
+</div>
+
+<div style="height:60%">
+</div>
+
+<div style="height:75%">
+</div>
+
+<div style="height:90%">
+</div>
+
+<div style="height:70%">
+</div>
+
 
 </div>
 
+
 </div>
 
 
 
-<div class="produtos">
 
-<h3>Produtos recentes</h3>
+
+
+<div class="box">
+
+
+<h3>
+Produtos Recentes
+</h3>
 
 
 <table>
 
+
 <tr>
-<th>Produto</th>
-<th>Venda</th>
-<th>Status</th>
+
+<th>
+Produto
+</th>
+
+<th>
+Estoque
+</th>
+
+<th>
+Venda
+</th>
+
+<th>
+Status
+</th>
+
 </tr>
 
 
+
+
 <tr>
-<td>Smart Watch X</td>
-<td>R$299</td>
-<td class="green">Ativo</td>
+
+<td>
+⌚ Smart Watch X
+</td>
+
+<td>
+120
+</td>
+
+<td>
+R$299
+</td>
+
+<td class="green">
+Ativo
+</td>
+
 </tr>
 
 
+
+
 <tr>
-<td>Fone Bluetooth</td>
-<td>R$159</td>
-<td class="green">Ativo</td>
+
+<td>
+🎧 Fone Bluetooth
+</td>
+
+<td>
+85
+</td>
+
+<td>
+R$159
+</td>
+
+<td class="green">
+Ativo
+</td>
+
 </tr>
 
 
+
+
 <tr>
-<td>Teclado Gamer</td>
-<td>R$450</td>
-<td class="orange">Baixo estoque</td>
+
+<td>
+⌨ Teclado Gamer
+</td>
+
+<td>
+12
+</td>
+
+<td>
+R$450
+</td>
+
+<td class="orange">
+Baixo estoque
+</td>
+
 </tr>
 
 
@@ -157,8 +340,14 @@
 
 </main>
 
+
 </div>
 
 
+
+<script src="script.js"></script>
+
+
 </body>
+
 </html>
