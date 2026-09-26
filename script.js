@@ -1,5 +1,5 @@
 // =====================================
-// DASHTIK V3.3
+// DASHTIK V3.4
 // SCRIPT PRINCIPAL
 // =====================================
 
@@ -38,6 +38,8 @@ function voltarDashboard(){
 
 
 
+
+
 // ===============================
 // PRODUTOS
 // ===============================
@@ -59,7 +61,6 @@ function cadastrar(){
 
 
 
-
     if(
         nome === "" ||
         preco === "" ||
@@ -77,13 +78,18 @@ function cadastrar(){
 
     let produto = {
 
+
         id: Date.now(),
+
 
         nome:nome,
 
+
         preco:Number(preco),
 
+
         estoque:Number(estoque)
+
 
     };
 
@@ -107,6 +113,8 @@ function cadastrar(){
 
 
 }
+
+
 
 
 
@@ -191,6 +199,8 @@ function listarProdutos(){
 
 
 
+
+
 function excluirProduto(id){
 
     removerProduto(id);
@@ -213,7 +223,7 @@ function excluirProduto(id){
 
 
 // ===============================
-// DASHBOARD V3.3
+// DASHBOARD
 // ===============================
 
 
@@ -233,17 +243,34 @@ function atualizarDashboard(){
 
 
 
-    // PRODUTOS
 
-
-    let campoProdutos =
+    let totalProdutos =
     document.getElementById("totalProdutos");
 
 
 
-    if(campoProdutos){
+    let totalVendas =
+    document.getElementById("totalVendas");
 
-        campoProdutos.innerHTML =
+
+
+    let faturamento =
+    document.getElementById("faturamento");
+
+
+
+    let ticket =
+    document.getElementById("ticketMedio");
+
+
+
+
+
+
+
+    if(totalProdutos){
+
+        totalProdutos.innerHTML =
         produtos.length;
 
     }
@@ -252,18 +279,9 @@ function atualizarDashboard(){
 
 
 
+    if(totalVendas){
 
-    // VENDAS
-
-
-    let campoVendas =
-    document.getElementById("totalVendas");
-
-
-
-    if(campoVendas){
-
-        campoVendas.innerHTML =
+        totalVendas.innerHTML =
         vendas.length;
 
     }
@@ -273,18 +291,14 @@ function atualizarDashboard(){
 
 
 
-
-    // FATURAMENTO
-
-
-    let faturamento = 0;
+    let totalFaturamento = 0;
 
 
 
     vendas.forEach(venda=>{
 
 
-        faturamento += Number(venda.valor);
+        totalFaturamento += Number(venda.valor);
 
 
     });
@@ -293,16 +307,12 @@ function atualizarDashboard(){
 
 
 
-    let campoFaturamento =
-    document.getElementById("faturamento");
 
+    if(faturamento){
 
-
-    if(campoFaturamento){
-
-        campoFaturamento.innerHTML =
+        faturamento.innerHTML =
         "R$ " +
-        faturamento.toLocaleString("pt-BR");
+        totalFaturamento.toLocaleString("pt-BR");
 
     }
 
@@ -312,17 +322,14 @@ function atualizarDashboard(){
 
 
 
-    // TICKET MÉDIO
-
-
-    let ticket = 0;
+    let media = 0;
 
 
 
     if(vendas.length > 0){
 
-        ticket =
-        faturamento / vendas.length;
+        media =
+        totalFaturamento / vendas.length;
 
     }
 
@@ -330,17 +337,11 @@ function atualizarDashboard(){
 
 
 
+    if(ticket){
 
-    let campoTicket =
-    document.getElementById("ticketMedio");
-
-
-
-    if(campoTicket){
-
-        campoTicket.innerHTML =
+        ticket.innerHTML =
         "R$ " +
-        ticket.toLocaleString("pt-BR");
+        media.toLocaleString("pt-BR");
 
     }
 
@@ -350,7 +351,6 @@ function atualizarDashboard(){
 
 
     mostrarVendasDashboard();
-
 
 
 }
@@ -369,7 +369,6 @@ function atualizarDashboard(){
 
 
 function mostrarVendasDashboard(){
-
 
 
     let tabela =
@@ -391,7 +390,9 @@ function mostrarVendasDashboard(){
 
 
 
+
     tabela.innerHTML="";
+
 
 
 
@@ -444,8 +445,145 @@ function mostrarVendasDashboard(){
 
 
 // ===============================
+// GRÁFICO
+// ===============================
+
+
+function criarGrafico(){
+
+
+
+    let canvas =
+    document.getElementById("graficoVendas");
+
+
+
+    if(!canvas){
+
+        return;
+
+    }
+
+
+
+
+    let vendas =
+    pegarVendas();
+
+
+
+    if(vendas.length === 0){
+
+        return;
+
+    }
+
+
+
+
+    let nomes = [];
+
+    let valores = [];
+
+
+
+
+    vendas.forEach(venda=>{
+
+
+        nomes.push(
+            venda.produto
+        );
+
+
+
+        valores.push(
+            Number(venda.valor)
+        );
+
+
+    });
+
+
+
+
+
+
+    new Chart(canvas,{
+
+
+        type:"bar",
+
+
+
+        data:{
+
+
+            labels:nomes,
+
+
+
+            datasets:[{
+
+                label:"Faturamento",
+
+                data:valores
+
+
+            }]
+
+
+        },
+
+
+
+        options:{
+
+
+            responsive:true,
+
+
+            maintainAspectRatio:false,
+
+
+            scales:{
+
+
+                y:{
+
+
+                    beginAtZero:true
+
+
+                }
+
+
+            }
+
+
+
+        }
+
+
+
+    });
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// ===============================
 // VENDAS
 // ===============================
+
 
 
 function carregarProdutosVenda(){
@@ -461,7 +599,6 @@ function carregarProdutosVenda(){
         return;
 
     }
-
 
 
 
@@ -511,14 +648,14 @@ function registrarVenda(){
 
     let produtoId =
     Number(
-        document.getElementById("produtoVenda").value
+    document.getElementById("produtoVenda").value
     );
 
 
 
     let quantidade =
     Number(
-        document.getElementById("quantidadeVenda").value
+    document.getElementById("quantidadeVenda").value
     );
 
 
@@ -534,7 +671,7 @@ function registrarVenda(){
 
     let produto =
     produtos.find(
-        p => p.id === produtoId
+        item => item.id === produtoId
     );
 
 
@@ -543,11 +680,12 @@ function registrarVenda(){
 
     if(!produto){
 
-        alert("Produto não encontrado");
+        alert("Produto inválido");
 
         return;
 
     }
+
 
 
 
@@ -556,11 +694,12 @@ function registrarVenda(){
 
     if(quantidade > produto.estoque){
 
-        alert("Estoque insuficiente!");
+        alert("Estoque insuficiente");
 
         return;
 
     }
+
 
 
 
@@ -572,6 +711,7 @@ function registrarVenda(){
 
 
     salvarProdutos(produtos);
+
 
 
 
@@ -591,15 +731,10 @@ function registrarVenda(){
 
 
         valor:
-        produto.preco * quantidade,
-
-
-        data:
-        new Date().toLocaleDateString("pt-BR")
+        produto.preco * quantidade
 
 
     };
-
 
 
 
@@ -610,22 +745,24 @@ function registrarVenda(){
 
 
 
-    alert("Venda registrada!");
+    alert("Venda realizada!");
 
-
-
-
-    carregarProdutosVenda();
-
-
-    listarVendas();
 
 
     atualizarDashboard();
 
 
 
+    carregarProdutosVenda();
+
+
+
+    listarVendas();
+
+
+
 }
+
 
 
 
@@ -651,7 +788,6 @@ function listarVendas(){
 
 
 
-
     let vendas =
     pegarVendas();
 
@@ -669,7 +805,6 @@ function listarVendas(){
 
 
         <tr>
-
 
         <td>
         ${venda.produto}
@@ -705,118 +840,10 @@ function listarVendas(){
 
 
 
-
 // ===============================
 // INICIALIZAÇÃO
 // ===============================
-// ===============================
-// GRÁFICO DE VENDAS
-// ===============================
 
-
-function criarGrafico(){
-
-
-let canvas =
-document.getElementById("graficoVendas");
-
-
-
-if(!canvas){
-
-return;
-
-}
-
-
-
-let vendas =
-pegarVendas();
-
-
-
-let nomes = [];
-
-let valores = [];
-
-
-
-
-vendas.forEach(venda=>{
-
-
-nomes.push(
-venda.produto
-);
-
-
-valores.push(
-venda.valor
-);
-
-
-
-});
-
-
-
-
-
-new Chart(canvas, {
-
-
-type:"bar",
-
-
-data:{
-
-
-labels:nomes,
-
-
-datasets:[{
-
-label:"Faturamento",
-
-data:valores
-
-
-}]
-
-
-},
-
-
-options:{
-
-
-responsive:true,
-
-
-plugins:{
-
-
-legend:{
-
-
-display:true
-
-
-}
-
-
-}
-
-
-}
-
-
-
-});
-
-
-
-}
 
 document.addEventListener(
 "DOMContentLoaded",
@@ -836,5 +863,6 @@ document.addEventListener(
 
 
     criarGrafico();
+
 
 });
