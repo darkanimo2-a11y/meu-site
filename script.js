@@ -1,13 +1,7 @@
-// =======================================
-// DASHTIK V3.1
-// SCRIPT PRINCIPAL
-// =======================================
+// =================================
+// DASHTIK - SCRIPT
+// =================================
 
-
-
-// =======================================
-// NAVEGAÇÃO
-// =======================================
 
 
 function abrirProdutos(){
@@ -19,107 +13,9 @@ function abrirProdutos(){
 
 
 
+function voltarDashboard(){
 
-
-// =======================================
-// ATUALIZAR DASHBOARD
-// =======================================
-
-
-function atualizarDashboard(){
-
-
-    let produtos = pegarProdutos();
-
-
-
-    let totalProdutos = produtos.length;
-
-
-    let estoqueTotal = 0;
-
-
-    let valorEstoque = 0;
-
-
-
-
-    produtos.forEach(produto => {
-
-
-        estoqueTotal += Number(produto.estoque);
-
-
-
-        valorEstoque += 
-        Number(produto.preco) *
-        Number(produto.estoque);
-
-
-
-    });
-
-
-
-
-
-
-    let campoProdutos =
-    document.getElementById("totalProdutos");
-
-
-
-    if(campoProdutos){
-
-        campoProdutos.innerHTML = totalProdutos;
-
-    }
-
-
-
-
-
-
-    let campoEstoque =
-    document.getElementById("totalEstoque");
-
-
-
-    if(campoEstoque){
-
-        campoEstoque.innerHTML = estoqueTotal;
-
-    }
-
-
-
-
-
-
-
-    let campoValor =
-    document.getElementById("valorEstoque");
-
-
-
-    if(campoValor){
-
-
-        campoValor.innerHTML =
-        "R$ " + 
-        valorEstoque.toLocaleString("pt-BR");
-
-
-    }
-
-
-
-
-
-
-    mostrarProdutosDashboard();
-
-
+    window.location.href = "index.html";
 
 }
 
@@ -127,104 +23,13 @@ function atualizarDashboard(){
 
 
 
-
-
-
-
-// =======================================
-// MOSTRAR PRODUTOS NO DASHBOARD
-// =======================================
-
-
-function mostrarProdutosDashboard(){
-
-
-
-    let tabela =
-    document.getElementById("listaDashboard");
-
-
-
-    if(!tabela) return;
-
-
-
-
-
-    let produtos =
-    pegarProdutos();
-
-
-
-
-
-    tabela.innerHTML = "";
-
-
-
-
-
-    produtos
-    .slice(-5)
-    .reverse()
-    .forEach(produto => {
-
-
-
-        tabela.innerHTML += `
-
-
-        <tr>
-
-
-        <td>
-        ${produto.nome}
-        </td>
-
-
-        <td>
-        R$ ${produto.preco}
-        </td>
-
-
-        <td>
-        ${produto.estoque}
-        </td>
-
-
-        </tr>
-
-
-        `;
-
-
-
-    });
-
-
-
-}
-
-
-
-
-
-
-
-
-
-// =======================================
-// CADASTRAR PRODUTO
-// =======================================
 
 
 function cadastrar(){
 
 
-
     let nome =
     document.getElementById("nome").value;
-
 
 
 
@@ -233,59 +38,32 @@ function cadastrar(){
 
 
 
-
     let estoque =
     document.getElementById("estoque").value;
 
 
 
+    if(nome === "" || preco === "" || estoque === ""){
 
-
-
-
-    if(
-        nome === "" ||
-        preco === "" ||
-        estoque === ""
-    ){
-
-
-        alert("Preencha todos os campos!");
+        alert("Preencha todos os campos");
 
         return;
-
 
     }
 
 
 
-
-
-
-
-
     let produto = {
-
 
         id: Date.now(),
 
-
         nome:nome,
-
 
         preco:Number(preco),
 
-
         estoque:Number(estoque)
 
-
-
     };
-
-
-
-
-
 
 
 
@@ -293,25 +71,19 @@ function cadastrar(){
 
 
 
-
-
-    alert("Produto cadastrado com sucesso!");
-
+    alert("Produto salvo!");
 
 
 
+    document.getElementById("nome").value="";
 
-    limparCampos();
+    document.getElementById("preco").value="";
 
-
-
-
-    mostrarProdutos();
+    document.getElementById("estoque").value="";
 
 
-    atualizarDashboard();
 
-
+    listarProdutos();
 
 
 }
@@ -320,28 +92,17 @@ function cadastrar(){
 
 
 
+function listarProdutos(){
 
 
-
-
-// =======================================
-// LISTAR PRODUTOS
-// =======================================
-
-
-function mostrarProdutos(){
-
-
-
-    let lista =
+    let tabela =
     document.getElementById("lista");
 
 
 
-
-    if(!lista) return;
-
-
+    if(!tabela){
+        return;
+    }
 
 
 
@@ -350,67 +111,107 @@ function mostrarProdutos(){
 
 
 
-
-    lista.innerHTML="";
-
+    tabela.innerHTML="";
 
 
 
+    produtos.forEach(produto=>{
 
 
-    produtos.forEach(produto => {
-
-
-
-        lista.innerHTML += `
-
-
+        tabela.innerHTML += `
 
         <tr>
 
+        <td>${produto.nome}</td>
 
+        <td>R$ ${produto.preco}</td>
 
-        <td>
-        ${produto.nome}
-        </td>
-
-
-
-
-        <td>
-        R$ ${produto.preco}
-        </td>
-
-
-
-
-        <td>
-        ${produto.estoque}
-        </td>
-
-
+        <td>${produto.estoque}</td>
 
 
         <td>
 
-
-        <button onclick="excluir(${produto.id})">
-
+        <button onclick="excluirProduto(${produto.id})">
         🗑
-
         </button>
 
-
         </td>
-
 
 
         </tr>
 
-
-
         `;
 
+
+    });
+
+
+}
+
+
+
+
+
+
+
+function excluirProduto(id){
+
+    removerProduto(id);
+
+    listarProdutos();
+
+}
+
+
+
+
+
+
+
+function atualizarDashboard(){
+
+
+
+    let produtos =
+    pegarProdutos();
+
+
+
+    let total =
+    document.getElementById("totalProdutos");
+
+
+
+    let estoque =
+    document.getElementById("totalEstoque");
+
+
+
+    let valor =
+    document.getElementById("valorEstoque");
+
+
+
+
+    let quantidadeProdutos =
+    produtos.length;
+
+
+
+    let totalEstoque = 0;
+
+    let valorTotal = 0;
+
+
+
+    produtos.forEach(produto=>{
+
+
+        totalEstoque += produto.estoque;
+
+
+        valorTotal += 
+        produto.preco * produto.estoque;
 
 
     });
@@ -418,90 +219,35 @@ function mostrarProdutos(){
 
 
 
-}
 
+    if(total){
 
-
-
-
-
-
-
-
-// =======================================
-// EXCLUIR PRODUTO
-// =======================================
-
-
-function excluir(id){
-
-
-
-    removerProduto(id);
-
-
-
-    mostrarProdutos();
-
-
-
-    atualizarDashboard();
-
-
-
-}
-
-
-
-
-
-
-
-
-
-// =======================================
-// LIMPAR FORMULÁRIO
-// =======================================
-
-
-function limparCampos(){
-
-
-    let nome =
-    document.getElementById("nome");
-
-
-    let preco =
-    document.getElementById("preco");
-
-
-    let estoque =
-    document.getElementById("estoque");
-
-
-
-
-    if(nome){
-
-        nome.value="";
+        total.innerHTML =
+        quantidadeProdutos;
 
     }
 
-
-
-    if(preco){
-
-        preco.value="";
-
-    }
 
 
 
     if(estoque){
 
-        estoque.value="";
+        estoque.innerHTML =
+        totalEstoque;
 
     }
+
+
+
+
+
+    if(valor){
+
+        valor.innerHTML =
+        "R$ " + valorTotal.toLocaleString("pt-BR");
+
+    }
+
 
 
 }
@@ -509,14 +255,6 @@ function limparCampos(){
 
 
 
-
-
-
-
-
-// =======================================
-// INICIALIZAÇÃO
-// =======================================
 
 
 document.addEventListener(
@@ -526,11 +264,7 @@ document.addEventListener(
 
     atualizarDashboard();
 
+    listarProdutos();
 
 
-    mostrarProdutos();
-
-
-
-}
-);
+});
