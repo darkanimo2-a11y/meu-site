@@ -411,3 +411,8 @@ mostrarProdutos();
 
 }
 );
+function abrirProdutos(){
+
+window.location.href="produtos.html";
+
+}
