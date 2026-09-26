@@ -709,7 +709,114 @@ function listarVendas(){
 // ===============================
 // INICIALIZAÇÃO
 // ===============================
+// ===============================
+// GRÁFICO DE VENDAS
+// ===============================
 
+
+function criarGrafico(){
+
+
+let canvas =
+document.getElementById("graficoVendas");
+
+
+
+if(!canvas){
+
+return;
+
+}
+
+
+
+let vendas =
+pegarVendas();
+
+
+
+let nomes = [];
+
+let valores = [];
+
+
+
+
+vendas.forEach(venda=>{
+
+
+nomes.push(
+venda.produto
+);
+
+
+valores.push(
+venda.valor
+);
+
+
+
+});
+
+
+
+
+
+new Chart(canvas, {
+
+
+type:"bar",
+
+
+data:{
+
+
+labels:nomes,
+
+
+datasets:[{
+
+label:"Faturamento",
+
+data:valores
+
+
+}]
+
+
+},
+
+
+options:{
+
+
+responsive:true,
+
+
+plugins:{
+
+
+legend:{
+
+
+display:true
+
+
+}
+
+
+}
+
+
+}
+
+
+
+});
+
+
+
+}
 
 document.addEventListener(
 "DOMContentLoaded",
@@ -727,5 +834,7 @@ document.addEventListener(
 
     listarVendas();
 
+
+    criarGrafico();
 
 });
