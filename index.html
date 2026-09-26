@@ -20,8 +20,6 @@
 <div class="app">
 
 
-<!-- MENU -->
-
 <aside class="sidebar">
 
 
@@ -34,51 +32,33 @@
 
 
 <li class="active">
-
 📊 Dashboard
-
 </li>
-
 
 
 <li onclick="abrirProdutos()">
-
 📦 Produtos
-
 </li>
-
 
 
 <li onclick="abrirVendas()">
-
 💰 Vendas
-
 </li>
 
 
-
 <li>
-
 👥 Clientes
-
 </li>
 
 
-
 <li>
-
 📈 Relatórios
-
 </li>
-
 
 
 <li>
-
 ⚙ Configurações
-
 </li>
-
 
 
 </ul>
@@ -91,8 +71,6 @@
 
 
 
-
-<!-- CONTEÚDO -->
 
 <main>
 
@@ -133,9 +111,6 @@ Análise da sua operação em tempo real
 
 
 
-
-
-<!-- CARDS -->
 
 <section class="cards">
 
@@ -271,9 +246,6 @@ Média por venda
 
 
 
-<!-- ÁREA INFERIOR -->
-
-
 <section class="content">
 
 
@@ -289,8 +261,15 @@ Desempenho de vendas
 
 
 
+<div class="grafico-container">
+
 
 <canvas id="graficoVendas"></canvas>
+
+
+</div>
+
+
 
 </div>
 
@@ -343,6 +322,7 @@ Valor
 
 
 
+
 <tbody id="listaVendasDashboard">
 
 
@@ -361,7 +341,9 @@ Valor
 
 
 
+
 </section>
+
 
 
 
@@ -378,7 +360,10 @@ Valor
 
 
 
+<!-- CHART.JS -->
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 
 <script src="storage.js"></script>
 
