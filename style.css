@@ -1,5 +1,5 @@
 /* =====================================
-   DASHTIK V3.5
+   DASHTIK V3.5.1
    STYLE
 ===================================== */
 
@@ -16,7 +16,6 @@ font-family:Arial, Helvetica, sans-serif;
 
 
 
-
 body{
 
 background:#070b18;
@@ -24,6 +23,7 @@ background:#070b18;
 color:white;
 
 }
+
 
 
 
@@ -47,7 +47,7 @@ min-height:100vh;
 
 
 /* ==========================
-   MENU
+   SIDEBAR
 ========================== */
 
 
@@ -81,15 +81,11 @@ color:#00e5ff;
 
 
 
-
-
 .sidebar ul{
 
 list-style:none;
 
 }
-
-
 
 
 
@@ -114,11 +110,9 @@ transition:.3s;
 .sidebar li:hover,
 .sidebar .active{
 
-
 background:#00e5ff;
 
 color:#000;
-
 
 }
 
@@ -184,8 +178,6 @@ font-weight:bold;
 
 cursor:pointer;
 
-transition:.3s;
-
 }
 
 
@@ -226,10 +218,11 @@ margin-top:35px;
 
 .cards-extra{
 
+grid-template-columns:repeat(3,1fr);
+
 margin-top:20px;
 
 }
-
 
 
 
@@ -242,9 +235,9 @@ padding:25px;
 
 border-radius:20px;
 
-box-shadow:0 0 20px #0005;
-
 min-height:170px;
+
+box-shadow:0 0 20px #0005;
 
 }
 
@@ -257,8 +250,6 @@ min-height:170px;
 font-size:32px;
 
 }
-
-
 
 
 
@@ -277,6 +268,8 @@ margin-top:15px;
 font-size:30px;
 
 margin:15px 0;
+
+word-break:break-word;
 
 }
 
@@ -343,27 +336,21 @@ border-radius:20px;
 
 .grafico-container{
 
-
 height:300px;
 
 width:100%;
 
-
 margin-top:20px;
-
 
 }
 
 
 
-
 #graficoVendas{
-
 
 width:100%!important;
 
 height:100%!important;
-
 
 }
 
@@ -392,7 +379,6 @@ margin-top:25px;
 
 
 
-
 th,
 td{
 
@@ -403,7 +389,6 @@ border-bottom:1px solid #30364d;
 text-align:left;
 
 }
-
 
 
 
@@ -444,7 +429,17 @@ grid-template-columns:repeat(2,1fr);
 }
 
 
+
+.cards-extra{
+
+grid-template-columns:repeat(2,1fr);
+
 }
+
+
+
+}
+
 
 
 
@@ -460,6 +455,7 @@ display:none;
 
 
 .cards,
+.cards-extra,
 .content{
 
 grid-template-columns:1fr;
@@ -473,6 +469,7 @@ main{
 padding:20px;
 
 }
+
 
 
 }
