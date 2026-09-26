@@ -20,6 +20,7 @@
 <div class="app">
 
 
+
 <aside class="sidebar">
 
 
@@ -36,9 +37,11 @@
 </li>
 
 
+
 <li onclick="abrirProdutos()">
 📦 Produtos
 </li>
+
 
 
 <li onclick="abrirVendas()">
@@ -46,14 +49,17 @@
 </li>
 
 
+
 <li>
 👥 Clientes
 </li>
 
 
+
 <li>
 📈 Relatórios
 </li>
+
 
 
 <li>
@@ -65,6 +71,7 @@
 
 
 </aside>
+
 
 
 
@@ -87,11 +94,12 @@ Painel de Vendas
 
 
 <p>
-Análise da sua operação em tempo real
+Análise inteligente da operação
 </p>
 
 
 </div>
+
 
 
 
@@ -112,12 +120,14 @@ Análise da sua operação em tempo real
 
 
 
+
 <section class="cards">
 
 
 
-<div class="card">
 
+
+<div class="card">
 
 <div class="icon">
 📦
@@ -140,6 +150,8 @@ Produtos ativos
 
 
 </div>
+
+
 
 
 
@@ -178,6 +190,8 @@ Pedidos concluídos
 
 
 
+
+
 <div class="card">
 
 
@@ -202,6 +216,8 @@ Receita acumulada
 
 
 </div>
+
+
 
 
 
@@ -236,6 +252,114 @@ Média por venda
 
 
 
+
+
+
+</section>
+
+
+
+
+
+
+
+
+
+<section class="cards cards-extra">
+
+
+
+
+
+<div class="card">
+
+
+<div class="icon">
+🏆
+</div>
+
+
+<p>
+Produto mais vendido
+</p>
+
+
+<h3 id="produtoTop">
+-
+</h3>
+
+
+<span>
+Ranking de vendas
+</span>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="card">
+
+
+<div class="icon">
+⚠️
+</div>
+
+
+<p>
+Estoque baixo
+</p>
+
+
+<h3 id="estoqueBaixo">
+0
+</h3>
+
+
+<span>
+Produtos críticos
+</span>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="card">
+
+
+<div class="icon">
+📅
+</div>
+
+
+<p>
+Vendas hoje
+</p>
+
+
+<h3 id="vendasHoje">
+0
+</h3>
+
+
+<span>
+Pedidos do dia
+</span>
+
+
+</div>
+
+
+
 </section>
 
 
@@ -258,6 +382,7 @@ Média por venda
 <h3>
 Desempenho de vendas
 </h3>
+
 
 
 
@@ -334,8 +459,8 @@ Valor
 
 
 
-</div>
 
+</div>
 
 
 
@@ -360,10 +485,8 @@ Valor
 
 
 
-<!-- CHART.JS -->
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 
 <script src="storage.js"></script>
 
@@ -372,6 +495,5 @@ Valor
 
 
 </body>
-
 
 </html>
