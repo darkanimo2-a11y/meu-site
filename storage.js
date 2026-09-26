@@ -1,70 +1,56 @@
-// STORAGE DO DASHTIK
+// =================================
+// DASHTIK - STORAGE
+// BANCO LOCAL
+// =================================
 
 
 function pegarProdutos(){
 
-let produtos =
-localStorage.getItem("produtos");
+    let produtos = localStorage.getItem("produtos");
 
+    if(produtos){
+        return JSON.parse(produtos);
+    }
 
-if(produtos){
-
-return JSON.parse(produtos);
-
-}
-
-
-return [];
+    return [];
 
 }
-
 
 
 
 function salvarProdutos(produtos){
 
-localStorage.setItem(
-"produtos",
-JSON.stringify(produtos)
-);
+    localStorage.setItem(
+        "produtos",
+        JSON.stringify(produtos)
+    );
 
 }
-
-
 
 
 
 function adicionarProduto(produto){
 
+    let produtos = pegarProdutos();
 
-let produtos = pegarProdutos();
+    produtos.push(produto);
 
-
-produtos.push(produto);
-
-
-salvarProdutos(produtos);
-
+    salvarProdutos(produtos);
 
 }
 
 
 
-
-
 function removerProduto(id){
 
-
-let produtos = pegarProdutos();
-
-
-produtos =
-produtos.filter(
-produto => produto.id !== id
-);
+    let produtos = pegarProdutos();
 
 
-salvarProdutos(produtos);
+    produtos = produtos.filter(
+        produto => produto.id !== id
+    );
 
+
+    salvarProdutos(produtos);
 
 }
