@@ -1,161 +1,205 @@
-// =====================================
+// =======================================
 // DASHTIK V3.1
-// SISTEMA PRINCIPAL
-// =====================================
+// SCRIPT PRINCIPAL
+// =======================================
 
 
 
-// ================================
+// =======================================
+// NAVEGAÇÃO
+// =======================================
+
+
+function abrirProdutos(){
+
+    window.location.href = "produtos.html";
+
+}
+
+
+
+
+
+
+// =======================================
 // ATUALIZAR DASHBOARD
-// ================================
+// =======================================
 
 
 function atualizarDashboard(){
 
 
-let produtos = pegarProdutos();
+    let produtos = pegarProdutos();
 
 
 
-let totalProdutos = produtos.length;
+    let totalProdutos = produtos.length;
 
 
-let estoqueTotal = 0;
+    let estoqueTotal = 0;
 
 
-let valorEstoque = 0;
-
-
-
-produtos.forEach(produto => {
-
-
-estoqueTotal += Number(produto.estoque);
-
-
-
-valorEstoque += 
-Number(produto.preco) *
-Number(produto.estoque);
-
-
-
-});
+    let valorEstoque = 0;
 
 
 
 
-// CARD PRODUTOS
-
-let campoProdutos =
-document.getElementById("totalProdutos");
+    produtos.forEach(produto => {
 
 
-if(campoProdutos){
+        estoqueTotal += Number(produto.estoque);
 
-campoProdutos.innerHTML =
-totalProdutos;
+
+
+        valorEstoque += 
+        Number(produto.preco) *
+        Number(produto.estoque);
+
+
+
+    });
+
+
+
+
+
+
+    let campoProdutos =
+    document.getElementById("totalProdutos");
+
+
+
+    if(campoProdutos){
+
+        campoProdutos.innerHTML = totalProdutos;
+
+    }
+
+
+
+
+
+
+    let campoEstoque =
+    document.getElementById("totalEstoque");
+
+
+
+    if(campoEstoque){
+
+        campoEstoque.innerHTML = estoqueTotal;
+
+    }
+
+
+
+
+
+
+
+    let campoValor =
+    document.getElementById("valorEstoque");
+
+
+
+    if(campoValor){
+
+
+        campoValor.innerHTML =
+        "R$ " + 
+        valorEstoque.toLocaleString("pt-BR");
+
+
+    }
+
+
+
+
+
+
+    mostrarProdutosDashboard();
+
+
 
 }
 
 
 
-// CARD ESTOQUE
-
-let campoEstoque =
-document.getElementById("totalEstoque");
-
-
-if(campoEstoque){
-
-campoEstoque.innerHTML =
-estoqueTotal;
-
-}
-
-
-
-
-// CARD VALOR
-
-let campoValor =
-document.getElementById("valorEstoque");
-
-
-if(campoValor){
-
-campoValor.innerHTML =
-"R$ " +
-valorEstoque.toLocaleString("pt-BR");
-
-}
-
-
-
-mostrarProdutosDashboard();
-
-
-
-}
 
 
 
 
 
-// =====================================
+
+// =======================================
 // MOSTRAR PRODUTOS NO DASHBOARD
-// =====================================
+// =======================================
 
 
 function mostrarProdutosDashboard(){
 
 
-let tabela =
-document.getElementById("listaDashboard");
+
+    let tabela =
+    document.getElementById("listaDashboard");
 
 
 
-if(!tabela) return;
+    if(!tabela) return;
 
 
 
-let produtos =
-pegarProdutos();
+
+
+    let produtos =
+    pegarProdutos();
 
 
 
-tabela.innerHTML="";
+
+
+    tabela.innerHTML = "";
 
 
 
-produtos.slice(-5).reverse().forEach(produto=>{
 
 
-tabela.innerHTML += `
-
-<tr>
-
-<td>
-${produto.nome}
-</td>
+    produtos
+    .slice(-5)
+    .reverse()
+    .forEach(produto => {
 
 
-<td>
-R$ ${produto.preco}
-</td>
+
+        tabela.innerHTML += `
 
 
-<td>
-${produto.estoque}
-</td>
+        <tr>
 
 
-</tr>
+        <td>
+        ${produto.nome}
+        </td>
 
-`;
+
+        <td>
+        R$ ${produto.preco}
+        </td>
 
 
-});
+        <td>
+        ${produto.estoque}
+        </td>
+
+
+        </tr>
+
+
+        `;
+
+
+
+    });
 
 
 
@@ -168,168 +212,209 @@ ${produto.estoque}
 
 
 
-// =====================================
+
+// =======================================
 // CADASTRAR PRODUTO
-// =====================================
+// =======================================
 
 
 function cadastrar(){
 
 
 
-let nome =
-document.getElementById("nome").value;
-
-
-
-let preco =
-document.getElementById("preco").value;
-
-
-
-let estoque =
-document.getElementById("estoque").value;
+    let nome =
+    document.getElementById("nome").value;
 
 
 
 
-if(
-nome === "" ||
-preco === "" ||
-estoque === ""
-){
+    let preco =
+    document.getElementById("preco").value;
 
-alert("Preencha todos os campos!");
 
-return;
+
+
+    let estoque =
+    document.getElementById("estoque").value;
+
+
+
+
+
+
+
+    if(
+        nome === "" ||
+        preco === "" ||
+        estoque === ""
+    ){
+
+
+        alert("Preencha todos os campos!");
+
+        return;
+
+
+    }
+
+
+
+
+
+
+
+
+    let produto = {
+
+
+        id: Date.now(),
+
+
+        nome:nome,
+
+
+        preco:Number(preco),
+
+
+        estoque:Number(estoque)
+
+
+
+    };
+
+
+
+
+
+
+
+
+    adicionarProduto(produto);
+
+
+
+
+
+    alert("Produto cadastrado com sucesso!");
+
+
+
+
+
+    limparCampos();
+
+
+
+
+    mostrarProdutos();
+
+
+    atualizarDashboard();
+
+
+
 
 }
 
 
 
 
-let produto = {
-
-
-id: Date.now(),
-
-
-nome:nome,
-
-
-preco:Number(preco),
-
-
-estoque:Number(estoque)
-
-
-
-};
 
 
 
 
 
-adicionarProduto(produto);
-
-
-
-alert("Produto cadastrado!");
-
-
-
-mostrarProdutos();
-
-
-
-atualizarDashboard();
-
-
-
-}
-
-
-
-
-
-// =====================================
+// =======================================
 // LISTAR PRODUTOS
-// =====================================
+// =======================================
 
 
 function mostrarProdutos(){
 
 
 
-let lista =
-document.getElementById("lista");
-
-
-
-if(!lista) return;
+    let lista =
+    document.getElementById("lista");
 
 
 
 
-let produtos =
-pegarProdutos();
-
-
-
-lista.innerHTML="";
+    if(!lista) return;
 
 
 
 
-produtos.forEach(produto=>{
 
-
-lista.innerHTML += `
-
-
-<tr>
-
-
-<td>
-${produto.nome}
-</td>
+    let produtos =
+    pegarProdutos();
 
 
 
-<td>
-R$ ${produto.preco}
-</td>
+
+    lista.innerHTML="";
 
 
 
-<td>
-${produto.estoque}
-</td>
 
 
 
-<td>
-
-
-<button onclick="excluir(${produto.id})">
-
-🗑
-
-</button>
-
-
-</td>
-
-
-</tr>
+    produtos.forEach(produto => {
 
 
 
-`;
+        lista.innerHTML += `
 
 
 
-});
+        <tr>
+
+
+
+        <td>
+        ${produto.nome}
+        </td>
+
+
+
+
+        <td>
+        R$ ${produto.preco}
+        </td>
+
+
+
+
+        <td>
+        ${produto.estoque}
+        </td>
+
+
+
+
+        <td>
+
+
+        <button onclick="excluir(${produto.id})">
+
+        🗑
+
+        </button>
+
+
+        </td>
+
+
+
+        </tr>
+
+
+
+        `;
+
+
+
+    });
+
 
 
 
@@ -339,51 +424,28 @@ ${produto.estoque}
 
 
 
-// =====================================
+
+
+
+
+// =======================================
 // EXCLUIR PRODUTO
-// =====================================
+// =======================================
 
 
 function excluir(id){
 
 
 
-removerProduto(id);
+    removerProduto(id);
 
 
 
-mostrarProdutos();
-
-
-atualizarDashboard();
+    mostrarProdutos();
 
 
 
-}
-
-
-
-
-
-// =====================================
-// ABRIR FORMULÁRIO
-// =====================================
-
-
-function abrirFormulario(){
-
-
-
-let formulario =
-document.getElementById("formulario");
-
-
-
-if(formulario){
-
-formulario.style.display="block";
-
-}
+    atualizarDashboard();
 
 
 
@@ -393,9 +455,68 @@ formulario.style.display="block";
 
 
 
-// =====================================
-// INICIAR SISTEMA
-// =====================================
+
+
+
+
+// =======================================
+// LIMPAR FORMULÁRIO
+// =======================================
+
+
+function limparCampos(){
+
+
+    let nome =
+    document.getElementById("nome");
+
+
+    let preco =
+    document.getElementById("preco");
+
+
+    let estoque =
+    document.getElementById("estoque");
+
+
+
+
+    if(nome){
+
+        nome.value="";
+
+    }
+
+
+
+    if(preco){
+
+        preco.value="";
+
+    }
+
+
+
+    if(estoque){
+
+        estoque.value="";
+
+    }
+
+
+}
+
+
+
+
+
+
+
+
+
+// =======================================
+// INICIALIZAÇÃO
+// =======================================
 
 
 document.addEventListener(
@@ -403,16 +524,13 @@ document.addEventListener(
 ()=>{
 
 
-atualizarDashboard();
+    atualizarDashboard();
 
 
-mostrarProdutos();
+
+    mostrarProdutos();
+
 
 
 }
 );
-function abrirProdutos(){
-
-window.location.href="produtos.html";
-
-}
