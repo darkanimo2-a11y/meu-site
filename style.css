@@ -1,47 +1,79 @@
+/* =====================================
+   DASHTIK V3.4
+   STYLE
+===================================== */
+
+
 *{
 
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:Arial,sans-serif;
+
+font-family:Arial, Helvetica, sans-serif;
 
 }
+
+
 
 
 body{
 
 background:#070b18;
+
 color:white;
 
 }
 
 
+
+
+
+
+/* ==============================
+   ESTRUTURA
+============================== */
+
+
 .app{
 
 display:flex;
+
 min-height:100vh;
 
 }
 
 
-/* SIDEBAR */
+
+
+
+
+
+/* ==============================
+   SIDEBAR
+============================== */
 
 
 .sidebar{
 
 width:270px;
+
 background:#101528;
+
 padding:35px;
 
 }
 
 
+
 .sidebar h1{
 
 font-size:34px;
-margin-bottom:50px;
+
+margin-bottom:45px;
 
 }
+
 
 
 .sidebar span{
@@ -51,23 +83,34 @@ color:#00e5ff;
 }
 
 
-.sidebar li{
+
+
+
+.sidebar ul{
 
 list-style:none;
 
-padding:18px;
+}
+
+
+
+.sidebar li{
+
+padding:16px;
 
 margin-bottom:10px;
 
-color:#aaa;
-
 border-radius:12px;
+
+color:#aaa;
 
 cursor:pointer;
 
 transition:.3s;
 
 }
+
+
 
 
 .sidebar li:hover,
@@ -82,15 +125,26 @@ color:#000;
 
 
 
-/* MAIN */
+
+
+
+
+
+/* ==============================
+   MAIN
+============================== */
 
 
 main{
 
 flex:1;
+
 padding:35px;
 
 }
+
+
+
 
 
 header{
@@ -104,6 +158,9 @@ align-items:center;
 }
 
 
+
+
+
 header p{
 
 color:#888;
@@ -114,17 +171,32 @@ margin-top:8px;
 
 
 
+
+
 button{
 
 background:#00e5ff;
 
-border:0;
+border:none;
 
-padding:15px 25px;
+padding:14px 25px;
 
 border-radius:12px;
 
 font-weight:bold;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+
+
+
+button:hover{
+
+transform:scale(1.05);
 
 }
 
@@ -132,7 +204,13 @@ font-weight:bold;
 
 
 
-/* CARDS */
+
+
+
+
+/* ==============================
+   CARDS
+============================== */
 
 
 .cards{
@@ -149,6 +227,8 @@ margin-top:35px;
 
 
 
+
+
 .card{
 
 background:#151b32;
@@ -157,33 +237,39 @@ padding:25px;
 
 border-radius:20px;
 
-position:relative;
-
-overflow:hidden;
+box-shadow:0 0 20px #0005;
 
 }
+
+
 
 
 
 .icon{
 
-font-size:30px;
+font-size:32px;
 
 }
 
 
+
+
+
 .card p{
 
-color:#999;
+color:#888;
 
 margin-top:15px;
 
 }
 
 
+
+
+
 .card h3{
 
-font-size:35px;
+font-size:34px;
 
 margin:15px 0;
 
@@ -191,29 +277,13 @@ margin:15px 0;
 
 
 
+
+
 .card span{
 
 color:#00e676;
 
-}
-
-
-
-.mini-chart{
-
-height:35px;
-
-background:
-linear-gradient(
-90deg,
-transparent,
-#00e5ff,
-transparent
-);
-
-opacity:.3;
-
-margin-top:20px;
+font-size:14px;
 
 }
 
@@ -221,7 +291,13 @@ margin-top:20px;
 
 
 
-/* CONTENT */
+
+
+
+
+/* ==============================
+   CONTEÚDO
+============================== */
 
 
 .content{
@@ -237,6 +313,9 @@ margin-top:35px;
 }
 
 
+
+
+
 .box{
 
 background:#151b32;
@@ -250,29 +329,23 @@ border-radius:20px;
 
 
 
-.chart{
-
-height:260px;
-
-display:flex;
-
-align-items:end;
-
-gap:25px;
-
-margin-top:40px;
-
-}
 
 
 
-.chart div{
 
-width:45px;
 
-background:#00e5ff;
+/* ==============================
+   GRÁFICO
+============================== */
 
-border-radius:10px 10px 0 0;
+
+.grafico-container{
+
+height:300px;
+
+width:100%;
+
+margin-top:25px;
 
 }
 
@@ -280,7 +353,25 @@ border-radius:10px 10px 0 0;
 
 
 
-/* TABLE */
+#graficoVendas{
+
+width:100%!important;
+
+height:100%!important;
+
+}
+
+
+
+
+
+
+
+
+
+/* ==============================
+   TABELAS
+============================== */
 
 
 table{
@@ -294,30 +385,50 @@ border-collapse:collapse;
 }
 
 
-th,td{
 
-padding:16px;
+
+th,
+td{
+
+padding:15px;
 
 border-bottom:1px solid #30364d;
 
-}
-
-
-.green{
-
-color:#00e676;
-
-}
-
-
-.orange{
-
-color:#ff9800;
+text-align:left;
 
 }
 
 
 
+
+
+th{
+
+color:#00e5ff;
+
+}
+
+
+
+
+
+td{
+
+color:#ddd;
+
+}
+
+
+
+
+
+
+
+
+
+/* ==============================
+   RESPONSIVO
+============================== */
 
 
 @media(max-width:1000px){
@@ -330,6 +441,7 @@ display:none;
 }
 
 
+
 .cards{
 
 grid-template-columns:1fr;
@@ -337,11 +449,13 @@ grid-template-columns:1fr;
 }
 
 
+
 .content{
 
 grid-template-columns:1fr;
 
 }
+
 
 
 }
