@@ -1,5 +1,5 @@
 /* =====================================
-   DASHTIK V3.4
+   DASHTIK V3.5
    STYLE
 ===================================== */
 
@@ -29,10 +29,9 @@ color:white;
 
 
 
-
-/* ==============================
+/* ==========================
    ESTRUTURA
-============================== */
+========================== */
 
 
 .app{
@@ -47,11 +46,9 @@ min-height:100vh;
 
 
 
-
-
-/* ==============================
-   SIDEBAR
-============================== */
+/* ==========================
+   MENU
+========================== */
 
 
 .sidebar{
@@ -94,6 +91,8 @@ list-style:none;
 
 
 
+
+
 .sidebar li{
 
 padding:16px;
@@ -102,9 +101,9 @@ margin-bottom:10px;
 
 border-radius:12px;
 
-color:#aaa;
-
 cursor:pointer;
+
+color:#aaa;
 
 transition:.3s;
 
@@ -112,13 +111,14 @@ transition:.3s;
 
 
 
-
 .sidebar li:hover,
 .sidebar .active{
+
 
 background:#00e5ff;
 
 color:#000;
+
 
 }
 
@@ -130,9 +130,9 @@ color:#000;
 
 
 
-/* ==============================
-   MAIN
-============================== */
+/* ==========================
+   CONTEÚDO
+========================== */
 
 
 main{
@@ -146,7 +146,6 @@ padding:35px;
 
 
 
-
 header{
 
 display:flex;
@@ -156,8 +155,6 @@ justify-content:space-between;
 align-items:center;
 
 }
-
-
 
 
 
@@ -208,9 +205,9 @@ transform:scale(1.05);
 
 
 
-/* ==============================
+/* ==========================
    CARDS
-============================== */
+========================== */
 
 
 .cards{
@@ -227,6 +224,14 @@ margin-top:35px;
 
 
 
+.cards-extra{
+
+margin-top:20px;
+
+}
+
+
+
 
 
 .card{
@@ -238,6 +243,8 @@ padding:25px;
 border-radius:20px;
 
 box-shadow:0 0 20px #0005;
+
+min-height:170px;
 
 }
 
@@ -257,7 +264,7 @@ font-size:32px;
 
 .card p{
 
-color:#888;
+color:#999;
 
 margin-top:15px;
 
@@ -265,17 +272,13 @@ margin-top:15px;
 
 
 
-
-
 .card h3{
 
-font-size:34px;
+font-size:30px;
 
 margin:15px 0;
 
 }
-
-
 
 
 
@@ -295,9 +298,9 @@ font-size:14px;
 
 
 
-/* ==============================
-   CONTEÚDO
-============================== */
+/* ==========================
+   ÁREA INFERIOR
+========================== */
 
 
 .content{
@@ -311,7 +314,6 @@ gap:25px;
 margin-top:35px;
 
 }
-
 
 
 
@@ -334,30 +336,34 @@ border-radius:20px;
 
 
 
-/* ==============================
+/* ==========================
    GRÁFICO
-============================== */
+========================== */
 
 
 .grafico-container{
+
 
 height:300px;
 
 width:100%;
 
-margin-top:25px;
+
+margin-top:20px;
+
 
 }
-
 
 
 
 
 #graficoVendas{
 
+
 width:100%!important;
 
 height:100%!important;
+
 
 }
 
@@ -369,18 +375,18 @@ height:100%!important;
 
 
 
-/* ==============================
+/* ==========================
    TABELAS
-============================== */
+========================== */
 
 
 table{
 
 width:100%;
 
-margin-top:25px;
-
 border-collapse:collapse;
+
+margin-top:25px;
 
 }
 
@@ -401,14 +407,11 @@ text-align:left;
 
 
 
-
 th{
 
 color:#00e5ff;
 
 }
-
-
 
 
 
@@ -426,12 +429,26 @@ color:#ddd;
 
 
 
-/* ==============================
+/* ==========================
    RESPONSIVO
-============================== */
+========================== */
 
 
-@media(max-width:1000px){
+@media(max-width:1200px){
+
+
+.cards{
+
+grid-template-columns:repeat(2,1fr);
+
+}
+
+
+}
+
+
+
+@media(max-width:800px){
 
 
 .sidebar{
@@ -442,20 +459,20 @@ display:none;
 
 
 
-.cards{
-
-grid-template-columns:1fr;
-
-}
-
-
-
+.cards,
 .content{
 
 grid-template-columns:1fr;
 
 }
 
+
+
+main{
+
+padding:20px;
+
+}
 
 
 }
