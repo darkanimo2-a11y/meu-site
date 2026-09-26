@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+
+<head>
+
+
+<meta charset="UTF-8">
+
+
+<meta 
+name="viewport" 
+content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+
+<title>
+Relatórios | DashTik
+</title>
+
+
+<link rel="stylesheet" href="style.css">
+
+
+</head>
+
+
+
+<body>
+
+
+<div class="app">
+
+
+
+
+
+<aside class="sidebar">
+
+
+<h1>
+<span>Dash</span>Tik
+</h1>
+
+
+
+<ul>
+
+
+<li onclick="voltarDashboard()">
+
+📊 Dashboard
+
+</li>
+
+
+
+<li onclick="abrirProdutos()">
+
+📦 Produtos
+
+</li>
+
+
+
+<li onclick="abrirVendas()">
+
+💰 Vendas
+
+</li>
+
+
+
+<li class="active">
+
+📈 Relatórios
+
+</li>
+
+
+</ul>
+
+
+</aside>
+
+
+
+
+
+
+
+
+<main>
+
+
+
+
+<header>
+
+
+<div>
+
+
+<h2>
+Relatórios
+</h2>
+
+
+<p>
+Análise financeira e metas
+</p>
+
+
+</div>
+
+
+
+</header>
+
+
+
+
+
+
+
+
+
+<div class="box">
+
+
+<h3>
+🎯 Definir Meta Mensal
+</h3>
+
+
+
+<br>
+
+
+<input 
+id="metaMensal"
+type="number"
+placeholder="Ex: 10000">
+
+
+
+<br><br>
+
+
+<button onclick="definirMeta()">
+
+Salvar Meta
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<section class="cards">
+
+
+
+
+
+<div class="card">
+
+
+<div class="icon">
+
+🎯
+
+</div>
+
+
+<p>
+Meta mensal
+</p>
+
+
+<h3 id="valorMeta">
+
+R$ 0
+
+</h3>
+
+
+<span>
+Objetivo definido
+</span>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="card">
+
+
+<div class="icon">
+
+💰
+
+</div>
+
+
+<p>
+Realizado
+</p>
+
+
+<h3 id="valorRealizado">
+
+R$ 0
+
+</h3>
+
+
+<span>
+Faturamento atual
+</span>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="card">
+
+
+<div class="icon">
+
+📊
+
+</div>
+
+
+<p>
+Progresso
+</p>
+
+
+<h3 id="progressoMeta">
+
+0%
+
+</h3>
+
+
+<span>
+Meta atingida
+</span>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="card">
+
+
+<div class="icon">
+
+📉
+
+</div>
+
+
+<p>
+Falta para meta
+</p>
+
+
+<h3 id="faltaMeta">
+
+R$ 0
+
+</h3>
+
+
+<span>
+Valor restante
+</span>
+
+
+</div>
+
+
+
+
+
+
+</section>
+
+
+
+
+
+
+
+
+
+<div class="box">
+
+
+<h3>
+Resumo financeiro
+</h3>
+
+
+<br>
+
+
+<p>
+O sistema acompanha automaticamente suas vendas,
+faturamento e evolução da meta mensal.
+</p>
+
+
+
+</div>
+
+
+
+
+
+
+</main>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+<script src="storage.js"></script>
+
+<script src="script.js"></script>
+
+
+
+</body>
+
+
+</html>
