@@ -9,19 +9,14 @@
 
 <title>VendaPro Dashboard</title>
 
-
-<link rel="stylesheet" href="css/style.css?v=6">
-
+<link rel="stylesheet" href="css/style.css?v=7">
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
 
 </head>
 
 
-
 <body>
-
 
 
 <div class="layout">
@@ -32,9 +27,7 @@
 
 
 <div class="logo">
-
 🚀 VendaPro
-
 </div>
 
 
@@ -42,27 +35,27 @@
 <nav>
 
 
-<a class="active">
+<a class="menu-link active" data-page="dashboardPage">
 🏠 Dashboard
 </a>
 
 
-<a>
+<a class="menu-link" data-page="contasPage">
 📱 Contas
 </a>
 
 
-<a>
+<a class="menu-link" data-page="vendasPage">
 💰 Vendas
 </a>
 
 
-<a>
+<a class="menu-link" data-page="relatoriosPage">
 📊 Relatórios
 </a>
 
 
-<a>
+<a class="menu-link" data-page="configPage">
 ⚙ Configurações
 </a>
 
@@ -70,9 +63,7 @@
 </nav>
 
 
-
 </aside>
-
 
 
 
@@ -85,11 +76,15 @@
 
 
 
+<!-- DASHBOARD -->
+
+<section id="dashboardPage" class="pagina ativa">
+
+
 <header class="top">
 
 
 <div>
-
 
 <h1>
 Dashboard
@@ -104,25 +99,17 @@ Visão geral das suas vendas
 </div>
 
 
-
-
 <div class="top-buttons">
 
 
 <button id="novaConta">
-
 + Nova conta
-
 </button>
-
 
 
 <button id="novaVenda">
-
 + Nova venda
-
 </button>
-
 
 
 </div>
@@ -135,10 +122,7 @@ Visão geral das suas vendas
 
 
 
-
-
 <section class="cards">
-
 
 
 <div class="card">
@@ -147,15 +131,11 @@ Visão geral das suas vendas
 Faturamento
 </span>
 
-
 <h2>
 R$ 0,00
 </h2>
 
-
 </div>
-
-
 
 
 
@@ -165,15 +145,11 @@ R$ 0,00
 Vendas
 </span>
 
-
 <h2>
 0
 </h2>
 
-
 </div>
-
-
 
 
 
@@ -183,15 +159,11 @@ Vendas
 Lucro
 </span>
 
-
 <h2>
 R$ 0,00
 </h2>
 
-
 </div>
-
-
 
 
 
@@ -201,13 +173,14 @@ R$ 0,00
 Contas
 </span>
 
-
 <h2>
 0
 </h2>
 
-
 </div>
+
+
+</section>
 
 
 
@@ -220,18 +193,29 @@ Contas
 
 
 
+<!-- CONTAS -->
 
-<section class="panel">
-
-
-<h3>
-Minhas contas
-</h3>
+<section id="contasPage" class="pagina">
 
 
+<div class="page-header">
 
-<div class="table-scroll">
 
+<h1>
+Contas
+</h1>
+
+
+<button id="novaConta2">
++ Nova conta
+</button>
+
+
+</div>
+
+
+
+<div class="panel">
 
 
 <table>
@@ -239,43 +223,21 @@ Minhas contas
 
 <thead>
 
-
 <tr>
 
-<th>
-Conta
-</th>
+<th>Conta</th>
 
+<th>Seguidores</th>
 
-<th>
-Seguidores
-</th>
+<th>Progresso</th>
 
+<th>Compra</th>
 
-<th>
-Progresso
-</th>
+<th>Venda</th>
 
+<th>Status</th>
 
-<th>
-Compra
-</th>
-
-
-<th>
-Venda
-</th>
-
-
-<th>
-Status
-</th>
-
-
-<th>
-Ações
-</th>
-
+<th>Ações</th>
 
 </tr>
 
@@ -283,18 +245,12 @@ Ações
 </thead>
 
 
-
-
 <tbody id="listaContas">
-
 
 </tbody>
 
 
-
-
 </table>
-
 
 
 </div>
@@ -309,12 +265,69 @@ Ações
 
 
 
+<!-- VENDAS -->
+
+<section id="vendasPage" class="pagina">
 
 
-<section class="grid">
+<h1>
+Vendas
+</h1>
+
+
+<div class="panel">
+
+
+<table>
+
+
+<thead>
+
+<tr>
+
+<th>Conta</th>
+
+<th>Cliente</th>
+
+<th>Valor</th>
+
+<th>Ação</th>
+
+</tr>
+
+
+</thead>
+
+
+<tbody id="listaVendas">
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</section>
 
 
 
+
+
+
+
+
+<!-- RELATORIOS -->
+
+
+<section id="relatoriosPage" class="pagina">
+
+
+<h1>
+Relatórios
+</h1>
 
 
 <div class="panel">
@@ -325,92 +338,13 @@ Faturamento mensal
 </h3>
 
 
-
 <div id="graficoVendas" class="grafico">
 
 
 </div>
 
 
-
 </div>
-
-
-
-
-
-
-
-<div class="panel">
-
-
-<h3>
-Últimas vendas
-</h3>
-
-
-
-
-<div class="table-scroll">
-
-
-<table>
-
-
-<thead>
-
-
-<tr>
-
-
-<th>
-Conta
-</th>
-
-
-<th>
-Cliente
-</th>
-
-
-<th>
-Valor
-</th>
-
-
-<th>
-Ação
-</th>
-
-
-</tr>
-
-
-
-</thead>
-
-
-
-
-<tbody id="listaVendas">
-
-
-</tbody>
-
-
-
-</table>
-
-
-
-</div>
-
-
-
-</div>
-
-
-
 
 
 </section>
@@ -421,8 +355,40 @@ Ação
 
 
 
-</main>
+<!-- CONFIG -->
 
+
+<section id="configPage" class="pagina">
+
+
+<h1>
+Configurações
+</h1>
+
+
+
+<div class="panel">
+
+
+<p>
+Meta atual de seguidores:
+<strong>
+2000
+</strong>
+</p>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+</main>
 
 
 
@@ -451,32 +417,24 @@ Ação
 </button>
 
 
-
 <div id="conteudoModal">
 
+</div>
+
+
+</div>
+
 
 </div>
 
 
 
 
-</div>
 
 
-
-</div>
-
-
-
-
-
-
-
-<script src="js/app.js?v=6"></script>
-
+<script src="js/app.js?v=7"></script>
 
 
 </body>
-
 
 </html>
