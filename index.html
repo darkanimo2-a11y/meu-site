@@ -9,42 +9,71 @@
 
 <title>VendaPro Dashboard</title>
 
-<link rel="stylesheet" href="css/style.css?v=5">
+
+<link rel="stylesheet" href="css/style.css?v=6">
+
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+
 </head>
+
 
 
 <body>
 
 
+
 <div class="layout">
+
 
 
 <aside class="sidebar">
 
+
 <div class="logo">
+
 🚀 VendaPro
+
 </div>
+
 
 
 <nav>
 
-<a class="active">🏠 Dashboard</a>
 
-<a>📱 Contas</a>
+<a class="active">
+🏠 Dashboard
+</a>
 
-<a>💰 Vendas</a>
 
-<a>📊 Relatórios</a>
+<a>
+📱 Contas
+</a>
 
-<a>⚙ Configurações</a>
+
+<a>
+💰 Vendas
+</a>
+
+
+<a>
+📊 Relatórios
+</a>
+
+
+<a>
+⚙ Configurações
+</a>
+
 
 </nav>
 
 
+
 </aside>
+
+
 
 
 
@@ -54,10 +83,13 @@
 
 
 
+
+
 <header class="top">
 
 
 <div>
+
 
 <h1>
 Dashboard
@@ -73,21 +105,27 @@ Visão geral das suas vendas
 
 
 
+
 <div class="top-buttons">
 
 
 <button id="novaConta">
+
 + Nova conta
+
 </button>
+
 
 
 <button id="novaVenda">
+
 + Nova venda
+
 </button>
 
 
-</div>
 
+</div>
 
 
 </header>
@@ -98,7 +136,9 @@ Visão geral das suas vendas
 
 
 
+
 <section class="cards">
+
 
 
 <div class="card">
@@ -107,11 +147,15 @@ Visão geral das suas vendas
 Faturamento
 </span>
 
+
 <h2>
 R$ 0,00
 </h2>
 
+
 </div>
+
+
 
 
 
@@ -121,11 +165,14 @@ R$ 0,00
 Vendas
 </span>
 
+
 <h2>
 0
 </h2>
 
+
 </div>
+
 
 
 
@@ -136,11 +183,14 @@ Vendas
 Lucro
 </span>
 
+
 <h2>
 R$ 0,00
 </h2>
 
+
 </div>
+
 
 
 
@@ -151,15 +201,18 @@ R$ 0,00
 Contas
 </span>
 
+
 <h2>
 0
 </h2>
+
 
 </div>
 
 
 
 </section>
+
 
 
 
@@ -180,10 +233,12 @@ Minhas contas
 <div class="table-scroll">
 
 
+
 <table>
 
 
 <thead>
+
 
 <tr>
 
@@ -191,25 +246,31 @@ Minhas contas
 Conta
 </th>
 
+
 <th>
 Seguidores
 </th>
+
 
 <th>
 Progresso
 </th>
 
+
 <th>
 Compra
 </th>
+
 
 <th>
 Venda
 </th>
 
+
 <th>
 Status
 </th>
+
 
 <th>
 Ações
@@ -223,6 +284,7 @@ Ações
 
 
 
+
 <tbody id="listaContas">
 
 
@@ -230,10 +292,13 @@ Ações
 
 
 
+
 </table>
 
 
+
 </div>
+
 
 
 </section>
@@ -245,7 +310,11 @@ Ações
 
 
 
+
 <section class="grid">
+
+
+
 
 
 <div class="panel">
@@ -256,20 +325,12 @@ Faturamento mensal
 </h3>
 
 
-<div class="fake-chart">
 
-<div></div>
-
-<div></div>
-
-<div></div>
-
-<div></div>
-
-<div></div>
+<div id="graficoVendas" class="grafico">
 
 
 </div>
+
 
 
 </div>
@@ -289,6 +350,7 @@ Faturamento mensal
 
 
 
+
 <div class="table-scroll">
 
 
@@ -297,19 +359,24 @@ Faturamento mensal
 
 <thead>
 
+
 <tr>
+
 
 <th>
 Conta
 </th>
 
+
 <th>
 Cliente
 </th>
 
+
 <th>
 Valor
 </th>
+
 
 <th>
 Ação
@@ -319,7 +386,9 @@ Ação
 </tr>
 
 
+
 </thead>
+
 
 
 
@@ -329,6 +398,7 @@ Ação
 </tbody>
 
 
+
 </table>
 
 
@@ -336,7 +406,10 @@ Ação
 </div>
 
 
+
 </div>
+
+
 
 
 
@@ -345,10 +418,16 @@ Ação
 
 
 
+
+
+
 </main>
 
 
+
+
 </div>
+
 
 
 
@@ -366,7 +445,9 @@ Ação
 
 
 <button id="fecharModal" class="fechar">
+
 ×
+
 </button>
 
 
@@ -377,18 +458,22 @@ Ação
 </div>
 
 
-</div>
 
 
 </div>
 
 
 
+</div>
 
 
 
 
-<script src="js/app.js?v=5"></script>
+
+
+
+<script src="js/app.js?v=6"></script>
+
 
 
 </body>
