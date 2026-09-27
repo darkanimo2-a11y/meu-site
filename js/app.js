@@ -6,14 +6,12 @@ const DB_KEY = "vendapro_database";
 const META_SEGUIDORES = 2000;
 
 
-
 let database = {
 
 contas: [],
 vendas: []
 
 };
-
 
 
 
@@ -53,10 +51,6 @@ salvarDados();
 
 
 
-
-
-
-
 function salvarDados(){
 
 
@@ -70,7 +64,6 @@ JSON.stringify(database)
 
 
 }
-
 
 
 
@@ -108,7 +101,6 @@ currency:"BRL"
 
 
 
-
 function progresso(valor){
 
 
@@ -127,7 +119,6 @@ Math.round(
 
 
 return `
-
 
 <div class="progresso-box">
 
@@ -148,11 +139,9 @@ ${porcentagem}%
 
 </div>
 
-
 `;
 
 }
-
 
 
 
@@ -168,7 +157,7 @@ ${porcentagem}%
 function atualizarDashboard(){
 
 
-let faturamento = 0;
+let faturamento=0;
 
 
 
@@ -182,24 +171,23 @@ faturamento += Number(v.valor || 0);
 
 
 
-const cards =
-document.querySelectorAll(".card h2");
+let cards=document.querySelectorAll(".card h2");
 
 
 
-if(cards.length >= 4){
+if(cards.length>=4){
 
 
-cards[0].innerHTML = moeda(faturamento);
+cards[0].innerHTML=moeda(faturamento);
 
 
-cards[1].innerHTML = database.vendas.length;
+cards[1].innerHTML=database.vendas.length;
 
 
-cards[2].innerHTML = moeda(faturamento);
+cards[2].innerHTML=moeda(faturamento);
 
 
-cards[3].innerHTML = database.contas.length;
+cards[3].innerHTML=database.contas.length;
 
 
 }
@@ -231,7 +219,6 @@ const tabela =
 document.getElementById("listaContas");
 
 
-
 if(!tabela)return;
 
 
@@ -243,6 +230,12 @@ tabela.innerHTML="";
 database.contas.forEach((c,index)=>{
 
 
+
+if(!c.nome)
+c.nome="Sem nome";
+
+
+
 let linha=document.createElement("tr");
 
 
@@ -250,20 +243,23 @@ let linha=document.createElement("tr");
 linha.innerHTML=`
 
 
-<td>${c.nome || "Sem nome"}</td>
+<td>${c.nome}</td>
 
 
 <td>${c.seguidores || 0}</td>
 
 
-<td>${progresso(c.seguidores)}</td>
+<td>
+
+${progresso(c.seguidores)}
+
+</td>
 
 
 <td>${moeda(c.custo)}</td>
 
 
 <td>${moeda(c.precoVenda)}</td>
-
 
 
 <td>
@@ -280,6 +276,34 @@ ${c.status || "Disponível"}
 
 <td>
 
+
+<div class="acoes">
+
+
+<button
+
+class="btn-edit"
+
+onclick="editarConta(${index})">
+
+Editar
+
+</button>
+
+
+
+<button
+
+class="btn-followers"
+
+onclick="atualizarSeguidores(${index})">
+
+Seguidores
+
+</button>
+
+
+
 <button
 
 class="btn-delete"
@@ -289,6 +313,9 @@ onclick="removerConta(${index})">
 Excluir
 
 </button>
+
+
+</div>
 
 
 </td>
@@ -312,10 +339,165 @@ tabela.appendChild(linha);
 
 
 
+
+function editarConta(index){
+
+
+
+const conta = database.contas[index];
+
+
+
+abrirModal(`
+
+
+<h2>
+Editar conta
+</h2>
+
+
+
+<div class="form">
+
+
+<input id="editNome" value="${conta.nome}">
+
+
+<input id="editSeg" type="number" value="${conta.seguidores}">
+
+
+<input id="editCompra" type="number" value="${conta.custo}">
+
+
+<input id="editVenda" type="number" value="${conta.precoVenda}">
+
+
+<button id="salvarEdicao">
+
+Salvar
+
+</button>
+
+
+</div>
+
+
+
+`);
+
+
+
+
+document
+.getElementById("salvarEdicao")
+.onclick=()=>{
+
+
+conta.nome =
+document.getElementById("editNome").value;
+
+
+
+conta.seguidores =
+Number(document.getElementById("editSeg").value);
+
+
+
+conta.custo =
+Number(document.getElementById("editCompra").value);
+
+
+
+conta.precoVenda =
+Number(document.getElementById("editVenda").value);
+
+
+
+salvarDados();
+
+atualizarDashboard();
+
+fecharModal();
+
+
+};
+
+
+}
+
+
+
+
+
+
+
+
+function atualizarSeguidores(index){
+
+
+
+const conta =
+database.contas[index];
+
+
+
+let novo =
+prompt(
+"Novo número de seguidores:",
+conta.seguidores
+);
+
+
+
+if(!novo)return;
+
+
+
+if(!conta.historico)
+
+conta.historico=[];
+
+
+
+conta.historico.push({
+
+data:new Date().toLocaleDateString(),
+
+anterior:conta.seguidores,
+
+novo:Number(novo),
+
+crescimento:
+Number(novo)-conta.seguidores
+
+});
+
+
+
+conta.seguidores =
+Number(novo);
+
+
+
+salvarDados();
+
+
+atualizarDashboard();
+
+
+}
+
+
+
+
+
+
+
 function removerConta(index){
 
 
-if(confirm("Excluir essa conta?")){
+
+if(confirm("Excluir esta conta?")){
 
 
 database.contas.splice(index,1);
@@ -338,6 +520,8 @@ atualizarDashboard();
 
 
 
+
+
 // =======================
 // VENDAS
 // =======================
@@ -350,7 +534,6 @@ const tabela =
 document.getElementById("listaVendas");
 
 
-
 if(!tabela)return;
 
 
@@ -359,7 +542,9 @@ tabela.innerHTML="";
 
 
 
-database.vendas.slice().reverse()
+database.vendas
+.slice()
+.reverse()
 .forEach((v,index)=>{
 
 
@@ -381,6 +566,7 @@ linha.innerHTML=`
 
 
 <td>
+
 
 <button
 
@@ -414,11 +600,10 @@ tabela.appendChild(linha);
 
 
 
-
 function removerVenda(index){
 
 
-if(confirm("Excluir essa venda?")){
+if(confirm("Excluir venda?")){
 
 
 database.vendas.splice(index,1);
@@ -442,6 +627,7 @@ atualizarDashboard();
 
 
 
+
 // =======================
 // MODAL
 // =======================
@@ -452,8 +638,7 @@ function abrirModal(html){
 
 document
 .getElementById("conteudoModal")
-.innerHTML = html;
-
+.innerHTML=html;
 
 
 document
@@ -479,7 +664,7 @@ document
 
 document
 .getElementById("fecharModal")
-.onclick = fecharModal;
+.onclick=fecharModal;
 
 
 
@@ -490,85 +675,73 @@ document
 
 
 // =======================
-// NOVA CONTA MODAL
+// NOVA CONTA
 // =======================
 
 
 function iniciarConta(){
 
 
-
 document
 .getElementById("novaConta")
-.onclick = ()=>{
+.onclick=()=>{
 
 
 abrirModal(`
-
 
 <h2>
 Nova Conta
 </h2>
 
 
-
 <div class="form">
 
 
-<input id="contaNome" placeholder="Nome da conta">
+<input id="contaNome" placeholder="Nome">
 
 
 <input id="contaSeguidores" type="number" placeholder="Seguidores">
 
 
-<input id="contaCusto" type="number" placeholder="Valor compra">
+<input id="contaCusto" type="number" placeholder="Compra">
 
 
-<input id="contaVenda" type="number" placeholder="Valor venda">
+<input id="contaVenda" type="number" placeholder="Venda">
 
 
 <button id="salvarConta">
 
-Salvar conta
+Salvar
 
 </button>
 
 
 </div>
 
-
 `);
-
-
 
 
 
 document
 .getElementById("salvarConta")
-.onclick = ()=>{
+.onclick=()=>{
 
 
 database.contas.push({
 
-
 nome:
 document.getElementById("contaNome").value,
-
 
 seguidores:
 Number(document.getElementById("contaSeguidores").value),
 
-
 custo:
 Number(document.getElementById("contaCusto").value),
-
 
 precoVenda:
 Number(document.getElementById("contaVenda").value),
 
-
 status:"Disponível"
-
 
 });
 
@@ -586,6 +759,7 @@ fecharModal();
 };
 
 
+
 };
 
 
@@ -600,17 +774,16 @@ fecharModal();
 
 
 // =======================
-// NOVA VENDA MODAL
+// NOVA VENDA
 // =======================
 
 
 function iniciarVenda(){
 
 
-
 document
 .getElementById("novaVenda")
-.onclick = ()=>{
+.onclick=()=>{
 
 
 abrirModal(`
@@ -619,7 +792,6 @@ abrirModal(`
 <h2>
 Nova Venda
 </h2>
-
 
 
 <div class="form">
@@ -636,7 +808,7 @@ Nova Venda
 
 <button id="salvarVenda">
 
-Salvar venda
+Salvar
 
 </button>
 
@@ -644,34 +816,25 @@ Salvar venda
 </div>
 
 
-
 `);
-
-
 
 
 
 document
 .getElementById("salvarVenda")
-.onclick = ()=>{
-
+.onclick=()=>{
 
 
 database.vendas.push({
 
-
 conta:
 document.getElementById("vendaConta").value,
-
 
 cliente:
 document.getElementById("vendaCliente").value,
 
-
 valor:
 Number(document.getElementById("vendaValor").value)
-
-
 
 });
 
@@ -689,6 +852,7 @@ fecharModal();
 };
 
 
+
 };
 
 
@@ -700,11 +864,6 @@ fecharModal();
 
 
 
-
-
-// =======================
-// INICIAR
-// =======================
 
 
 document.addEventListener(
