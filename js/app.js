@@ -737,7 +737,127 @@ document
 
 
 
+// =======================
+// NOVA CONTA
+// =======================
 
+
+function iniciarConta(){
+
+
+const botoes = [
+
+"novaConta",
+
+"novaConta2"
+
+];
+
+
+
+botoes.forEach(id=>{
+
+
+const botao =
+document.getElementById(id);
+
+
+
+if(botao){
+
+
+botao.onclick = ()=>{
+
+
+abrirModal(`
+
+
+<h2>
+Nova Conta
+</h2>
+
+
+
+<div class="form">
+
+
+<input id="contaNome" placeholder="Nome da conta">
+
+
+<input id="contaSeguidores" type="number" placeholder="Seguidores">
+
+
+<input id="contaCusto" type="number" placeholder="Valor compra">
+
+
+<input id="contaVenda" type="number" placeholder="Valor venda">
+
+
+<button id="salvarConta">
+
+Salvar conta
+
+</button>
+
+
+</div>
+
+
+`);
+
+
+
+document
+.getElementById("salvarConta")
+.onclick=()=>{
+
+
+database.contas.push({
+
+nome:
+document.getElementById("contaNome").value,
+
+
+seguidores:
+Number(document.getElementById("contaSeguidores").value),
+
+
+custo:
+Number(document.getElementById("contaCusto").value),
+
+
+precoVenda:
+Number(document.getElementById("contaVenda").value),
+
+
+status:"Disponível"
+
+});
+
+
+
+salvarDados();
+
+
+atualizarDashboard();
+
+
+fecharModal();
+
+
+};
+
+
+};
+
+
+}
+
+
+});
+
+
+}
 
 
 // =======================
@@ -960,6 +1080,7 @@ carregarDados();
 
 atualizarDashboard();
 
+iniciarConta();
 
 iniciarVenda();
 
