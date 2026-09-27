@@ -1,14 +1,13 @@
 console.log("VendaPro iniciado 🚀");
 
 
-const DB_KEY = "vendapro_database";
+const DB_KEY="vendapro_database";
 
 
+let database={
 
-let database = {
-
-    contas: [],
-    vendas: []
+contas:[],
+vendas:[]
 
 };
 
@@ -16,32 +15,22 @@ let database = {
 
 
 
-// ==========================
-// CARREGAR BANCO
-// ==========================
-
-
 function carregarDados(){
 
 
-    const dados = localStorage.getItem(DB_KEY);
+let dados=localStorage.getItem(DB_KEY);
 
 
 
-    if(dados){
+if(dados){
 
-        database = JSON.parse(dados);
+database=JSON.parse(dados);
 
-        console.log("Banco carregado:", database);
+}else{
 
-    }
-    else{
+salvarDados();
 
-        salvarDados();
-
-        console.log("Novo banco criado");
-
-    }
+}
 
 
 }
@@ -49,43 +38,14 @@ function carregarDados(){
 
 
 
-
-
-
-// ==========================
-// SALVAR BANCO
-// ==========================
 
 
 function salvarDados(){
 
 
-    localStorage.setItem(
-        DB_KEY,
-        JSON.stringify(database)
-    );
-
-
-    console.log("Dados salvos");
-
-}
-
-
-
-
-
-
-
-
-function moeda(valor){
-
-
-return Number(valor).toLocaleString(
-"pt-BR",
-{
-style:"currency",
-currency:"BRL"
-}
+localStorage.setItem(
+DB_KEY,
+JSON.stringify(database)
 );
 
 
@@ -96,66 +56,65 @@ currency:"BRL"
 
 
 
+function moeda(valor){
+
+return Number(valor).toLocaleString(
+"pt-BR",
+{
+style:"currency",
+currency:"BRL"
+}
+);
+
+}
 
 
-// ==========================
-// ATUALIZAR DASHBOARD
-// ==========================
+
+
+
 
 
 function atualizarDashboard(){
 
 
-
-let faturamento = 0;
-
+let faturamento=0;
 
 
-database.vendas.forEach(venda=>{
+database.vendas.forEach(v=>{
 
-
-faturamento += Number(venda.valor);
-
+faturamento+=Number(v.valor);
 
 });
 
 
 
-
-const cards =
-document.querySelectorAll(".card h2");
+let cards=document.querySelectorAll(".card h2");
 
 
 
-if(cards.length >= 4){
+if(cards.length>=4){
 
 
-cards[0].innerHTML =
-moeda(faturamento);
+cards[0].innerHTML=moeda(faturamento);
 
 
-
-cards[1].innerHTML =
-database.vendas.length;
+cards[1].innerHTML=database.vendas.length;
 
 
-
-cards[2].innerHTML =
-moeda(faturamento);
+cards[2].innerHTML=moeda(faturamento);
 
 
-
-cards[3].innerHTML =
-database.contas.length;
+cards[3].innerHTML=database.contas.length;
 
 
 }
-
 
 
 
 renderizarVendas();
 
+renderizarContas();
+
 
 }
 
@@ -165,54 +124,38 @@ renderizarVendas();
 
 
 
-
-// ==========================
-// MOSTRAR VENDAS
-// ==========================
-
-
 function renderizarVendas(){
 
 
-
-const tabela =
-document.querySelector("#listaVendas");
-
+let tabela=document.querySelector("#listaVendas");
 
 
 if(!tabela)return;
-
 
 
 tabela.innerHTML="";
 
 
 
-database.vendas
-.slice()
-.reverse()
-.forEach(venda=>{
+database.vendas.slice().reverse()
+.forEach(v=>{
 
 
-let linha =
-document.createElement("tr");
+let tr=document.createElement("tr");
 
 
+tr.innerHTML=`
 
-linha.innerHTML = `
+<td>${v.conta}</td>
 
-<td>${venda.conta}</td>
+<td>${v.cliente}</td>
 
-<td>${venda.cliente}</td>
-
-<td>${moeda(venda.valor)}</td>
+<td>${moeda(v.valor)}</td>
 
 `;
 
 
-
-tabela.appendChild(linha);
-
+tabela.appendChild(tr);
 
 
 });
@@ -227,56 +170,72 @@ tabela.appendChild(linha);
 
 
 
+function renderizarContas(){
 
 
-// ==========================
-// NOVA VENDA
-// ==========================
+let tabela=document.querySelector("#listaContas");
+
+
+if(!tabela)return;
+
+
+tabela.innerHTML="";
+
+
+
+database.contas.forEach(c=>{
+
+
+let tr=document.createElement("tr");
+
+
+tr.innerHTML=`
+
+<td>${c.nome}</td>
+
+<td>${c.seguidores}</td>
+
+<td>${moeda(c.custo)}</td>
+
+<td>${moeda(c.precoVenda)}</td>
+
+<td>
+<span class="status">
+${c.status}
+</span>
+</td>
+
+`;
+
+
+tabela.appendChild(tr);
+
+
+});
+
+
+}
+
+
+
+
+
+
 
 
 function iniciarVenda(){
 
 
-
-const botaoVenda =
-document.getElementById("novaVenda");
-
-
-
-if(!botaoVenda)return;
+document
+.getElementById("novaVenda")
+.addEventListener("click",()=>{
 
 
+let conta=prompt("Nome da conta:");
 
-botaoVenda.addEventListener(
-"click",
-()=>{
+let cliente=prompt("Cliente:");
 
-
-let conta =
-prompt("Nome da conta:");
-
-
-
-let cliente =
-prompt("Nome do cliente:");
-
-
-
-let valor =
-prompt("Valor da venda:");
-
-
-
-
-
-if(!conta || !cliente || !valor){
-
-alert("Preencha todos os campos");
-
-return;
-
-}
-
+let valor=prompt("Valor:");
 
 
 
@@ -288,22 +247,64 @@ cliente,
 
 valor:Number(valor),
 
-data:new Date().toLocaleDateString()
+data:new Date()
 
 });
 
 
 
-
-
 salvarDados();
-
 
 atualizarDashboard();
 
 
+});
 
-alert("Venda cadastrada 🚀");
+}
+
+
+
+
+function iniciarConta(){
+
+
+document
+.getElementById("novaConta")
+.addEventListener("click",()=>{
+
+
+let nome=prompt("Nome da conta:");
+
+let seguidores=prompt("Seguidores:");
+
+let custo=prompt("Valor de compra:");
+
+let precoVenda=prompt("Preço de venda:");
+
+
+
+database.contas.push({
+
+nome,
+
+seguidores:Number(seguidores),
+
+custo:Number(custo),
+
+precoVenda:Number(precoVenda),
+
+status:"Disponível"
+
+});
+
+
+
+salvarDados();
+
+atualizarDashboard();
+
+
+alert("Conta cadastrada 🚀");
 
 
 });
@@ -317,14 +318,6 @@ alert("Venda cadastrada 🚀");
 
 
 
-
-
-
-// ==========================
-// INICIAR SISTEMA
-// ==========================
-
-
 document.addEventListener(
 "DOMContentLoaded",
 ()=>{
@@ -332,12 +325,11 @@ document.addEventListener(
 
 carregarDados();
 
-
 atualizarDashboard();
-
 
 iniciarVenda();
 
+iniciarConta();
 
 
 });
