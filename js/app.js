@@ -3,12 +3,13 @@ console.log("VendaPro iniciado 🚀");
 
 const DB_KEY="vendapro_database";
 
+const META_SEGUIDORES = 2000;
+
+
 
 let database={
-
 contas:[],
 vendas:[]
-
 };
 
 
@@ -17,9 +18,7 @@ vendas:[]
 
 function carregarDados(){
 
-
 let dados=localStorage.getItem(DB_KEY);
-
 
 
 if(dados){
@@ -32,9 +31,7 @@ salvarDados();
 
 }
 
-
 }
-
 
 
 
@@ -42,15 +39,12 @@ salvarDados();
 
 function salvarDados(){
 
-
 localStorage.setItem(
 DB_KEY,
 JSON.stringify(database)
 );
 
-
 }
-
 
 
 
@@ -82,7 +76,7 @@ let faturamento=0;
 
 database.vendas.forEach(v=>{
 
-faturamento+=Number(v.valor);
+faturamento += Number(v.valor);
 
 });
 
@@ -91,30 +85,20 @@ faturamento+=Number(v.valor);
 let cards=document.querySelectorAll(".card h2");
 
 
-
-if(cards.length>=4){
-
-
 cards[0].innerHTML=moeda(faturamento);
-
 
 cards[1].innerHTML=database.vendas.length;
 
-
 cards[2].innerHTML=moeda(faturamento);
-
 
 cards[3].innerHTML=database.contas.length;
 
 
-}
-
-
-
-renderizarVendas();
 
 renderizarContas();
 
+renderizarVendas();
+
 
 }
 
@@ -124,42 +108,39 @@ renderizarContas();
 
 
 
-function renderizarVendas(){
+function progressoSeguidores(valor){
 
 
-let tabela=document.querySelector("#listaVendas");
-
-
-if(!tabela)return;
-
-
-tabela.innerHTML="";
+let porcentagem =
+Math.min(
+100,
+Math.round((valor/META_SEGUIDORES)*100)
+);
 
 
 
-database.vendas.slice().reverse()
-.forEach(v=>{
+return `
+
+<div class="progresso-box">
 
 
-let tr=document.createElement("tr");
+<div class="barra">
+
+<div style="width:${porcentagem}%"></div>
+
+</div>
 
 
-tr.innerHTML=`
+<span class="porcentagem">
 
-<td>${v.conta}</td>
+${porcentagem}%
 
-<td>${v.cliente}</td>
+</span>
 
-<td>${moeda(v.valor)}</td>
+
+</div>
 
 `;
-
-
-tabela.appendChild(tr);
-
-
-});
-
 
 }
 
@@ -183,7 +164,7 @@ tabela.innerHTML="";
 
 
 
-database.contas.forEach(c=>{
+database.contas.forEach((c,index)=>{
 
 
 let tr=document.createElement("tr");
@@ -195,14 +176,102 @@ tr.innerHTML=`
 
 <td>${c.seguidores}</td>
 
+
+<td>
+
+${progressoSeguidores(c.seguidores)}
+
+</td>
+
+
 <td>${moeda(c.custo)}</td>
+
 
 <td>${moeda(c.precoVenda)}</td>
 
+
 <td>
+
 <span class="status">
 ${c.status}
 </span>
+
+</td>
+
+
+
+<td>
+
+<button 
+class="btn-delete"
+onclick="removerConta(${index})">
+
+Excluir
+
+</button>
+
+</td>
+
+`;
+
+
+
+tabela.appendChild(tr);
+
+
+});
+
+
+}
+
+
+
+
+
+
+
+
+function renderizarVendas(){
+
+
+let tabela=document.querySelector("#listaVendas");
+
+
+if(!tabela)return;
+
+
+tabela.innerHTML="";
+
+
+
+database.vendas
+.slice()
+.reverse()
+.forEach((v,index)=>{
+
+
+let tr=document.createElement("tr");
+
+
+tr.innerHTML=`
+
+<td>${v.conta}</td>
+
+<td>${v.cliente}</td>
+
+<td>${moeda(v.valor)}</td>
+
+
+<td>
+
+<button 
+class="btn-delete"
+onclick="removerVenda(${index})">
+
+Excluir
+
+</button>
+
 </td>
 
 `;
@@ -211,7 +280,59 @@ ${c.status}
 tabela.appendChild(tr);
 
 
+
 });
+
+
+}
+
+
+
+
+
+
+
+
+
+function removerConta(index){
+
+
+if(confirm("Deseja excluir esta conta?")){
+
+
+database.contas.splice(index,1);
+
+
+salvarDados();
+
+atualizarDashboard();
+
+
+}
+
+
+}
+
+
+
+
+
+
+function removerVenda(index){
+
+
+if(confirm("Deseja excluir esta venda?")){
+
+
+database.vendas.splice(index,1);
+
+
+salvarDados();
+
+atualizarDashboard();
+
+
+}
 
 
 }
@@ -231,7 +352,7 @@ document
 .addEventListener("click",()=>{
 
 
-let conta=prompt("Nome da conta:");
+let conta=prompt("Conta:");
 
 let cliente=prompt("Cliente:");
 
@@ -245,12 +366,9 @@ conta,
 
 cliente,
 
-valor:Number(valor),
-
-data:new Date()
+valor:Number(valor)
 
 });
-
 
 
 salvarDados();
@@ -260,7 +378,12 @@ atualizarDashboard();
 
 });
 
+
 }
+
+
+
+
 
 
 
@@ -277,9 +400,9 @@ let nome=prompt("Nome da conta:");
 
 let seguidores=prompt("Seguidores:");
 
-let custo=prompt("Valor de compra:");
+let custo=prompt("Compra:");
 
-let precoVenda=prompt("Preço de venda:");
+let precoVenda=prompt("Venda:");
 
 
 
@@ -298,13 +421,9 @@ status:"Disponível"
 });
 
 
-
 salvarDados();
 
 atualizarDashboard();
-
-
-alert("Conta cadastrada 🚀");
 
 
 });
@@ -327,9 +446,9 @@ carregarDados();
 
 atualizarDashboard();
 
-iniciarVenda();
-
 iniciarConta();
+
+iniciarVenda();
 
 
 });
