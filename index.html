@@ -4,9 +4,10 @@
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Dashboard Pro</title>
+<title>VendaPro Dashboard</title>
 
 <link rel="stylesheet" href="css/style.css">
 
@@ -20,8 +21,6 @@
 
 <div class="layout">
 
-
-<!-- SIDEBAR -->
 
 <aside class="sidebar">
 
@@ -52,7 +51,6 @@
 ⚙ Configurações
 </a>
 
-
 </nav>
 
 
@@ -60,8 +58,6 @@
 
 
 
-
-<!-- CONTEÚDO -->
 
 
 <main class="main">
@@ -82,7 +78,7 @@ Visão geral das suas vendas
 </div>
 
 
-<button>
+<button id="novaVenda">
 + Nova venda
 </button>
 
@@ -91,8 +87,6 @@ Visão geral das suas vendas
 
 
 
-
-<!-- CARDS -->
 
 
 <section class="cards">
@@ -113,7 +107,6 @@ R$ 0,00
 </p>
 
 </div>
-
 
 
 
@@ -172,7 +165,6 @@ Ativas
 </div>
 
 
-
 </section>
 
 
@@ -180,14 +172,11 @@ Ativas
 
 
 
-<!-- GRAFICOS -->
-
-
 <section class="grid">
 
 
-<div class="panel chart">
 
+<div class="panel">
 
 <h3>
 Faturamento mensal
@@ -196,11 +185,11 @@ Faturamento mensal
 
 <div class="fake-chart">
 
-<div style="height:40%"></div>
-<div style="height:70%"></div>
-<div style="height:50%"></div>
-<div style="height:90%"></div>
-<div style="height:65%"></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
+<div></div>
 
 
 </div>
@@ -232,9 +221,11 @@ Faturamento mensal
 Conta
 </th>
 
+
 <th>
 Cliente
 </th>
+
 
 <th>
 Valor
@@ -247,54 +238,17 @@ Valor
 
 
 
-<tbody>
-
-
-<tr>
-
-<td>
-@conta01
-</td>
-
-<td>
-Cliente
-</td>
-
-<td>
-R$300
-</td>
-
-
-</tr>
-
-
-
-<tr>
-
-<td>
-@conta02
-</td>
-
-<td>
-Cliente
-</td>
-
-<td>
-R$450
-</td>
-
-
-</tr>
+<tbody id="listaVendas">
 
 
 </tbody>
-
 
 
 </table>
 
 
 </div>
+
 
 
 </section>
@@ -306,6 +260,7 @@ R$450
 
 
 </div>
+
 
 
 <script src="js/app.js"></script>
