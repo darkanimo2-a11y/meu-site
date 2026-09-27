@@ -1,35 +1,58 @@
 console.log("VendaPro iniciado 🚀");
 
 
-const DB_KEY="vendapro_database";
+const DB_KEY = "vendapro_database";
 
 const META_SEGUIDORES = 2000;
 
 
 
-let database={
-contas:[],
-vendas:[]
+let database = {
+
+contas: [],
+vendas: []
+
 };
 
 
 
 
 
+// =======================
+// BANCO DE DADOS
+// =======================
+
+
 function carregarDados(){
 
-let dados=localStorage.getItem(DB_KEY);
+
+const dados = localStorage.getItem(DB_KEY);
+
 
 
 if(dados){
 
-database=JSON.parse(dados);
 
-}else{
+database = JSON.parse(dados);
+
+
+
+if(!database.contas){
+database.contas=[];
+}
+
+
+if(!database.vendas){
+database.vendas=[];
+}
+
+
+
+}
+
 
 salvarDados();
 
-}
 
 }
 
@@ -39,10 +62,12 @@ salvarDados();
 
 function salvarDados(){
 
+
 localStorage.setItem(
 DB_KEY,
 JSON.stringify(database)
 );
+
 
 }
 
@@ -50,9 +75,19 @@ JSON.stringify(database)
 
 
 
+
+
+
+// =======================
+// UTILIDADES
+// =======================
+
+
 function moeda(valor){
 
-return Number(valor).toLocaleString(
+
+return Number(valor || 0)
+.toLocaleString(
 "pt-BR",
 {
 style:"currency",
@@ -60,45 +95,6 @@ currency:"BRL"
 }
 );
 
-}
-
-
-
-
-
-
-
-function atualizarDashboard(){
-
-
-let faturamento=0;
-
-
-database.vendas.forEach(v=>{
-
-faturamento += Number(v.valor);
-
-});
-
-
-
-let cards=document.querySelectorAll(".card h2");
-
-
-cards[0].innerHTML=moeda(faturamento);
-
-cards[1].innerHTML=database.vendas.length;
-
-cards[2].innerHTML=moeda(faturamento);
-
-cards[3].innerHTML=database.contas.length;
-
-
-
-renderizarContas();
-
-renderizarVendas();
-
 
 }
 
@@ -108,18 +104,23 @@ renderizarVendas();
 
 
 
-function progressoSeguidores(valor){
+function progresso(valor){
 
 
-let porcentagem =
-Math.min(
+let porcentagem = Math.min(
+
 100,
-Math.round((valor/META_SEGUIDORES)*100)
+
+Math.round(
+(Number(valor || 0) / META_SEGUIDORES) * 100
+)
+
 );
 
 
 
 return `
+
 
 <div class="progresso-box">
 
@@ -140,6 +141,7 @@ ${porcentagem}%
 
 </div>
 
+
 `;
 
 }
@@ -151,49 +153,156 @@ ${porcentagem}%
 
 
 
+
+// =======================
+// DASHBOARD
+// =======================
+
+
+function atualizarDashboard(){
+
+
+
+let faturamento = 0;
+
+
+
+database.vendas.forEach(v=>{
+
+
+faturamento += Number(v.valor || 0);
+
+
+});
+
+
+
+
+const cards =
+document.querySelectorAll(".card h2");
+
+
+
+if(cards.length >= 4){
+
+
+cards[0].innerHTML =
+moeda(faturamento);
+
+
+
+cards[1].innerHTML =
+database.vendas.length;
+
+
+
+cards[2].innerHTML =
+moeda(faturamento);
+
+
+
+cards[3].innerHTML =
+database.contas.length;
+
+
+
+}
+
+
+
+renderizarContas();
+
+renderizarVendas();
+
+
+}
+
+
+
+
+
+
+
+
+// =======================
+// CONTAS
+// =======================
+
+
 function renderizarContas(){
 
 
-let tabela=document.querySelector("#listaContas");
+const tabela =
+document.getElementById("listaContas");
+
 
 
 if(!tabela)return;
+
 
 
 tabela.innerHTML="";
 
 
 
-database.contas.forEach((c,index)=>{
+database.contas.forEach((conta,index)=>{
 
 
-let tr=document.createElement("tr");
+
+if(!conta.nome){
+
+conta.nome="Sem nome";
+
+}
 
 
-tr.innerHTML=`
 
-<td>${c.nome}</td>
+let linha =
+document.createElement("tr");
 
-<td>${c.seguidores}</td>
+
+
+linha.innerHTML = `
+
+
+<td>${conta.nome}</td>
 
 
 <td>
 
-${progressoSeguidores(c.seguidores)}
+${conta.seguidores || 0}
 
 </td>
 
 
-<td>${moeda(c.custo)}</td>
+<td>
+
+${progresso(conta.seguidores)}
+
+</td>
 
 
-<td>${moeda(c.precoVenda)}</td>
+<td>
+
+${moeda(conta.custo)}
+
+</td>
+
+
+<td>
+
+${moeda(conta.precoVenda)}
+
+</td>
+
 
 
 <td>
 
 <span class="status">
-${c.status}
+
+${conta.status || "Disponível"}
+
 </span>
 
 </td>
@@ -201,6 +310,7 @@ ${c.status}
 
 
 <td>
+
 
 <button 
 class="btn-delete"
@@ -210,91 +320,28 @@ Excluir
 
 </button>
 
+
 </td>
+
 
 `;
 
 
 
-tabela.appendChild(tr);
+tabela.appendChild(linha);
 
 
 });
 
 
 }
-
-
-
-
-
-
-
-
-function renderizarVendas(){
-
-
-let tabela=document.querySelector("#listaVendas");
-
-
-if(!tabela)return;
-
-
-tabela.innerHTML="";
-
-
-
-database.vendas
-.slice()
-.reverse()
-.forEach((v,index)=>{
-
-
-let tr=document.createElement("tr");
-
-
-tr.innerHTML=`
-
-<td>${v.conta}</td>
-
-<td>${v.cliente}</td>
-
-<td>${moeda(v.valor)}</td>
-
-
-<td>
-
-<button 
-class="btn-delete"
-onclick="removerVenda(${index})">
-
-Excluir
-
-</button>
-
-</td>
-
-`;
-
-
-tabela.appendChild(tr);
-
-
-
-});
-
-
-}
-
-
-
-
 
 
 
 
 
 function removerConta(index){
+
 
 
 if(confirm("Deseja excluir esta conta?")){
@@ -305,12 +352,14 @@ database.contas.splice(index,1);
 
 salvarDados();
 
+
 atualizarDashboard();
 
 
 }
 
 
+
 }
 
 
@@ -318,7 +367,106 @@ atualizarDashboard();
 
 
 
+
+
+
+// =======================
+// VENDAS
+// =======================
+
+
+function renderizarVendas(){
+
+
+
+const tabela =
+document.getElementById("listaVendas");
+
+
+
+if(!tabela)return;
+
+
+
+tabela.innerHTML="";
+
+
+
+database.vendas
+.slice()
+.reverse()
+.forEach((venda,index)=>{
+
+
+
+let linha =
+document.createElement("tr");
+
+
+
+linha.innerHTML=`
+
+
+<td>
+
+${venda.conta || "-"}
+
+</td>
+
+
+<td>
+
+${venda.cliente || "-"}
+
+</td>
+
+
+<td>
+
+${moeda(venda.valor)}
+
+</td>
+
+
+
+<td>
+
+
+<button
+
+class="btn-delete"
+
+onclick="removerVenda(${index})">
+
+
+Excluir
+
+
+</button>
+
+
+</td>
+
+
+
+`;
+
+
+
+tabela.appendChild(linha);
+
+
+});
+
+
+}
+
+
+
+
+
 function removerVenda(index){
+
 
 
 if(confirm("Deseja excluir esta venda?")){
@@ -329,6 +477,7 @@ database.vendas.splice(index,1);
 
 salvarDados();
 
+
 atualizarDashboard();
 
 
@@ -344,23 +493,149 @@ atualizarDashboard();
 
 
 
+
+// =======================
+// NOVA CONTA
+// =======================
+
+
+function iniciarConta(){
+
+
+
+const botao =
+document.getElementById("novaConta");
+
+
+
+if(!botao)return;
+
+
+
+
+botao.onclick=function(){
+
+
+
+let nome =
+prompt("Nome da conta:");
+
+
+
+let seguidores =
+prompt("Seguidores:");
+
+
+
+let custo =
+prompt("Valor de compra:");
+
+
+
+let precoVenda =
+prompt("Valor de venda:");
+
+
+
+
+if(!nome)return;
+
+
+
+database.contas.push({
+
+
+nome:nome,
+
+
+seguidores:Number(seguidores || 0),
+
+
+custo:Number(custo || 0),
+
+
+precoVenda:Number(precoVenda || 0),
+
+
+status:"Disponível"
+
+
+});
+
+
+
+
+salvarDados();
+
+
+atualizarDashboard();
+
+
+
+alert("Conta criada 🚀");
+
+
+
+};
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// =======================
+// NOVA VENDA
+// =======================
+
+
 function iniciarVenda(){
 
 
-document
-.getElementById("novaVenda")
-.addEventListener("click",()=>{
+
+const botao =
+document.getElementById("novaVenda");
 
 
-let conta=prompt("Conta:");
 
-let cliente=prompt("Cliente:");
+if(!botao)return;
 
-let valor=prompt("Valor:");
+
+
+
+botao.onclick=function(){
+
+
+
+let conta =
+prompt("Conta:");
+
+
+
+let cliente =
+prompt("Cliente:");
+
+
+
+let valor =
+prompt("Valor:");
+
+
+
+
+
+if(!conta || !valor)return;
 
 
 
 database.vendas.push({
+
 
 conta,
 
@@ -368,15 +643,26 @@ cliente,
 
 valor:Number(valor)
 
+
+
 });
+
+
 
 
 salvarDados();
 
+
 atualizarDashboard();
 
 
-});
+
+alert("Venda registrada 🚀");
+
+
+
+};
+
 
 
 }
@@ -388,53 +674,11 @@ atualizarDashboard();
 
 
 
-function iniciarConta(){
 
 
-document
-.getElementById("novaConta")
-.addEventListener("click",()=>{
-
-
-let nome=prompt("Nome da conta:");
-
-let seguidores=prompt("Seguidores:");
-
-let custo=prompt("Compra:");
-
-let precoVenda=prompt("Venda:");
-
-
-
-database.contas.push({
-
-nome,
-
-seguidores:Number(seguidores),
-
-custo:Number(custo),
-
-precoVenda:Number(precoVenda),
-
-status:"Disponível"
-
-});
-
-
-salvarDados();
-
-atualizarDashboard();
-
-
-});
-
-
-}
-
-
-
-
-
+// =======================
+// INICIAR SISTEMA
+// =======================
 
 
 document.addEventListener(
@@ -444,9 +688,12 @@ document.addEventListener(
 
 carregarDados();
 
+
 atualizarDashboard();
 
+
 iniciarConta();
+
 
 iniciarVenda();
 
