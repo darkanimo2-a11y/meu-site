@@ -44,10 +44,13 @@ database.vendas=[];
 }
 
 
+
 salvarDados();
 
 
 }
+
+
 
 
 
@@ -64,6 +67,8 @@ JSON.stringify(database)
 
 
 }
+
+
 
 
 
@@ -101,6 +106,7 @@ currency:"BRL"
 
 
 
+
 function progresso(valor){
 
 
@@ -110,7 +116,7 @@ let porcentagem = Math.min(
 
 Math.round(
 
-(Number(valor || 0) / META_SEGUIDORES) * 100
+(Number(valor || 0)/META_SEGUIDORES)*100
 
 )
 
@@ -119,6 +125,7 @@ Math.round(
 
 
 return `
+
 
 <div class="progresso-box">
 
@@ -139,9 +146,12 @@ ${porcentagem}%
 
 </div>
 
+
 `;
 
 }
+
+
 
 
 
@@ -160,7 +170,6 @@ function atualizarDashboard(){
 let faturamento=0;
 
 
-
 database.vendas.forEach(v=>{
 
 
@@ -171,7 +180,7 @@ faturamento += Number(v.valor || 0);
 
 
 
-let cards=document.querySelectorAll(".card h2");
+const cards=document.querySelectorAll(".card h2");
 
 
 
@@ -198,8 +207,12 @@ renderizarContas();
 
 renderizarVendas();
 
+gerarGrafico();
+
 
 }
+
+
 
 
 
@@ -215,8 +228,7 @@ renderizarVendas();
 function renderizarContas(){
 
 
-const tabela =
-document.getElementById("listaContas");
+const tabela=document.getElementById("listaContas");
 
 
 if(!tabela)return;
@@ -231,12 +243,20 @@ database.contas.forEach((c,index)=>{
 
 
 
-if(!c.nome)
-c.nome="Sem nome";
+let status = c.status || "Disponível";
 
 
 
-let linha=document.createElement("tr");
+let classeStatus =
+status === "Vendida"
+?
+"status-vendida"
+:
+"status";
+
+
+
+linha=document.createElement("tr");
 
 
 
@@ -246,14 +266,10 @@ linha.innerHTML=`
 <td>${c.nome}</td>
 
 
-<td>${c.seguidores || 0}</td>
+<td>${c.seguidores}</td>
 
 
-<td>
-
-${progresso(c.seguidores)}
-
-</td>
+<td>${progresso(c.seguidores)}</td>
 
 
 <td>${moeda(c.custo)}</td>
@@ -264,14 +280,13 @@ ${progresso(c.seguidores)}
 
 <td>
 
-<span class="status">
+<span class="${classeStatus}">
 
-${c.status || "Disponível"}
+${status}
 
 </span>
 
 </td>
-
 
 
 <td>
@@ -304,6 +319,32 @@ Seguidores
 
 
 
+${status !== "Vendida"
+
+?
+
+`
+
+<button
+
+class="btn-sell"
+
+onclick="venderConta(${index})">
+
+Vender
+
+</button>
+
+`
+
+:
+
+""
+
+}
+
+
+
 <button
 
 class="btn-delete"
@@ -321,11 +362,13 @@ Excluir
 </td>
 
 
+
 `;
 
 
 
 tabela.appendChild(linha);
+
 
 
 });
@@ -340,8 +383,13 @@ tabela.appendChild(linha);
 
 
 
-function editarConta(index){
 
+// =======================
+// VENDER CONTA
+// =======================
+
+
+function venderConta(index){
 
 
 const conta = database.contas[index];
@@ -352,7 +400,9 @@ abrirModal(`
 
 
 <h2>
-Editar conta
+
+Vender ${conta.nome}
+
 </h2>
 
 
@@ -360,21 +410,15 @@ Editar conta
 <div class="form">
 
 
-<input id="editNome" value="${conta.nome}">
+<input id="clienteVenda" placeholder="Cliente">
 
 
-<input id="editSeg" type="number" value="${conta.seguidores}">
+<input id="valorVenda" type="number" value="${conta.precoVenda}">
 
 
-<input id="editCompra" type="number" value="${conta.custo}">
+<button id="confirmarVenda">
 
-
-<input id="editVenda" type="number" value="${conta.precoVenda}">
-
-
-<button id="salvarEdicao">
-
-Salvar
+Confirmar venda
 
 </button>
 
@@ -382,134 +426,55 @@ Salvar
 </div>
 
 
-
 `);
 
 
 
 
+
 document
-.getElementById("salvarEdicao")
+.getElementById("confirmarVenda")
 .onclick=()=>{
 
 
-conta.nome =
-document.getElementById("editNome").value;
+database.vendas.push({
+
+
+conta:conta.nome,
+
+
+cliente:
+document.getElementById("clienteVenda").value,
+
+
+valor:
+Number(
+document.getElementById("valorVenda").value
+),
+
+
+data:new Date().toLocaleDateString()
+
+
+});
 
 
 
-conta.seguidores =
-Number(document.getElementById("editSeg").value);
-
-
-
-conta.custo =
-Number(document.getElementById("editCompra").value);
-
-
-
-conta.precoVenda =
-Number(document.getElementById("editVenda").value);
+conta.status="Vendida";
 
 
 
 salvarDados();
 
+
 atualizarDashboard();
+
 
 fecharModal();
 
 
 };
 
-
-}
-
-
-
-
-
-
-
-
-function atualizarSeguidores(index){
-
-
-
-const conta =
-database.contas[index];
-
-
-
-let novo =
-prompt(
-"Novo número de seguidores:",
-conta.seguidores
-);
-
-
-
-if(!novo)return;
-
-
-
-if(!conta.historico)
-
-conta.historico=[];
-
-
-
-conta.historico.push({
-
-data:new Date().toLocaleDateString(),
-
-anterior:conta.seguidores,
-
-novo:Number(novo),
-
-crescimento:
-Number(novo)-conta.seguidores
-
-});
-
-
-
-conta.seguidores =
-Number(novo);
-
-
-
-salvarDados();
-
-
-atualizarDashboard();
-
-
-}
-
-
-
-
-
-
-
-function removerConta(index){
-
-
-
-if(confirm("Excluir esta conta?")){
-
-
-database.contas.splice(index,1);
-
-
-salvarDados();
-
-
-atualizarDashboard();
-
-
-}
 
 
 }
@@ -530,8 +495,7 @@ atualizarDashboard();
 function renderizarVendas(){
 
 
-const tabela =
-document.getElementById("listaVendas");
+const tabela=document.getElementById("listaVendas");
 
 
 if(!tabela)return;
@@ -564,7 +528,6 @@ linha.innerHTML=`
 <td>${moeda(v.valor)}</td>
 
 
-
 <td>
 
 
@@ -589,11 +552,11 @@ Excluir
 tabela.appendChild(linha);
 
 
+
 });
 
 
 }
-
 
 
 
@@ -629,6 +592,115 @@ atualizarDashboard();
 
 
 // =======================
+// GRÁFICO
+// =======================
+
+
+function gerarGrafico(){
+
+
+const grafico =
+document.getElementById("graficoVendas");
+
+
+
+if(!grafico)return;
+
+
+
+grafico.innerHTML="";
+
+
+
+let meses={};
+
+
+
+database.vendas.forEach(v=>{
+
+
+let data =
+v.data || "Atual";
+
+
+
+if(!meses[data])
+meses[data]=0;
+
+
+
+meses[data]+=Number(v.valor);
+
+
+});
+
+
+
+Object.keys(meses)
+.forEach(m=>{
+
+
+let valor=meses[m];
+
+
+
+let altura =
+Math.min(
+250,
+valor/2
+);
+
+
+
+grafico.innerHTML += `
+
+
+<div class="grafico-item">
+
+
+<div class="grafico-valor">
+
+${moeda(valor)}
+
+</div>
+
+
+<div
+
+class="grafico-barra"
+
+style="height:${altura}px">
+
+</div>
+
+
+<div class="grafico-mes">
+
+${m}
+
+</div>
+
+
+</div>
+
+
+`;
+
+
+});
+
+
+
+}
+
+
+
+
+
+
+
+
+// =======================
 // MODAL
 // =======================
 
@@ -636,14 +708,10 @@ atualizarDashboard();
 function abrirModal(html){
 
 
-document
-.getElementById("conteudoModal")
-.innerHTML=html;
+document.getElementById("conteudoModal").innerHTML=html;
 
 
-document
-.getElementById("modal")
-.classList.add("ativo");
+document.getElementById("modal").classList.add("ativo");
 
 
 }
@@ -653,9 +721,7 @@ document
 function fecharModal(){
 
 
-document
-.getElementById("modal")
-.classList.remove("ativo");
+document.getElementById("modal").classList.remove("ativo");
 
 
 }
@@ -675,105 +741,6 @@ document
 
 
 // =======================
-// NOVA CONTA
-// =======================
-
-
-function iniciarConta(){
-
-
-document
-.getElementById("novaConta")
-.onclick=()=>{
-
-
-abrirModal(`
-
-<h2>
-Nova Conta
-</h2>
-
-
-<div class="form">
-
-
-<input id="contaNome" placeholder="Nome">
-
-
-<input id="contaSeguidores" type="number" placeholder="Seguidores">
-
-
-<input id="contaCusto" type="number" placeholder="Compra">
-
-
-<input id="contaVenda" type="number" placeholder="Venda">
-
-
-<button id="salvarConta">
-
-Salvar
-
-</button>
-
-
-</div>
-
-`);
-
-
-
-document
-.getElementById("salvarConta")
-.onclick=()=>{
-
-
-database.contas.push({
-
-nome:
-document.getElementById("contaNome").value,
-
-seguidores:
-Number(document.getElementById("contaSeguidores").value),
-
-custo:
-Number(document.getElementById("contaCusto").value),
-
-precoVenda:
-Number(document.getElementById("contaVenda").value),
-
-status:"Disponível"
-
-});
-
-
-
-salvarDados();
-
-
-atualizarDashboard();
-
-
-fecharModal();
-
-
-};
-
-
-
-};
-
-
-}
-
-
-
-
-
-
-
-
-
-// =======================
 // NOVA VENDA
 // =======================
 
@@ -781,29 +748,52 @@ fecharModal();
 function iniciarVenda(){
 
 
-document
-.getElementById("novaVenda")
+document.getElementById("novaVenda")
 .onclick=()=>{
+
+
+let disponiveis =
+database.contas.filter(
+c=>c.status !== "Vendida"
+);
+
+
+
+let opcoes =
+disponiveis.map((c,i)=>
+
+`<option value="${i}">
+${c.nome}
+</option>`
+
+).join("");
+
 
 
 abrirModal(`
 
 
 <h2>
+
 Nova Venda
+
 </h2>
 
 
 <div class="form">
 
 
-<input id="vendaConta" placeholder="Conta">
+<select id="contaVenda">
+
+${opcoes}
+
+</select>
 
 
-<input id="vendaCliente" placeholder="Cliente">
+<input id="clienteVenda" placeholder="Cliente">
 
 
-<input id="vendaValor" type="number" placeholder="Valor">
+<input id="valorVenda" type="number" placeholder="Valor">
 
 
 <button id="salvarVenda">
@@ -820,24 +810,37 @@ Salvar
 
 
 
-document
-.getElementById("salvarVenda")
+
+document.getElementById("salvarVenda")
 .onclick=()=>{
+
+
+let conta =
+disponiveis[
+document.getElementById("contaVenda").value
+];
+
 
 
 database.vendas.push({
 
-conta:
-document.getElementById("vendaConta").value,
+conta:conta.nome,
 
 cliente:
-document.getElementById("vendaCliente").value,
+document.getElementById("clienteVenda").value,
 
 valor:
-Number(document.getElementById("vendaValor").value)
+Number(
+document.getElementById("valorVenda").value
+),
+
+data:new Date().toLocaleDateString()
 
 });
 
+
+
+conta.status="Vendida";
 
 
 salvarDados();
@@ -850,7 +853,6 @@ fecharModal();
 
 
 };
-
 
 
 };
@@ -866,6 +868,11 @@ fecharModal();
 
 
 
+// =======================
+// INICIALIZAÇÃO
+// =======================
+
+
 document.addEventListener(
 
 "DOMContentLoaded",
@@ -877,9 +884,6 @@ carregarDados();
 
 
 atualizarDashboard();
-
-
-iniciarConta();
 
 
 iniciarVenda();
