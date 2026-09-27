@@ -31,25 +31,15 @@
 
 <nav>
 
-<a class="active">
-🏠 Dashboard
-</a>
+<a class="active">🏠 Dashboard</a>
 
-<a>
-📱 Contas
-</a>
+<a>📱 Contas</a>
 
-<a>
-💰 Vendas
-</a>
+<a>💰 Vendas</a>
 
-<a>
-📊 Relatórios
-</a>
+<a>📊 Relatórios</a>
 
-<a>
-⚙ Configurações
-</a>
+<a>⚙ Configurações</a>
 
 </nav>
 
@@ -59,17 +49,15 @@
 
 
 
-
 <main class="main">
 
 
 <header class="top">
 
+
 <div>
 
-<h1>
-Dashboard
-</h1>
+<h1>Dashboard</h1>
 
 <p>
 Visão geral das suas vendas
@@ -78,9 +66,21 @@ Visão geral das suas vendas
 </div>
 
 
-<button id="novaVenda" type="button">
+
+<div class="top-buttons">
+
+
+<button id="novaConta">
++ Nova conta
+</button>
+
+
+<button id="novaVenda">
 + Nova venda
 </button>
+
+
+</div>
 
 
 </header>
@@ -128,7 +128,6 @@ Este mês
 
 
 
-
 <div class="card">
 
 <span>
@@ -147,11 +146,10 @@ Margem
 
 
 
-
 <div class="card">
 
 <span>
-Contas disponíveis
+Contas cadastradas
 </span>
 
 <h2>
@@ -171,12 +169,68 @@ Ativas
 
 
 
+<section class="panel contas-panel">
+
+
+<h3>
+Minhas contas
+</h3>
+
+
+<table>
+
+
+<thead>
+
+<tr>
+
+<th>
+Conta
+</th>
+
+<th>
+Seguidores
+</th>
+
+<th>
+Compra
+</th>
+
+<th>
+Venda
+</th>
+
+<th>
+Status
+</th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="listaContas">
+
+
+</tbody>
+
+
+</table>
+
+
+</section>
+
+
+
+
+
+
 
 <section class="grid">
 
 
-
 <div class="panel">
+
 
 <h3>
 Faturamento mensal
@@ -186,9 +240,13 @@ Faturamento mensal
 <div class="fake-chart">
 
 <div></div>
+
 <div></div>
+
 <div></div>
+
 <div></div>
+
 <div></div>
 
 
@@ -221,21 +279,18 @@ Faturamento mensal
 Conta
 </th>
 
-
 <th>
 Cliente
 </th>
-
 
 <th>
 Valor
 </th>
 
-
 </tr>
 
-</thead>
 
+</thead>
 
 
 <tbody id="listaVendas">
@@ -250,9 +305,7 @@ Valor
 </div>
 
 
-
 </section>
-
 
 
 
@@ -260,6 +313,7 @@ Valor
 
 
 </div>
+
 
 
 
