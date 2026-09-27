@@ -866,7 +866,82 @@ fecharModal();
 
 
 
+// =======================
+// NAVEGAÇÃO SIDEBAR
+// =======================
 
+
+function iniciarNavegacao(){
+
+
+
+const links = document.querySelectorAll(".menu-link");
+
+
+const paginas = document.querySelectorAll(".pagina");
+
+
+
+
+links.forEach(link=>{
+
+
+link.addEventListener("click",()=>{
+
+
+
+const paginaId =
+link.dataset.page;
+
+
+
+// esconder páginas
+
+paginas.forEach(p=>{
+
+p.classList.remove("ativa");
+
+});
+
+
+
+
+// mostrar página escolhida
+
+const pagina =
+document.getElementById(paginaId);
+
+
+
+if(pagina){
+
+pagina.classList.add("ativa");
+
+}
+
+
+
+
+// mudar menu ativo
+
+links.forEach(l=>{
+
+l.classList.remove("active");
+
+});
+
+
+link.classList.add("active");
+
+
+
+});
+
+
+});
+
+
+}
 
 // =======================
 // INICIALIZAÇÃO
@@ -888,7 +963,7 @@ atualizarDashboard();
 
 iniciarVenda();
 
-
+iniciarNavegacao();
 }
 
 );
