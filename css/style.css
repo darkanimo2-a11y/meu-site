@@ -593,3 +593,96 @@ width:100%;
 
 
 }
+/* ==========================
+   BOTÕES DE AÇÃO DAS CONTAS
+========================== */
+
+
+.acoes{
+
+display:flex;
+
+gap:8px;
+
+flex-wrap:wrap;
+
+}
+
+
+
+.btn-edit{
+
+background:#2563eb;
+
+padding:8px 12px;
+
+font-size:12px;
+
+}
+
+
+
+.btn-followers{
+
+background:#16a34a;
+
+padding:8px 12px;
+
+font-size:12px;
+
+}
+
+
+
+.btn-edit:hover{
+
+background:#1d4ed8;
+
+}
+
+
+
+.btn-followers:hover{
+
+background:#15803d;
+
+}
+
+
+
+
+
+/* HISTÓRICO DE SEGUIDORES */
+
+
+.historico{
+
+margin-top:15px;
+
+padding:15px;
+
+background:#f8fafc;
+
+border-radius:12px;
+
+font-size:14px;
+
+}
+
+
+
+.historico-item{
+
+padding:8px 0;
+
+border-bottom:1px solid #e5e7eb;
+
+}
+
+
+
+.historico-item:last-child{
+
+border-bottom:0;
+
+}
