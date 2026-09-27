@@ -192,8 +192,74 @@ tabela.appendChild(linha);
 
 
 
-const botaoVenda =
-document.querySelector("#novaVenda");
+// BOTÃO NOVA VENDA
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+
+const botaoVenda = document.getElementById("novaVenda");
+
+
+console.log("Botão encontrado:", botaoVenda);
+
+
+
+if(botaoVenda){
+
+
+botaoVenda.addEventListener("click",()=>{
+
+
+console.log("Clique detectado");
+
+
+let conta = prompt("Nome da conta:");
+
+let cliente = prompt("Nome do cliente:");
+
+let valor = prompt("Valor da venda:");
+
+
+
+if(!conta || !cliente || !valor){
+
+alert("Preencha todos os campos");
+
+return;
+
+}
+
+
+
+database.vendas.push({
+
+conta: conta,
+
+cliente: cliente,
+
+valor: Number(valor),
+
+data: new Date().toLocaleDateString()
+
+});
+
+
+
+salvarDados();
+
+atualizarDashboard();
+
+
+alert("Venda cadastrada com sucesso 🚀");
+
+
+});
+
+
+}
+
+
+});
 
 
 
