@@ -4,20 +4,13 @@
 <head>
 
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Dashboard Pro</title>
 
-<meta 
-name="viewport" 
-content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="stylesheet" href="css/style.css">
 
-
-<title>
-DashTik | Dashboard
-</title>
-
-
-<link rel="stylesheet" href="style.css">
-
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 </head>
 
@@ -25,67 +18,42 @@ DashTik | Dashboard
 <body>
 
 
-<div class="app">
+<div class="layout">
 
 
+<!-- SIDEBAR -->
 
 <aside class="sidebar">
 
-
-<h1>
-<span>Dash</span>Tik
-</h1>
-
+<div class="logo">
+🚀 VendaPro
+</div>
 
 
-<ul>
+<nav>
 
+<a class="active">
+🏠 Dashboard
+</a>
 
-<li class="active">
+<a>
+📱 Contas
+</a>
 
-📊 Dashboard
-
-</li>
-
-
-
-
-<li onclick="abrirProdutos()">
-
-📦 Produtos
-
-</li>
-
-
-
-
-<li onclick="abrirVendas()">
-
+<a>
 💰 Vendas
+</a>
 
-</li>
+<a>
+📊 Relatórios
+</a>
 
-
-
-
-<li onclick="abrirRelatorios()">
-
-📈 Relatórios
-
-</li>
-
-
-
-
-<li>
-
+<a>
 ⚙ Configurações
-
-</li>
-
+</a>
 
 
-</ul>
+</nav>
 
 
 </aside>
@@ -93,43 +61,30 @@ DashTik | Dashboard
 
 
 
+<!-- CONTEÚDO -->
 
 
+<main class="main">
 
 
-
-<main>
-
-
-
-
-<header>
-
+<header class="top">
 
 <div>
 
-
-<h2>
-Painel de Vendas
-</h2>
-
+<h1>
+Dashboard
+</h1>
 
 <p>
-Visão geral da operação
+Visão geral das suas vendas
 </p>
-
 
 </div>
 
 
-
-
-<button onclick="abrirProdutos()">
-
-+ Novo Produto
-
+<button>
++ Nova venda
 </button>
-
 
 
 </header>
@@ -137,138 +92,84 @@ Visão geral da operação
 
 
 
-
-
-
+<!-- CARDS -->
 
 
 <section class="cards">
 
 
-
-
-
 <div class="card">
-
-
-<div class="icon">
-📦
-</div>
-
-
-<p>
-Produtos cadastrados
-</p>
-
-
-<h3 id="totalProdutos">
-0
-</h3>
-
 
 <span>
-Produtos ativos
-</span>
-
-
-</div>
-
-
-
-
-
-
-
-
-<div class="card">
-
-
-<div class="icon">
-🛒
-</div>
-
-
-<p>
-Vendas realizadas
-</p>
-
-
-<h3 id="totalVendas">
-0
-</h3>
-
-
-<span>
-Pedidos concluídos
-</span>
-
-
-</div>
-
-
-
-
-
-
-
-
-<div class="card">
-
-
-<div class="icon">
-💰
-</div>
-
-
-<p>
 Faturamento
-</p>
-
-
-<h3 id="faturamento">
-R$ 0
-</h3>
-
-
-<span>
-Receita acumulada
 </span>
 
+<h2>
+R$ 0,00
+</h2>
+
+<p class="green">
+↑ 0%
+</p>
 
 </div>
-
-
-
-
 
 
 
 
 <div class="card">
 
-
-<div class="icon">
-🎯
-</div>
-
-
-<p>
-Meta mensal
-</p>
-
-
-<h3 id="progressoMeta">
-0%
-</h3>
-
-
 <span>
-Progresso da meta
+Vendas
 </span>
 
+<h2>
+0
+</h2>
+
+<p>
+Este mês
+</p>
 
 </div>
 
+
+
+
+<div class="card">
+
+<span>
+Lucro
+</span>
+
+<h2>
+R$ 0,00
+</h2>
+
+<p class="green">
+Margem
+</p>
+
+</div>
+
+
+
+
+<div class="card">
+
+<span>
+Contas disponíveis
+</span>
+
+<h2>
+0
+</h2>
+
+<p>
+Ativas
+</p>
+
+</div>
 
 
 
@@ -279,51 +180,45 @@ Progresso da meta
 
 
 
+<!-- GRAFICOS -->
 
 
-
-<section class="content">
-
+<section class="grid">
 
 
-
-
-<div class="box">
+<div class="panel chart">
 
 
 <h3>
-Desempenho de vendas
+Faturamento mensal
 </h3>
 
 
+<div class="fake-chart">
 
-<div class="grafico-container">
+<div style="height:40%"></div>
+<div style="height:70%"></div>
+<div style="height:50%"></div>
+<div style="height:90%"></div>
+<div style="height:65%"></div>
 
 
-<canvas id="graficoVendas"></canvas>
+</div>
 
 
 </div>
 
 
 
-</div>
 
 
 
-
-
-
-
-
-<div class="box">
+<div class="panel">
 
 
 <h3>
 Últimas vendas
 </h3>
-
-
 
 
 <table>
@@ -334,14 +229,12 @@ Desempenho de vendas
 <tr>
 
 <th>
-Produto
+Conta
 </th>
-
 
 <th>
-Quantidade
+Cliente
 </th>
-
 
 <th>
 Valor
@@ -350,14 +243,48 @@ Valor
 
 </tr>
 
-
 </thead>
 
 
 
+<tbody>
 
 
-<tbody id="listaVendasDashboard">
+<tr>
+
+<td>
+@conta01
+</td>
+
+<td>
+Cliente
+</td>
+
+<td>
+R$300
+</td>
+
+
+</tr>
+
+
+
+<tr>
+
+<td>
+@conta02
+</td>
+
+<td>
+Cliente
+</td>
+
+<td>
+R$450
+</td>
+
+
+</tr>
 
 
 </tbody>
@@ -367,12 +294,7 @@ Valor
 </table>
 
 
-
 </div>
-
-
-
-
 
 
 </section>
@@ -380,29 +302,13 @@ Valor
 
 
 
-
-
-
-
-
 </main>
-
 
 
 </div>
 
 
-
-
-
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-
-<script src="storage.js"></script>
-
-<script src="script.js"></script>
-
+<script src="js/app.js"></script>
 
 
 </body>
