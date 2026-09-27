@@ -1,57 +1,84 @@
 console.log("VendaPro iniciado 🚀");
 
 
-
 const DB_KEY = "vendapro_database";
 
 
 
-function carregarDados(){
+let database = {
 
-let dados = localStorage.getItem(DB_KEY);
-
-
-if(dados){
-
-return JSON.parse(dados);
-
-}
-
-
-return {
-
-contas:[],
-vendas:[]
+    contas: [],
+    vendas: []
 
 };
 
 
+
+
+
+// ==========================
+// CARREGAR BANCO
+// ==========================
+
+
+function carregarDados(){
+
+
+    const dados = localStorage.getItem(DB_KEY);
+
+
+
+    if(dados){
+
+        database = JSON.parse(dados);
+
+        console.log("Banco carregado:", database);
+
+    }
+    else{
+
+        salvarDados();
+
+        console.log("Novo banco criado");
+
+    }
+
+
 }
 
 
 
 
 
-let database = carregarDados();
 
 
-
+// ==========================
+// SALVAR BANCO
+// ==========================
 
 
 function salvarDados(){
 
-localStorage.setItem(
-DB_KEY,
-JSON.stringify(database)
-);
+
+    localStorage.setItem(
+        DB_KEY,
+        JSON.stringify(database)
+    );
+
+
+    console.log("Dados salvos");
 
 }
+
+
+
 
 
 
 
 
 function moeda(valor){
+
 
 return Number(valor).toLocaleString(
 "pt-BR",
@@ -68,6 +95,12 @@ currency:"BRL"
 
 
 
+
+
+
+// ==========================
+// ATUALIZAR DASHBOARD
+// ==========================
 
 
 function atualizarDashboard(){
@@ -89,11 +122,12 @@ faturamento += Number(venda.valor);
 
 
 
-const cards=document.querySelectorAll(".card h2");
+const cards =
+document.querySelectorAll(".card h2");
 
 
 
-if(cards.length >=4){
+if(cards.length >= 4){
 
 
 cards[0].innerHTML =
@@ -132,6 +166,11 @@ renderizarVendas();
 
 
 
+// ==========================
+// MOSTRAR VENDAS
+// ==========================
+
+
 function renderizarVendas(){
 
 
@@ -149,26 +188,24 @@ tabela.innerHTML="";
 
 
 
-
 database.vendas
 .slice()
 .reverse()
 .forEach(venda=>{
 
 
+let linha =
+document.createElement("tr");
 
-let linha=document.createElement("tr");
 
 
-
-linha.innerHTML=`
+linha.innerHTML = `
 
 <td>${venda.conta}</td>
 
 <td>${venda.cliente}</td>
 
 <td>${moeda(venda.valor)}</td>
-
 
 `;
 
@@ -181,7 +218,6 @@ tabela.appendChild(linha);
 });
 
 
-
 }
 
 
@@ -192,83 +228,28 @@ tabela.appendChild(linha);
 
 
 
-// BOTÃO NOVA VENDA
 
-document.addEventListener("DOMContentLoaded",()=>{
-
-
-const botaoVenda = document.getElementById("novaVenda");
+// ==========================
+// NOVA VENDA
+// ==========================
 
 
-console.log("Botão encontrado:", botaoVenda);
+function iniciarVenda(){
 
 
 
-if(botaoVenda){
-
-
-botaoVenda.addEventListener("click",()=>{
-
-
-console.log("Clique detectado");
-
-
-let conta = prompt("Nome da conta:");
-
-let cliente = prompt("Nome do cliente:");
-
-let valor = prompt("Valor da venda:");
+const botaoVenda =
+document.getElementById("novaVenda");
 
 
 
-if(!conta || !cliente || !valor){
-
-alert("Preencha todos os campos");
-
-return;
-
-}
+if(!botaoVenda)return;
 
 
 
-database.vendas.push({
-
-conta: conta,
-
-cliente: cliente,
-
-valor: Number(valor),
-
-data: new Date().toLocaleDateString()
-
-});
-
-
-
-salvarDados();
-
-atualizarDashboard();
-
-
-alert("Venda cadastrada com sucesso 🚀");
-
-
-});
-
-
-}
-
-
-});
-
-
-
-
-if(botaoVenda){
-
-
-botaoVenda.onclick=function(){
-
+botaoVenda.addEventListener(
+"click",
+()=>{
 
 
 let conta =
@@ -290,28 +271,24 @@ prompt("Valor da venda:");
 
 if(!conta || !cliente || !valor){
 
-
 alert("Preencha todos os campos");
 
 return;
-
 
 }
 
 
 
 
-
 database.vendas.push({
 
-conta:conta,
+conta,
 
-cliente:cliente,
+cliente,
 
 valor:Number(valor),
 
-data:new Date()
-
+data:new Date().toLocaleDateString()
 
 });
 
@@ -326,13 +303,10 @@ atualizarDashboard();
 
 
 
-
 alert("Venda cadastrada 🚀");
 
 
-
-}
-
+});
 
 
 }
@@ -340,6 +314,30 @@ alert("Venda cadastrada 🚀");
 
 
 
+
+
+
+
+
+
+// ==========================
+// INICIAR SISTEMA
+// ==========================
+
+
+document.addEventListener(
+"DOMContentLoaded",
+()=>{
+
+
+carregarDados();
 
 
 atualizarDashboard();
+
+
+iniciarVenda();
+
+
+
+});
